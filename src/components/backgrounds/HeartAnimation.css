@@ -1,0 +1,129 @@
+/* HeartAnimation.css */
+.heart-anim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── Hero SVG ── */
+.hero-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+
+@keyframes ecgDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ecgPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes rotateCW {
+  from { transform-origin: 400px 300px; transform: rotate(0deg); }
+  to { transform-origin: 400px 300px; transform: rotate(360deg); }
+}
+
+@keyframes rotateCCW {
+  from { transform-origin: 400px 300px; transform: rotate(0deg); }
+  to { transform-origin: 400px 300px; transform: rotate(-360deg); }
+}
+
+.rotating-ring {
+  animation: rotateCW 20s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.rotating-ring-reverse {
+  animation: rotateCCW 30s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.heart-outline {
+  animation: fadeIn 2s ease forwards, pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulseHeart {
+  0%, 100% { transform: scale(1); transform-box: fill-box; transform-origin: center; }
+  50% { transform: scale(1.03); }
+}
+
+.heart-dot {
+  animation: heartbeat 2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.pulse-ring {
+  animation: pulseFade 3s ease-in-out infinite;
+}
+
+.r1 { animation-delay: 0s; }
+.r2 { animation-delay: 0.3s; }
+.r3 { animation-delay: 0.6s; }
+
+@keyframes pulseFade {
+  0%, 100% { opacity: 1; transform: scale(1); transform-box: fill-box; transform-origin: center; }
+  50% { opacity: 0.3; transform: scale(1.5); }
+}
+
+/* Particle animations */
+.particle {
+  animation: particleDrift 5s ease-in-out infinite;
+}
+.p-0 { animation-delay: 0s; animation-duration: 4s; }
+.p-1 { animation-delay: 0.3s; animation-duration: 5s; }
+.p-2 { animation-delay: 0.6s; animation-duration: 4.5s; }
+.p-3 { animation-delay: 0.9s; animation-duration: 6s; }
+.p-4 { animation-delay: 1.2s; animation-duration: 3.5s; }
+.p-5 { animation-delay: 1.5s; animation-duration: 5.5s; }
+.p-6 { animation-delay: 1.8s; animation-duration: 4.2s; }
+.p-7 { animation-delay: 2.1s; animation-duration: 5.8s; }
+.p-8 { animation-delay: 2.4s; animation-duration: 3.8s; }
+.p-9 { animation-delay: 2.7s; animation-duration: 6.2s; }
+.p-10 { animation-delay: 3s; animation-duration: 4.8s; }
+.p-11 { animation-delay: 3.3s; animation-duration: 5.2s; }
+
+/* ── Arteries ── */
+.arteries-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
+
+.artery-pulse {
+  animation: arteryGlow 2s ease-in-out infinite;
+}
+.a2 { animation-delay: 0.3s; }
+.a3 { animation-delay: 0.6s; }
+.a4 { animation-delay: 0.9s; }
+
+@keyframes arteryGlow {
+  0%, 100% { opacity: 0.6; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.5); }
+}
+
+/* ── Particles variant ── */
+.particles-anim {
+  pointer-events: none;
+}
+
+.med-particle {
+  position: absolute;
+  background: var(--color-accent);
+  border-radius: 50%;
+  animation: particleDrift 5s ease-in-out infinite;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .heart-anim * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

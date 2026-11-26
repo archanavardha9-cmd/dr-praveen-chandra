@@ -1,0 +1,414 @@
+/* ============================================================
+   Treatments.css – Imposing Hero, Compact Sections &
+   Reversible Bidirectional Motion
+   ============================================================ */
+
+/* ── HERO SECTION (~88vh) ── */
+.treatments-hero-revamp {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #050d18 0%, #0a2342 50%, #153b66 100%);
+  overflow: hidden;
+  padding-top: calc(var(--header-height) + 2rem);
+  padding-bottom: 3rem;
+}
+
+.treatments-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 75% 45%, rgba(139, 26, 46, 0.4) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 55% at 20% 75%, rgba(201, 168, 76, 0.15) 0%, transparent 55%),
+    var(--gradient-hero);
+}
+
+.treatments-hero-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+}
+
+.treatments-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.treatments-badge-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.treatments-hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.treatments-hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+  color: var(--color-white);
+  line-height: 1.1;
+  margin-bottom: 0.85rem;
+}
+
+.treatments-hero-title span {
+  color: var(--color-accent);
+}
+
+.treatments-hero-subtitle {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-elegant);
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.treatments-hero-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  max-width: 580px;
+}
+
+.treatments-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.treatments-hero-ticker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 1.5rem;
+}
+
+.treatments-ticker-box {}
+.treatments-ticker-val {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  display: block;
+}
+.treatments-ticker-lbl {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Right Visual Anatomical Card */
+.treatments-hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.treatments-anatomical-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(6, 15, 30, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+}
+
+.anatomical-svg-container {
+  width: 100%;
+  aspect-ratio: 16/10;
+  margin-bottom: 1.25rem;
+}
+
+.anatomical-pills-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.anatomical-pill-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  color: #fff;
+  transition: all var(--transition-fast);
+}
+
+.anatomical-pill-item:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.3);
+}
+
+.anatomical-pill-item span:last-child {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* ── 1. COMPACT PROCEDURES CATALOG ── */
+.treatments-catalog-section {
+  padding: clamp(50px, 7vh, 85px) 0;
+  background: var(--color-off-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.treatment-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.treatment-filter-btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  border: 1px solid rgba(10, 35, 66, 0.12);
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.treatment-filter-btn:hover,
+.treatment-filter-btn.active {
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  border-color: transparent;
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
+}
+
+.treatments-rich-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.treatment-rich-card {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.treatment-rich-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.treatment-rich-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+
+.treatment-rich-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.treatment-rich-card:hover .treatment-rich-media img {
+  transform: scale(1.05);
+}
+
+.treatment-badge-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(6, 15, 30, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--color-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.treatment-rich-body {
+  padding: 1.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.treatment-rich-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+.treatment-rich-fullname {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.85rem;
+}
+
+.treatment-rich-desc {
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.treatment-highlights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.treatment-highlights-list li {
+  font-size: 0.8125rem;
+  color: var(--color-text-light);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.treatment-highlights-list li::before {
+  content: '✓';
+  color: #27ae60;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.treatment-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin-top: auto;
+}
+
+/* ── 2. COMPACT COMPARISON SECTION ── */
+.treatments-comparison-section {
+  padding: clamp(50px, 7vh, 85px) 0;
+  background: #08172c;
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.comparison-table-wrapper {
+  margin-top: 2.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.comp-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  padding: 1.1rem 1.75rem;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.comp-row.comp-head {
+  background: rgba(201, 168, 76, 0.12);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.comp-row.comp-head .comp-col-catheter {
+  color: var(--color-accent);
+}
+
+.comp-col-param {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+.comp-col-surgery {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+}
+
+.comp-col-catheter {
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .treatments-hero-grid { grid-template-columns: 1fr; text-align: center; }
+  .treatments-hero-actions { justify-content: center; }
+  .treatments-badge-strip { justify-content: center; }
+  .treatments-hero-ticker { grid-template-columns: repeat(3, 1fr); text-align: center; }
+  .treatments-hero-visual { order: -1; }
+
+  .treatments-rich-grid { grid-template-columns: 1fr; }
+  .comp-row { grid-template-columns: 1fr; gap: 0.5rem; padding: 1rem; }
+  .comp-row.comp-head { display: none; }
+}
+
+@media (max-width: 640px) {
+  .treatments-hero-ticker { grid-template-columns: 1fr; }
+}

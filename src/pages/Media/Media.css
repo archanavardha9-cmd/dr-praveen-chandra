@@ -1,0 +1,685 @@
+/* ============================================================
+   Media.css – Imposing Hero, Compact Sections &
+   Reversible Bidirectional Motion
+   ============================================================ */
+
+/* ── HERO SECTION (~88vh) ── */
+.media-hero-revamp {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #050b14 0%, #0a203b 50%, #15375d 100%);
+  overflow: hidden;
+  padding-top: calc(var(--header-height) + 2rem);
+  padding-bottom: 3rem;
+}
+
+.media-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 75% 45%, rgba(201, 168, 76, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 55% at 20% 75%, rgba(26, 74, 124, 0.45) 0%, transparent 55%),
+    var(--gradient-hero);
+}
+
+.media-hero-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+}
+
+.media-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.media-badge-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.media-hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.media-hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+  color: var(--color-white);
+  line-height: 1.1;
+  margin-bottom: 0.85rem;
+}
+
+.media-hero-title span {
+  color: var(--color-accent);
+}
+
+.media-hero-subtitle {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-elegant);
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.media-hero-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  max-width: 580px;
+}
+
+.media-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.media-hero-ticker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 1.5rem;
+}
+
+.media-ticker-val {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  display: block;
+}
+
+.media-ticker-lbl {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Right Visual Reel Card in Media Hero */
+.media-hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.media-hero-preview-box {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(6, 15, 30, 0.9);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  transition: transform var(--transition-normal);
+}
+
+.media-hero-preview-box:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201, 168, 76, 0.6);
+}
+
+.media-hero-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+
+.media-hero-thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.media-hero-preview-box:hover .media-hero-thumb-wrap img {
+  transform: scale(1.05);
+}
+
+.media-hero-play-beacon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 6px 25px rgba(201, 168, 76, 0.6);
+  transition: transform var(--transition-spring);
+}
+
+.media-hero-preview-box:hover .media-hero-play-beacon {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.media-hero-box-meta {
+  padding: 1.25rem 1.5rem;
+}
+
+.media-hero-box-meta h4 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.media-hero-box-meta p {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.4;
+}
+
+/* ── 1. COMPACT FEATURED VIDEO CINEMA ── */
+.media-cinema-section {
+  padding: clamp(50px, 7vh, 85px) 0;
+  background: #040c18;
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.media-cinema-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 2rem;
+  align-items: stretch;
+  position: relative;
+  z-index: 1;
+}
+
+.cinema-main-stage {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.cinema-stage-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  cursor: pointer;
+}
+
+.cinema-stage-player img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.cinema-stage-player:hover img {
+  transform: scale(1.03);
+}
+
+.cinema-play-hero-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 8px 30px rgba(201, 168, 76, 0.6);
+  transition: transform var(--transition-spring);
+}
+
+.cinema-stage-player:hover .cinema-play-hero-btn {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.cinema-stage-meta {
+  padding: 1.5rem 1.75rem;
+  background: linear-gradient(180deg, #071527 0%, #040c18 100%);
+}
+
+.cinema-meta-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--color-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.cinema-stage-meta h3 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  margin-bottom: 0.35rem;
+}
+
+.cinema-stage-meta p {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.cinema-queue-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cinema-queue-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--color-white);
+  margin-bottom: 0.25rem;
+}
+
+.cinema-queue-item {
+  display: flex;
+  gap: 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  align-items: center;
+}
+
+.cinema-queue-item:hover,
+.cinema-queue-item.active {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(201, 168, 76, 0.4);
+  transform: translateX(4px);
+}
+
+.cinema-q-thumb {
+  position: relative;
+  width: 100px;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #000;
+}
+
+.cinema-q-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cinema-q-play {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-size: 0.85rem;
+}
+
+.cinema-q-info h5 {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  color: var(--color-white);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.cinema-q-info span {
+  font-size: 0.7rem;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ── 2. COMPACT FULL VIDEO LIBRARY ── */
+.media-library-section {
+  padding: clamp(50px, 7vh, 85px) 0;
+  background: #071324;
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.media-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.media-filter-pill {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.media-filter-pill:hover,
+.media-filter-pill.active {
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  border-color: transparent;
+}
+
+.media-full-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.media-video-item {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.media-video-item:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201, 168, 76, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+.media-video-thumb-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+
+.media-video-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.media-video-item:hover .media-video-thumb-box img {
+  transform: scale(1.05);
+}
+
+.media-video-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gradient-gold);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.5);
+}
+
+.media-video-details {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.media-video-details h4 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  color: var(--color-white);
+  margin-bottom: 0.35rem;
+  line-height: 1.35;
+}
+
+.media-video-details p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.825rem;
+  line-height: 1.55;
+  flex: 1;
+}
+
+/* ── 3. COMPACT PUBLICATIONS & ARTICLES ── */
+.media-articles-section {
+  padding: clamp(50px, 7vh, 85px) 0;
+  background: var(--color-off-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.articles-masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.article-visual-card {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.article-visual-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(201, 168, 76, 0.35);
+}
+
+.article-banner-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+
+.article-banner-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.article-visual-card:hover .article-banner-wrap img {
+  transform: scale(1.05);
+}
+
+.article-card-body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.article-card-cat {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #b8912a;
+  margin-bottom: 0.35rem;
+}
+
+.article-card-body h3 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+
+.article-card-body p {
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.article-read-more {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── 4. COMPACT PHOTO GALLERY ── */
+.media-gallery-section {
+  padding: clamp(50px, 7vh, 85px) 0;
+  background: #050e1a;
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-mosaic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.gallery-mosaic-tile {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  aspect-ratio: 4/3;
+  cursor: pointer;
+}
+
+.gallery-mosaic-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.gallery-mosaic-tile:hover img {
+  transform: scale(1.08);
+}
+
+.gallery-tile-caption {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4, 12, 24, 0.95) 0%, rgba(4, 12, 24, 0.2) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-tile-caption h4 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  color: var(--color-white);
+  margin-bottom: 2px;
+}
+
+.gallery-tile-caption p {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .media-hero-grid { grid-template-columns: 1fr; text-align: center; }
+  .media-hero-actions { justify-content: center; }
+  .media-badge-strip { justify-content: center; }
+  .media-hero-ticker { grid-template-columns: repeat(3, 1fr); text-align: center; }
+  .media-hero-visual { order: -1; }
+
+  .media-cinema-layout { grid-template-columns: 1fr; }
+  .media-full-grid { grid-template-columns: repeat(2, 1fr); }
+  .articles-masonry-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-mosaic-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .media-full-grid { grid-template-columns: 1fr; }
+  .articles-masonry-grid { grid-template-columns: 1fr; }
+  .gallery-mosaic-grid { grid-template-columns: 1fr; }
+  .media-hero-ticker { grid-template-columns: 1fr; }
+}
