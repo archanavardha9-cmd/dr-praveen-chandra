@@ -1,4 +1,4 @@
-// Media.jsx – Cinema Hero, Interactive Video Hub with embedded player, Swipeable Newspaper Stack & Publications
+// Media.jsx – Balanced Video Directory, Dynamic Opposing Directional Newspaper Archive, and Shared Image Photo Sequence
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
@@ -8,7 +8,6 @@ import VideoModal from '../../components/media/VideoModal';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import {
   MEDIA_VIDEOS,
-  PUBLICATIONS_ARTICLES,
   PHOTO_GALLERY,
   NEWS_ARTICLES,
   DOCTOR,
@@ -30,39 +29,53 @@ export default function Media() {
   const [activeInlineVideo, setActiveInlineVideo] = useState(null);
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
 
-  // Swipeable Stack State for Newspaper Coverage
-  const [stackIndex, setStackIndex] = useState(0);
-  const [isStackPaused, setIsStackPaused] = useState(false);
+  // Opposing Directional Newspaper State
+  const [newsIndex, setNewsIndex] = useState(0);
+  const [newsDirection, setNewsDirection] = useState(1); // 1 = right, -1 = left
+  const [isNewsPaused, setIsNewsPaused] = useState(false);
+
+  // Shared Display Area Photo Sequence State
+  const [photoIndex, setPhotoIndex] = useState(0);
+
   const pageRef = useRef(null);
 
   // Auto-cycle for featured hero spotlight
   const heroCycle = useAutoCycle(MEDIA_VIDEOS.slice(0, 4).length, 6000);
   const currentHeroVideo = MEDIA_VIDEOS.slice(0, 4)[heroCycle.activeIndex];
 
-  const pubCycle = useAutoCycle(PUBLICATIONS_ARTICLES.length, 5500);
-  const activePub = PUBLICATIONS_ARTICLES[pubCycle.activeIndex];
-
   const filteredVideos = MEDIA_VIDEOS.filter((v) => v.type === activeTab);
 
-  // Reset active inline video when tab changes
+  // Keep inline player synchronized or null (shows placeholder graphic before selection)
   useEffect(() => {
-    setActiveInlineVideo(filteredVideos[0] || null);
+    setActiveInlineVideo(null); // Shows the graphic placeholder first
   }, [activeTab]);
 
-  // Automatic stack rotation (pauses on user interaction)
+  // Opposing Directional Newspaper Auto-rotation
   useEffect(() => {
-    if (isStackPaused) return;
+    if (isNewsPaused) return;
     const timer = setInterval(() => {
-      setStackIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
-    }, 5000);
+      setNewsDirection((d) => -d); // Alternate opposing directions
+      setNewsIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
+    }, 5500);
     return () => clearInterval(timer);
-  }, [isStackPaused]);
+  }, [isNewsPaused]);
 
-  const handleDismissCard = (direction) => {
-    setIsStackPaused(true);
-    setStackIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
-    // Resume auto rotation after 8 seconds
-    setTimeout(() => setIsStackPaused(false), 8000);
+  // Shared Display Photo Sequence Auto-cycle
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPhotoIndex((prev) => (prev + 1) % PHOTO_GALLERY.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleManualNewsChange = (dir) => {
+    setIsNewsPaused(true);
+    setNewsDirection(dir);
+    setNewsIndex((prev) => {
+      if (dir > 0) return (prev + 1) % NEWS_ARTICLES.length;
+      return (prev - 1 + NEWS_ARTICLES.length) % NEWS_ARTICLES.length;
+    });
+    setTimeout(() => setIsNewsPaused(false), 9000);
   };
 
   useEffect(() => {
@@ -70,7 +83,7 @@ export default function Media() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Media Cinema Hero Entrance
+        // 1. Cinema Hero Entrance
         gsap.fromTo(
           '.med-hero-content',
           { opacity: 0, x: -45 },
@@ -95,30 +108,13 @@ export default function Media() {
           },
         });
 
-        // 2. Video Hub Section Reveals (Reversible)
+        // 2. Video Directory Reveal (Reversible)
         gsap.fromTo(
-          '.med-hub-featured-container',
-          { opacity: 0, x: -40, scale: 0.96 },
+          '.med-video-directory-layout',
+          { opacity: 0, y: 35 },
           {
             opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.media-archive-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.med-hub-rail',
-          { opacity: 0, x: 40 },
-          {
-            opacity: 1,
-            x: 0,
+            y: 0,
             duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
@@ -130,14 +126,14 @@ export default function Media() {
           }
         );
 
-        // 3. Swipeable Newspaper Editorial Stack Reveal
+        // 3. Opposing Newspaper Section Reveal
         gsap.fromTo(
-          '.press-stack-wrapper',
-          { opacity: 0, y: 35, scale: 0.95 },
+          '.news-opposing-wrapper',
+          { opacity: 0, scale: 0.94, y: 30 },
           {
             opacity: 1,
-            y: 0,
             scale: 1,
+            y: 0,
             duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
@@ -149,40 +145,18 @@ export default function Media() {
           }
         );
 
-        // 4. Zigzag Photo Archive Reveals (Alternating progressive expansion)
-        const photoRows = gsap.utils.toArray('.photo-zigzag-item');
-        photoRows.forEach((item, idx) => {
-          const fromLeft = idx % 2 === 0;
-          gsap.fromTo(
-            item,
-            { opacity: 0, x: fromLeft ? -45 : 45, scale: 0.94 },
-            {
-              opacity: 1,
-              x: 0,
-              scale: 1,
-              duration: 0.75,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: item,
-                start: 'top 86%',
-                end: 'bottom 12%',
-                toggleActions: 'play reverse play reverse',
-              },
-            }
-          );
-        });
-
-        // 5. Publications Showcase Reveal
+        // 4. Photo Archive Shared Stage Reveal
         gsap.fromTo(
-          '.med-pubs-reveal',
-          { opacity: 0, y: 32 },
+          '.photo-shared-container',
+          { opacity: 0, y: 32, scale: 0.95 },
           {
             opacity: 1,
             y: 0,
+            scale: 1,
             duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
-              trigger: '.media-pubs-stage',
+              trigger: '.media-zigzag-gallery',
               start: 'top 85%',
               end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
@@ -197,15 +171,17 @@ export default function Media() {
     return () => mm.revert();
   }, [activeTab]);
 
+  const activeArticle = NEWS_ARTICLES[newsIndex];
+  const activePhoto = PHOTO_GALLERY[photoIndex];
+
   return (
     <div ref={pageRef} className="media-root">
-      {/* ── 1. UNIQUE CINEMA HERO (IMMERSIVE STUDIO THEATER) ── */}
+      {/* ── 1. CINEMA HERO ── */}
       <section className="media-cinema-hero" aria-label="Clinical Cinema Hero">
         <SectionBackground variant="multimedia-waves" opacity={0.65} />
 
         <div className="container med-z1">
           <div className="med-hero-split">
-            {/* Left Typography & Quick Media Counters */}
             <div className="med-hero-content">
               <div className="section-kicker">Clinical Media Library</div>
               <h1 className="med-hero-title">Cardiology Cinema &amp; Clinical Explainers</h1>
@@ -219,12 +195,12 @@ export default function Media() {
                   <span className="med-metric-label">Clinical Films</span>
                 </div>
                 <div className="med-metric-chip">
-                  <span className="med-metric-num">100+</span>
-                  <span className="med-metric-label">Research Papers</span>
+                  <span className="med-metric-num">6</span>
+                  <span className="med-metric-label">National Press Clippings</span>
                 </div>
                 <div className="med-metric-chip">
-                  <span className="med-metric-num">7</span>
-                  <span className="med-metric-label">National Press Reports</span>
+                  <span className="med-metric-num">5</span>
+                  <span className="med-metric-label">Curated Gallery Photos</span>
                 </div>
               </div>
 
@@ -247,7 +223,6 @@ export default function Media() {
               </div>
             </div>
 
-            {/* Right Sleek 16:9 Featured Cinema Frame */}
             <div className="med-hero-theater">
               <div
                 className="theater-screen-box"
@@ -297,7 +272,7 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 2. VIDEO DIRECTORY WITH INLINE PLAYER & COMPACT SIDE LIST ── */}
+      {/* ── 2. BALANCED VIDEO DIRECTORY WITH GRAPHIC PLACEHOLDER & ACTIVE INLINE PLAYER ── */}
       <section className="section media-archive-stage" id="videos" aria-label="Complete Video Archive">
         <div className="container med-z1">
           <div className="media-stage-header">
@@ -322,54 +297,59 @@ export default function Media() {
             </div>
           </div>
 
-          {/* Interactive Player Hub: Left Inline Player / Visual, Right Compact Side List */}
-          <div className="media-hub-grid">
-            {/* Left Active Embedded Video / Main Visual Display */}
-            <div className="med-hub-featured-container">
+          {/* Balanced Layout: Left Main Display Area (Graphic placeholder replaced with video on click), Right Compact Uniform Cards */}
+          <div className="med-video-directory-layout">
+            {/* Main Interactive Stage */}
+            <div className="med-main-display-stage">
               {activeInlineVideo ? (
-                <div className="med-hub-inline-player">
-                  <div className="inline-video-wrapper">
+                <div className="med-active-video-player">
+                  <div className="med-iframe-box">
                     <iframe
-                      src={`https://www.youtube.com/embed/${activeInlineVideo.youtubeId}?autoplay=0&rel=0`}
+                      src={`https://www.youtube.com/embed/${activeInlineVideo.youtubeId}?autoplay=1&rel=0`}
                       title={activeInlineVideo.title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
-                      className="inline-iframe"
                     />
                   </div>
-                  <div className="inline-video-caption">
-                    <div className="inline-meta-bar">
-                      <span className="hub-tag-mono">{activeInlineVideo.category}</span>
-                      <span className="tabular-nums" style={{ fontSize: '0.82rem', color: 'var(--ink-muted)' }}>
-                        Duration: {activeInlineVideo.duration}
-                      </span>
+                  <div className="med-active-video-bar">
+                    <div>
+                      <span className="med-active-tag">{activeInlineVideo.category} · {activeInlineVideo.duration}</span>
+                      <h3>{activeInlineVideo.title}</h3>
+                      <p>{activeInlineVideo.description}</p>
                     </div>
-                    <h3>{activeInlineVideo.title}</h3>
-                    <p>{activeInlineVideo.description}</p>
+                    <button
+                      type="button"
+                      className="btn-clinical btn-clinical--secondary"
+                      onClick={() => setActiveInlineVideo(null)}
+                    >
+                      Close Player ✕
+                    </button>
                   </div>
                 </div>
               ) : (
-                <div className="inline-placeholder-box">
+                <div className="med-graphic-placeholder-frame">
                   <img
                     src="/images/illustrations/cardiac-anatomy-bright.webp"
-                    alt="Cardiac Anatomy Illustration"
-                    style={{ maxHeight: '300px', objectFit: 'contain' }}
+                    alt="Precision Cardiac Interventions & Anatomy"
+                    className="med-placeholder-graphic"
                   />
-                  <p style={{ marginTop: '1rem', fontWeight: 600, color: 'var(--ink-muted)' }}>
-                    Select a video from the list to begin watching
-                  </p>
+                  <div className="med-placeholder-overlay">
+                    <span className="med-placeholder-kicker">Interactive Video Hub</span>
+                    <h3>Select Any Video Below to Play</h3>
+                    <p>Click any card to watch high-definition surgical animations, clinical explainers, and patient recovery stories.</p>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Right Compact Side List */}
-            <div className="med-hub-rail" role="list" aria-label="Playlist items">
+            {/* Compact Neatly Arranged Video Cards (All equal, compact size) */}
+            <div className="med-cards-rail-grid" role="list" aria-label="Video Cards">
               {filteredVideos.map((vid) => {
-                const isSelected = activeInlineVideo?.id === vid.id;
+                const isCurrent = activeInlineVideo?.id === vid.id;
                 return (
                   <article
                     key={vid.id}
-                    className={`hub-rail-card ${isSelected ? 'is-selected' : ''}`}
+                    className={`med-uniform-video-card ${isCurrent ? 'is-playing' : ''}`}
                     onClick={() => setActiveInlineVideo(vid)}
                     role="button"
                     tabIndex={0}
@@ -381,17 +361,15 @@ export default function Media() {
                     }}
                     aria-label={`Play: ${vid.title}`}
                   >
-                    <div className="hub-rail-thumb">
+                    <div className="med-card-thumb-wrap">
                       <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
-                      <span className="hub-rail-play" aria-hidden="true">
-                        {isSelected ? '■' : '▶'}
+                      <span className="med-card-play-pill">
+                        {isCurrent ? 'Playing ■' : 'Play ▶'}
                       </span>
+                      <span className="med-card-dur">{vid.duration}</span>
                     </div>
-                    <div className="hub-rail-info">
-                      <div className="hub-rail-meta">
-                        <span className="hub-cat-name">{vid.category}</span>
-                        <span className="tabular-nums">{vid.duration}</span>
-                      </div>
+                    <div className="med-card-body-wrap">
+                      <span className="med-card-cat-label">{vid.category}</span>
                       <h4>{vid.title}</h4>
                       <p>{vid.description}</p>
                     </div>
@@ -403,7 +381,7 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 3. SWIPEABLE EDITORIAL STACK — AUTHENTIC NEWSPAPER ARCHIVE ── */}
+      {/* ── 3. DYNAMIC OPPOSING DIRECTIONAL NEWSPAPER ARCHIVE ── */}
       <section className="section media-news-stage" aria-label="Newspaper and News Coverage">
         <SectionBackground variant="telemetry-grid" opacity={0.25} />
 
@@ -412,116 +390,96 @@ export default function Media() {
             <div style={{ margin: '0 auto', maxWidth: '680px' }}>
               <div className="section-kicker">Press Archive</div>
               <h2 className="section-heading">Genuine Newspaper &amp; Media Coverage</h2>
-              <p className="section-lead" style={{ margin: '0.5rem auto 0' }}>
-                Centred editorial stack featuring authentic scanned clippings from national publications. Drag left or right or use the navigation arrows.
+              <p className="section-lead" style={{ margin: '0.4rem auto 0' }}>
+                Prominent scanned newspaper clippings from national publications. Slides automatically with opposing directional transitions. Swipe or use controls to browse.
               </p>
             </div>
           </div>
 
-          {/* Centered Editorial Stack */}
-          <div className="press-stack-wrapper">
-            <div className="press-stack-container">
-              {NEWS_ARTICLES.map((article, idx) => {
-                // Determine stack layer relative to current index
-                const offset = (idx - stackIndex + NEWS_ARTICLES.length) % NEWS_ARTICLES.length;
-                if (offset > 2) return null; // Show top 3 cards in stack
-
-                const isTop = offset === 0;
-
-                return (
-                  <motion.div
-                    key={article.id}
-                    className={`press-stack-card ${isTop ? 'is-top-card' : ''}`}
-                    style={{
-                      zIndex: 10 - offset,
-                    }}
-                    animate={{
-                      scale: 1 - offset * 0.05,
-                      y: offset * 18,
-                      opacity: offset === 0 ? 1 : 0.75 - offset * 0.2,
-                    }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    drag={isTop ? 'x' : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    onDragEnd={(e, { offset: dragOffset }) => {
-                      if (Math.abs(dragOffset.x) > 80) {
-                        handleDismissCard(dragOffset.x > 0 ? 'right' : 'left');
-                      }
-                    }}
-                    onClick={() => {
-                      if (isTop) {
-                        setLightboxPhoto({
-                          src: article.image,
-                          title: article.headline,
-                          caption: `${article.source} · ${article.date}`,
-                        });
-                      }
-                    }}
-                  >
-                    <div className="stack-card-visual">
-                      <img src={article.image} alt={article.headline} />
-                      <div className="stack-card-zoom-hint">
-                        <span>🔍 Click to Enlarge Clipping</span>
-                      </div>
+          <div className="news-opposing-wrapper">
+            <div className="news-opposing-stage">
+              <AnimatePresence mode="wait" custom={newsDirection}>
+                <motion.div
+                  key={activeArticle.id}
+                  custom={newsDirection}
+                  className="news-opposing-card"
+                  initial={{ opacity: 0, x: newsDirection * 90, scale: 0.94 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -newsDirection * 90, scale: 0.94 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  onDragEnd={(e, { offset }) => {
+                    if (Math.abs(offset.x) > 60) {
+                      handleManualNewsChange(offset.x > 0 ? -1 : 1);
+                    }
+                  }}
+                  onClick={() =>
+                    setLightboxPhoto({
+                      src: activeArticle.image,
+                      title: activeArticle.headline,
+                      caption: `${activeArticle.source} · ${activeArticle.date}`,
+                    })
+                  }
+                >
+                  {/* Large Prominent Newspaper Image */}
+                  <div className="news-large-image-frame">
+                    <img src={activeArticle.image} alt={activeArticle.headline} />
+                    <div className="news-zoom-badge">
+                      <span>🔍 Tap to Enlarge Full Newspaper</span>
                     </div>
+                  </div>
 
-                    <div className="stack-card-body">
-                      <div className="stack-meta-strip">
-                        <span className="clip-source-badge">{article.source}</span>
-                        <span className="clip-date-tag">{article.date}</span>
-                        <span className="clip-topic-pill">{article.tag}</span>
-                      </div>
-                      <h3>{article.headline}</h3>
-                      <p>{article.excerpt}</p>
-
-                      <div className="stack-card-action">
-                        <span className="stack-tap-hint">← Swipe card to advance →</span>
-                        <span className="stack-counter-mono">
-                          {stackIndex + 1} / {NEWS_ARTICLES.length}
-                        </span>
-                      </div>
+                  {/* Concise English-Only Meta & Information */}
+                  <div className="news-condensed-info">
+                    <div className="news-meta-pills">
+                      <span className="clip-source-badge">{activeArticle.source}</span>
+                      <span className="clip-date-tag">{activeArticle.date}</span>
+                      <span className="clip-topic-pill">{activeArticle.tag}</span>
                     </div>
-                  </motion.div>
-                );
-              })}
+                    <h3>{activeArticle.headline}</h3>
+                    <p>{activeArticle.excerpt}</p>
+
+                    <div className="news-switch-footer">
+                      <span className="news-drag-hint">← Drag left / right to transition →</span>
+                      <span className="news-counter-pill">
+                        {newsIndex + 1} of {NEWS_ARTICLES.length}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {/* Stack Manual Navigation Controls */}
-            <div className="press-stack-controls">
+            {/* Opposing Navigation Arrow Controls */}
+            <div className="news-opposing-nav">
               <button
                 type="button"
                 className="round-nav-btn"
-                onClick={() => {
-                  setIsStackPaused(true);
-                  setStackIndex((prev) => (prev - 1 + NEWS_ARTICLES.length) % NEWS_ARTICLES.length);
-                  setTimeout(() => setIsStackPaused(false), 8000);
-                }}
-                aria-label="Previous article"
+                onClick={() => handleManualNewsChange(-1)}
+                aria-label="Previous clipping"
               >
                 ←
               </button>
-              <span className="stack-indicator-dots">
+              <div className="news-indicator-track">
                 {NEWS_ARTICLES.map((_, i) => (
                   <span
                     key={i}
-                    className={`stack-dot ${i === stackIndex ? 'is-active' : ''}`}
+                    className={`news-nav-dot ${i === newsIndex ? 'is-active' : ''}`}
                     onClick={() => {
-                      setIsStackPaused(true);
-                      setStackIndex(i);
-                      setTimeout(() => setIsStackPaused(false), 8000);
+                      setIsNewsPaused(true);
+                      setNewsDirection(i > newsIndex ? 1 : -1);
+                      setNewsIndex(i);
+                      setTimeout(() => setIsNewsPaused(false), 9000);
                     }}
                   />
                 ))}
-              </span>
+              </div>
               <button
                 type="button"
                 className="round-nav-btn"
-                onClick={() => {
-                  setIsStackPaused(true);
-                  setStackIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
-                  setTimeout(() => setIsStackPaused(false), 8000);
-                }}
-                aria-label="Next article"
+                onClick={() => handleManualNewsChange(1)}
+                aria-label="Next clipping"
               >
                 →
               </button>
@@ -530,121 +488,59 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 4. COMPACT EDITORIAL ZIGZAG PHOTO ARCHIVE ── */}
+      {/* ── 4. SINGLE SHARED DISPLAY AREA PHOTO ARCHIVE ── */}
       <section className="section media-zigzag-gallery" aria-label="Clinical Photography Archive">
         <div className="container med-z1">
-          <div className="stage-header-row" style={{ marginBottom: '2.25rem' }}>
-            <div>
+          <div className="stage-header-row" style={{ marginBottom: '2rem', textAlign: 'center' }}>
+            <div style={{ margin: '0 auto', maxWidth: '640px' }}>
               <div className="section-kicker">Photo Archive</div>
-              <h2 className="section-heading">Clinical Practice &amp; Honors Gallery</h2>
-            </div>
-            <p className="section-lead">
-              Curated photographic record spanning catheterization suites, national investitures, and global faculty symposia.
-            </p>
-          </div>
-
-          {/* Compact Zigzag Editorial Arrangement */}
-          <div className="photo-zigzag-container">
-            {PHOTO_GALLERY.map((photo, idx) => {
-              const isLandscape = idx % 2 === 0;
-              return (
-                <div
-                  key={photo.src}
-                  className={`photo-zigzag-item ${isLandscape ? 'is-landscape' : 'is-portrait'}`}
-                  onClick={() => setLightboxPhoto(photo)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setLightboxPhoto(photo);
-                    }
-                  }}
-                  aria-label={`Enlarge photo: ${photo.title}`}
-                >
-                  <div className="photo-zigzag-frame">
-                    <img src={photo.src} alt={photo.title} loading="lazy" />
-                    <div className="photo-reveal-overlay">
-                      <span className="photo-zoom-icon">🔍</span>
-                    </div>
-                  </div>
-                  <div className="photo-zigzag-caption">
-                    <span className="photo-cat-mono">{photo.category}</span>
-                    <h4>{photo.title}</h4>
-                    <p>{photo.caption}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. PUBLICATIONS & CLINICAL BRIEFS (FULL PREVIEWS, NO OLD REDIRECTS) ── */}
-      <section className="section media-pubs-stage" aria-label="Medical Publications">
-        <div className="container med-z1">
-          <div className="media-stage-header med-pubs-reveal">
-            <div>
-              <div className="section-kicker">Clinical Writings &amp; Research</div>
-              <h2 className="section-heading">100+ Indexed Papers &amp; Clinical Briefs</h2>
+              <h2 className="section-heading">Curated Clinical Gallery</h2>
+              <p className="section-lead" style={{ margin: '0.4rem auto 0' }}>
+                Single shared display stage. Images emerge, expand into focus, and transition sequentially.
+              </p>
             </div>
           </div>
 
-          <div className="pubs-split-stage med-pubs-reveal">
-            {/* Left Dynamic Uncropped Visual + Full Article Excerpt */}
-            <div className="pubs-visual-col">
+          {/* Single Shared Display Stage with Continuous Sequential Transition */}
+          <div className="photo-shared-container">
+            <div className="photo-shared-viewport">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={activePub.id}
-                  className="pubs-display-panel"
-                  initial={{ opacity: 0, x: -26 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 24 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  key={activePhoto.src}
+                  className="photo-shared-slide"
+                  initial={{ opacity: 0, scale: 0.92, y: 18 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 1.05, filter: 'blur(4px)' }}
+                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={() => setLightboxPhoto(activePhoto)}
                 >
-                  <div className="pubs-display-art">
-                    <img src={activePub.image} alt={activePub.title} loading="lazy" />
-                  </div>
-                  <div className="pubs-display-copy">
-                    <span className="pubs-meta-mono">
-                      {activePub.category} · <span className="tabular-nums">{activePub.readTime}</span>
-                    </span>
-                    <h3>{activePub.title}</h3>
-                    <p>{activePub.excerpt}</p>
+                  <img src={activePhoto.src} alt={activePhoto.title} />
+                  <div className="photo-shared-overlay">
+                    <span className="photo-shared-cat">{activePhoto.category}</span>
+                    <h3>{activePhoto.title}</h3>
+                    <p>{activePhoto.caption}</p>
+                    <span className="photo-zoom-tag">🔍 Click to View Full Resolution</span>
                   </div>
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Right Selectable Article Rail */}
-            <div className="pubs-list-col" role="tablist" aria-label="Featured articles">
-              {PUBLICATIONS_ARTICLES.map((pub, idx) => {
-                const isActive = pubCycle.activeIndex === idx;
-                return (
-                  <button
-                    key={pub.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`pub-select-row ${isActive ? 'is-active' : ''}`}
-                    onClick={() => pubCycle.selectIndex(idx)}
-                  >
-                    <div className="pub-row-top">
-                      <span>{pub.category}</span>
-                      <span className="tabular-nums">{pub.readTime}</span>
-                    </div>
-                    <h4>{pub.title}</h4>
-                    {isActive && (
-                      <div className="cycle-progress-track" style={{ marginTop: '0.5rem' }}>
-                        <div
-                          key={`pub-prog-${pubCycle.cycleKey}`}
-                          className="cycle-progress-bar"
-                        />
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
+            {/* Photo Sequence Selector Dots */}
+            <div className="photo-sequence-selector">
+              {PHOTO_GALLERY.map((p, idx) => (
+                <button
+                  key={p.src}
+                  type="button"
+                  className={`photo-seq-btn ${idx === photoIndex ? 'is-active' : ''}`}
+                  onClick={() => setPhotoIndex(idx)}
+                  aria-label={`Show photo ${idx + 1}: ${p.title}`}
+                >
+                  <span className="photo-seq-thumb">
+                    <img src={p.src} alt="" />
+                  </span>
+                  <span className="photo-seq-label">{p.title}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>

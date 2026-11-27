@@ -1,4 +1,4 @@
-// BlogDetail.jsx – Dedicated full-length article detail page
+// BlogDetail.jsx – Dedicated full-length article detail page rendering exact original HTML
 import { useEffect, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { gsap } from 'gsap';
@@ -12,7 +12,7 @@ export default function BlogDetail() {
   const pageRef = useRef(null);
 
   const post = BLOG_POSTS.find((p) => p.slug === slug || p.id === slug);
-  const otherPosts = BLOG_POSTS.filter((p) => p.slug !== slug && p.id !== slug).slice(0, 3);
+  const otherPosts = BLOG_POSTS.filter((p) => p.slug !== slug && p.id !== slug).slice(0, 4);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -26,14 +26,9 @@ export default function BlogDetail() {
           { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
         );
         gsap.fromTo(
-          '.blog-hero-image-frame',
-          { opacity: 0, scale: 0.95 },
-          { opacity: 1, scale: 1, duration: 0.85, delay: 0.15, ease: 'power3.out' }
-        );
-        gsap.fromTo(
-          '.blog-article-content',
+          '.blog-article-body',
           { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: 'power3.out' }
+          { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power3.out' }
         );
       }, pageRef);
 
@@ -47,71 +42,6 @@ export default function BlogDetail() {
     return <Navigate to="/blog" replace />;
   }
 
-  // Parse simple markdown into paragraphs & headings
-  const renderContent = (contentStr) => {
-    const lines = contentStr.trim().split('\n');
-    const elements = [];
-    let currentParagraph = [];
-    let inList = false;
-    let listItems = [];
-
-    const flushParagraph = (key) => {
-      if (currentParagraph.length > 0) {
-        elements.push(
-          <p key={`p-${key}`}>{currentParagraph.join(' ')}</p>
-        );
-        currentParagraph = [];
-      }
-    };
-
-    const flushList = (key) => {
-      if (listItems.length > 0) {
-        elements.push(
-          <ul key={`ul-${key}`}>
-            {listItems.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        );
-        listItems = [];
-        inList = false;
-      }
-    };
-
-    lines.forEach((line, index) => {
-      const trimmed = line.trim();
-
-      if (trimmed.startsWith('# ')) {
-        flushParagraph(index);
-        flushList(index);
-        // Skip main h1 since title is already in header
-      } else if (trimmed.startsWith('## ')) {
-        flushParagraph(index);
-        flushList(index);
-        elements.push(<h2 key={`h2-${index}`}>{trimmed.replace('## ', '')}</h2>);
-      } else if (trimmed.startsWith('### ')) {
-        flushParagraph(index);
-        flushList(index);
-        elements.push(<h3 key={`h3-${index}`}>{trimmed.replace('### ', '')}</h3>);
-      } else if (trimmed.startsWith('- ')) {
-        flushParagraph(index);
-        inList = true;
-        listItems.push(trimmed.replace('- ', ''));
-      } else if (trimmed === '') {
-        flushParagraph(index);
-        flushList(index);
-      } else {
-        if (inList) flushList(index);
-        currentParagraph.push(trimmed);
-      }
-    });
-
-    flushParagraph(lines.length);
-    flushList(lines.length);
-
-    return elements;
-  };
-
   return (
     <div ref={pageRef} className="blog-detail-root">
       {/* ── 1. ARTICLE HEADER ── */}
@@ -124,10 +54,10 @@ export default function BlogDetail() {
               <span>/</span>
               <Link to="/blog">Blog</Link>
               <span>/</span>
-              <span>{post.category}</span>
+              <span>{post.category || 'Article'}</span>
             </nav>
 
-            <span className="section-kicker">{post.category}</span>
+            <span className="section-kicker">{post.category || 'Cardiology Clinical Monograph'}</span>
             <h1 className="blog-detail-title">{post.title}</h1>
 
             <div className="blog-detail-meta-bar">
@@ -146,26 +76,30 @@ export default function BlogDetail() {
               <div className="blog-card-meta" style={{ margin: 0 }}>
                 <span>Published: {post.date}</span>
                 <span>·</span>
-                <span>{post.readTime}</span>
+                <span>Medanta – The Medicity, Gurugram</span>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* ── 2. ARTICLE BODY + SIDEBAR ── */}
+      {/* ── 2. EXACT ORIGINAL ARTICLE CONTENT + SIDEBAR ── */}
       <section className="section blog-detail-stage">
         <div className="container blog-z1">
           <div className="blog-detail-layout">
-            {/* Main Longform Article */}
+            {/* Main Longform Article: Exact Raw HTML from Official Source */}
             <article className="blog-article-body">
-              <div className="blog-hero-image-frame">
-                <img src={post.image} alt={post.title} loading="eager" />
-              </div>
+              {post.image && (
+                <div className="blog-hero-image-frame">
+                  <img src={post.image} alt={post.title} loading="eager" />
+                </div>
+              )}
 
-              <div className="blog-article-content">
-                {renderContent(post.content)}
-              </div>
+              {/* Exact unedited HTML directly as published on drpraveenchandra.com */}
+              <div
+                className="blog-exact-content"
+                dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+              />
             </article>
 
             {/* Sidebar */}
@@ -192,7 +126,7 @@ export default function BlogDetail() {
                   {otherPosts.map((op) => (
                     <Link key={op.id} to={`/blog/${op.slug}`} className="blog-recent-item">
                       <h4>{op.title}</h4>
-                      <span className="blog-recent-date">{op.date} · {op.readTime}</span>
+                      <span className="blog-recent-date">{op.date} · {op.category}</span>
                     </Link>
                   ))}
                 </div>
@@ -207,7 +141,7 @@ export default function BlogDetail() {
         <div className="container">
           <div className="blog-cta-inner">
             <div>
-              <h2>Consult with Dr. Praveen Chandra</h2>
+              <h2>Consult with Padma Shri Dr. Praveen Chandra</h2>
               <p>Specialist outpatient evaluations &amp; angiogram second opinions at Medanta – The Medicity.</p>
             </div>
             <a

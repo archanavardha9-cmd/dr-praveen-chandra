@@ -275,15 +275,6 @@ export default function Contact() {
                   <br />
                   {CONTACT_INFO.address}
                 </p>
-                <a
-                  href={CONTACT_INFO.googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-clinical btn-clinical--primary"
-                  style={{ marginTop: '0.85rem' }}
-                >
-                  Open in Google Maps ↗
-                </a>
               </div>
 
               {/* Interactive Auto-Cycling Transit Stage */}

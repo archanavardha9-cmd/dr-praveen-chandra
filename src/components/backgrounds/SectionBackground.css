@@ -1,4 +1,4 @@
-/* SectionBackground.css – High-visibility bright clinical background motion */
+/* SectionBackground.css – High-visibility bright clinical background motion & floating medical particle system */
 
 .sec-bg-layer {
   position: absolute;
@@ -13,6 +13,146 @@
   height: 100%;
 }
 
+/* ── Moving Medical Particle System (Doctor-inspired floating motes, crosses, beacons) ── */
+.medical-particles-emitter {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.med-particle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  will-change: transform, opacity;
+}
+
+/* Dot Particles */
+.med-particle--dot-1 {
+  width: 6px;
+  height: 6px;
+  top: 15%;
+  left: 12%;
+  background: rgba(0, 91, 148, 0.45);
+  box-shadow: 0 0 8px rgba(0, 91, 148, 0.3);
+  animation: floatDrift1 12s ease-in-out infinite;
+}
+
+.med-particle--dot-2 {
+  width: 8px;
+  height: 8px;
+  top: 68%;
+  left: 22%;
+  background: rgba(11, 122, 122, 0.4);
+  box-shadow: 0 0 10px rgba(11, 122, 122, 0.25);
+  animation: floatDrift2 16s ease-in-out infinite 2s;
+}
+
+.med-particle--dot-3 {
+  width: 5px;
+  height: 5px;
+  top: 35%;
+  right: 18%;
+  background: rgba(0, 91, 148, 0.5);
+  animation: floatDrift3 14s ease-in-out infinite 1s;
+}
+
+.med-particle--dot-4 {
+  width: 7px;
+  height: 7px;
+  bottom: 20%;
+  right: 28%;
+  background: rgba(14, 165, 233, 0.45);
+  box-shadow: 0 0 8px rgba(14, 165, 233, 0.35);
+  animation: floatDrift1 18s ease-in-out infinite 4s;
+}
+
+/* Small Floating Crosses (Medical Emblem) */
+.med-particle--cross-1 {
+  width: 14px;
+  height: 14px;
+  top: 25%;
+  right: 12%;
+  opacity: 0.38;
+  animation: floatDrift2 20s ease-in-out infinite;
+}
+
+.med-particle--cross-1::before,
+.med-particle--cross-1::after {
+  content: '';
+  position: absolute;
+  background: #005B94;
+  border-radius: 2px;
+}
+
+.med-particle--cross-1::before {
+  top: 5px;
+  left: 0;
+  width: 14px;
+  height: 4px;
+}
+
+.med-particle--cross-1::after {
+  top: 0;
+  left: 5px;
+  width: 4px;
+  height: 14px;
+}
+
+.med-particle--cross-2 {
+  width: 12px;
+  height: 12px;
+  bottom: 30%;
+  left: 8%;
+  opacity: 0.32;
+  animation: floatDrift3 22s ease-in-out infinite 3s;
+}
+
+.med-particle--cross-2::before,
+.med-particle--cross-2::after {
+  content: '';
+  position: absolute;
+  background: #0B7A7A;
+  border-radius: 2px;
+}
+
+.med-particle--cross-2::before {
+  top: 4px;
+  left: 0;
+  width: 12px;
+  height: 4px;
+}
+
+.med-particle--cross-2::after {
+  top: 0;
+  left: 4px;
+  width: 4px;
+  height: 12px;
+}
+
+/* Floating Particle Animations */
+@keyframes floatDrift1 {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  35% { transform: translate(18px, -28px) scale(1.15); opacity: 0.75; }
+  70% { transform: translate(-14px, -45px) scale(0.9); opacity: 0.45; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+}
+
+@keyframes floatDrift2 {
+  0% { transform: translate(0, 0) scale(0.9); opacity: 0.35; }
+  40% { transform: translate(-24px, -35px) scale(1.1); opacity: 0.7; }
+  80% { transform: translate(20px, -60px) scale(1); opacity: 0.4; }
+  100% { transform: translate(0, 0) scale(0.9); opacity: 0.35; }
+}
+
+@keyframes floatDrift3 {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0.25; }
+  50% { transform: translate(15px, -40px) rotate(45deg); opacity: 0.65; }
+  100% { transform: translate(0, 0) rotate(0deg); opacity: 0.25; }
+}
+
+/* ── Grid & Sweep Elements ── */
 .clinical-grid-pattern {
   position: absolute;
   inset: 0;
