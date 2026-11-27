@@ -1,492 +1,887 @@
-// Home.jsx – Completely redesigned, highly visual, section-by-section animated experience
+// Home.jsx – Dynamic auto-cycling stages, multi-directional GSAP scroll choreography & zero-card open layouts
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
 import HeartAnimation from '../../components/backgrounds/HeartAnimation';
 import SectionBackground from '../../components/backgrounds/SectionBackground';
 import VideoModal from '../../components/media/VideoModal';
-import { DOCTOR, STATS, ACHIEVEMENTS, TREATMENTS, MEDIA_VIDEOS } from '../../data/doctorData';
+import { useAutoCycle } from '../../hooks/useAutoCycle';
+import {
+  DOCTOR,
+  VERIFIED_METRICS,
+  ANATOMY_HOTSPOTS,
+  DEVICES_SHOWCASE,
+  MEDIA_VIDEOS,
+  CONTACT_INFO,
+} from '../../data/doctorData';
 import './Home.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const EXPERTISE_AREAS = [
-  { icon: '🫀', title: 'TAVI / TAVR', category: 'Structural Heart', desc: 'India’s first transcatheter aortic valve implantation. Replaces diseased aortic valves via catheter without surgical sternotomy.' },
-  { icon: '🔬', title: 'MitraClip (TEER)', category: 'Structural Heart', desc: 'Pioneered in India by Dr. Chandra. Minimally invasive catheter clipping of leaking mitral valves for patients unfit for surgery.' },
-  { icon: '❤️', title: 'Complex & CTO PCI', category: 'Coronary Interventions', desc: 'Recanalization of 100% Chronic Total Occlusions, left main bifurcations, and heavily calcified vessels using rotablation.' },
-  { icon: '🚑', title: 'Acute MI Emergency PCI', category: 'Emergency Cardiology', desc: '24/7 rapid primary angioplasty with AngioJet mechanical thrombectomy for superior myocardial salvage during heart attacks.' },
-  { icon: '🩸', title: 'Carotid & Endovascular', category: 'Vascular Interventions', desc: 'Carotid artery stenting with dual-filter brain embolic protection to prevent strokes, plus peripheral limb salvage.' },
-  { icon: '📊', title: 'Physiologic FFR & IVL', category: 'Precision Technology', desc: 'Shockwave lithotripsy (IVL) and high-fidelity Fractional Flow Reserve guiding stenting only where clinically essential.' },
+const HERO_SLIDES = [
+  {
+    id: 'chairman',
+    index: '01',
+    label: 'Chairman, Medanta',
+    caption: 'Dr. Praveen Chandra — Chairman, Interventional Cardiology',
+    image: DOCTOR.images.hero,
+  },
+  {
+    id: 'padma',
+    index: '02',
+    label: 'Padma Shri 2016',
+    caption: 'Conferred the Padma Shri by the President of India (2016)',
+    image: DOCTOR.images.awardPodium,
+  },
+  {
+    id: 'cathlab',
+    index: '03',
+    label: 'Cath Lab Pioneer',
+    caption: 'Leading complex coronary & structural heart procedures',
+    image: DOCTOR.images.cathLab,
+  },
 ];
 
+const LEGACY_SCENES = [
+  {
+    id: 'padma',
+    year: '2016',
+    title: 'Padma Shri National Honor',
+    subtitle: 'Conferred by the President of India for pioneering cardiovascular medicine.',
+    image: DOCTOR.images.awardPodium,
+    caption: 'Padma Shri Investiture Ceremony, Rashtrapati Bhavan',
+  },
+  {
+    id: 'firsts',
+    year: 'First in India',
+    title: 'TAVI & MitraClip Valve Pioneer',
+    subtitle: 'First non-surgical aortic valve implantation & mitral clip repair in India.',
+    image: DOCTOR.images.cathLab,
+    caption: 'Cardiac Catheterization Suite, Medanta – The Medicity',
+  },
+  {
+    id: 'faculty',
+    year: '1992 – Present',
+    title: '30+ Years Global Leadership',
+    subtitle: 'Past Chairman, National Interventional Council & international keynote faculty.',
+    image: DOCTOR.images.speaking,
+    caption: 'Addressing global interventional cardiology symposia',
+  },
+];
+
+const SPOTLIGHT_VIDEOS = MEDIA_VIDEOS.slice(0, 4);
+
 export default function Home() {
-  const [activeVideo, setActiveVideo] = useState(null);
+  const heroCycle = useAutoCycle(HERO_SLIDES.length, 5200);
+  const anatomyCycle = useAutoCycle(ANATOMY_HOTSPOTS.length, 5500);
+  const deviceCycle = useAutoCycle(DEVICES_SHOWCASE.length, 5500);
+  const legacyCycle = useAutoCycle(LEGACY_SCENES.length, 5500);
+  const videoCycle = useAutoCycle(SPOTLIGHT_VIDEOS.length, 6000);
+
+  const [activeVideoModal, setActiveVideoModal] = useState(null);
   const homeRef = useRef(null);
 
+  const currentHero = HERO_SLIDES[heroCycle.activeIndex];
+  const currentHotspot = ANATOMY_HOTSPOTS[anatomyCycle.activeIndex];
+  const currentDevice = DEVICES_SHOWCASE[deviceCycle.activeIndex];
+  const currentLegacy = LEGACY_SCENES[legacyCycle.activeIndex];
+  const currentVideo = SPOTLIGHT_VIDEOS[videoCycle.activeIndex];
+
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // 1. Hero text reveal
-      gsap.fromTo('.hero-text-col > *',
-        { opacity: 0, y: 35 },
-        { opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out', delay: 0.15 }
-      );
+    const mm = gsap.matchMedia();
 
-      // 2. Hero photo frame entrance
-      gsap.fromTo('.hero-visual-frame',
-        { opacity: 0, scale: 0.92, y: 30 },
-        { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: 0.3 }
-      );
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ctx = gsap.context(() => {
+        // 1. Hero multi-directional entrance
+        gsap.fromTo(
+          '.hero-enter-left',
+          { opacity: 0, x: -42 },
+          { opacity: 1, x: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out' }
+        );
+        gsap.fromTo(
+          '.hero-enter-right',
+          { opacity: 0, x: 46, scale: 0.95 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.1 }
+        );
+        gsap.fromTo(
+          '.hero-enter-bottom',
+          { opacity: 0, y: 26 },
+          { opacity: 1, y: 0, duration: 0.75, stagger: 0.07, ease: 'power3.out', delay: 0.2 }
+        );
 
-      // 3. About section reveal
-      gsap.fromTo('.about-dual-frame',
-        { opacity: 0, x: -50 },
-        {
-          opacity: 1, x: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: '.home-about', start: 'top 75%' }
-        }
-      );
-      gsap.fromTo('.home-about-text-col > *',
-        { opacity: 0, x: 40 },
-        {
-          opacity: 1, x: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out',
-          scrollTrigger: { trigger: '.home-about', start: 'top 75%' }
-        }
-      );
+        // 2. Anatomy Section — reversible directional split + background scale
+        gsap.fromTo(
+          '.anat-from-left',
+          { opacity: 0, x: -50 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-anatomy-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.anat-from-right',
+          { opacity: 0, x: 50 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-anatomy-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.anat-from-bottom',
+          { opacity: 0, y: 28 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-anatomy-stage',
+              start: 'top 80%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
 
-      // 4. Expertise tiles stagger
-      gsap.fromTo('.expertise-modern-tile',
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out',
-          scrollTrigger: { trigger: '.expertise-asymmetric-grid', start: 'top 80%' }
-        }
-      );
+        // 3. Devices Section — scrubbed backdrop diagonal parallax + split reveal
+        gsap.fromTo(
+          '.devices-bg-shape',
+          { xPercent: 8, yPercent: -6 },
+          {
+            xPercent: -4,
+            yPercent: 6,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-devices-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 0.6,
+            },
+          }
+        );
+        gsap.fromTo(
+          '.dev-from-left',
+          { opacity: 0, x: -42 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-devices-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.dev-from-right',
+          { opacity: 0, x: 46, scale: 0.94 },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-devices-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
 
-      // 5. Featured treatments
-      gsap.fromTo('.treatment-visual-card',
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1, y: 0, duration: 0.85, stagger: 0.2, ease: 'power3.out',
-          scrollTrigger: { trigger: '.treatments-split-showcase', start: 'top 80%' }
-        }
-      );
+        // 4. Legacy Section — mask clip reveal + orthogonal text reveal
+        gsap.fromTo(
+          '.leg-from-bottom',
+          { opacity: 0, clipPath: 'inset(12% 0 0 0)', y: 30 },
+          {
+            opacity: 1,
+            clipPath: 'inset(0% 0 0 0)',
+            y: 0,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-legacy-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.leg-from-right',
+          { opacity: 0, x: 38 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            stagger: 0.09,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-legacy-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
 
-      // 6. Achievements
-      gsap.fromTo('.achievements-photo-banner',
-        { opacity: 0, scale: 0.94 },
-        {
-          opacity: 1, scale: 1, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: '.achievements-rich-layout', start: 'top 80%' }
-        }
-      );
-      gsap.fromTo('.milestone-interactive-row',
-        { opacity: 0, x: 35 },
-        {
-          opacity: 1, x: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: { trigger: '.achievements-milestone-list', start: 'top 85%' }
-        }
-      );
+        // 5. Video Cinema & Scrubbed ECG
+        gsap.fromTo(
+          '.vid-from-left',
+          { opacity: 0, x: -40 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-cinema-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.vid-from-right',
+          { opacity: 0, x: 40 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.home-cinema-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.consult-ecg-path',
+          { strokeDashoffset: 900 },
+          {
+            strokeDashoffset: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-consult-ribbon',
+              start: 'top 95%',
+              end: 'bottom 60%',
+              scrub: 0.5,
+            },
+          }
+        );
+      }, homeRef);
 
-      // 7. Media spotlight cards
-      gsap.fromTo('.media-interactive-thumb',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 0.75, stagger: 0.15, ease: 'power3.out',
-          scrollTrigger: { trigger: '.media-cards-triad', start: 'top 85%' }
-        }
-      );
-    }, homeRef);
+      return () => ctx.revert();
+    });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
-    <div ref={homeRef}>
-      {/* ── 1. HERO SECTION ── */}
-      <section className="hero" aria-label="Hero Introduction">
-        <div className="hero-bg">
-          <div className="hero-bg-gradient" />
-          <HeartAnimation variant="hero" />
-        </div>
+    <div ref={homeRef} className="home-root">
+      {/* ── 1. KINETIC SPOTLIGHT HERO ── */}
+      <section className="home-hero-stage" aria-label="Introduction">
+        <div className="hero-azure-wedge" aria-hidden="true" />
+        <HeartAnimation variant="hero" />
 
-        <div className="hero-content">
-          <div className="hero-text-col">
-            <div className="hero-award-badge">
-              <span style={{ fontSize: '1.2rem' }}>🏅</span>
-              Padma Shri Awardee 2016 · Government of India
-            </div>
-
-            <h1 className="hero-name">
-              <span className="hero-name-dr">Dr.</span> Praveen Chandra
-            </h1>
-
-            <p className="hero-designation">
-              Chairman, Interventional Cardiology · Medanta – The Medicity
-            </p>
-
-            <div className="hero-pioneer-tags">
-              <div className="hero-tag-pill">
-                <span>🫀</span> First TAVI in India
-              </div>
-              <div className="hero-tag-pill">
-                <span>🔬</span> First MitraClip in India
-              </div>
-              <div className="hero-tag-pill">
-                <span>⚡</span> Asia First Laser Revasc
-              </div>
-              <div className="hero-tag-pill">
-                <span>🏆</span> 30+ Years Global Leadership
-              </div>
-            </div>
-
-            <div className="hero-actions">
-              <AppointmentButton variant="primary" size="lg" showPulse label="Book Appointment" />
-              <Link to="/about" className="btn btn-secondary">
-                View Credentials →
-              </Link>
-            </div>
-
-            <div className="hero-stats-strip">
-              {STATS.map((s, i) => (
-                <div className="hero-stat-box" key={i}>
-                  <div className="hero-stat-val">{s.value}</div>
-                  <span className="hero-stat-lbl">{s.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Hero Visual: Authentic High-Res Portrait */}
-          <div className="hero-visual-frame">
-            <div className="hero-photo-glow" />
-            <div className="hero-photo-wrapper">
-              <img
-                src={DOCTOR.images.hero}
-                alt="Dr. Praveen Chandra - Padma Shri Cardiologist"
-                loading="eager"
-              />
-            </div>
-
-            <div className="hero-badge-float hbf-top">
-              <span style={{ fontSize: '1.4rem' }}>🏅</span>
-              <div>
-                <strong style={{ fontSize: '0.8rem', color: 'var(--color-accent)', display: 'block' }}>Padma Shri 2016</strong>
-                <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)' }}>Presidential Honor</span>
-              </div>
-            </div>
-
-            <div className="hero-badge-float hbf-bottom">
-              <span style={{ fontSize: '1.4rem' }}>🏥</span>
-              <div>
-                <strong style={{ fontSize: '0.8rem', color: '#fff', display: 'block' }}>Medanta Medicity</strong>
-                <span style={{ fontSize: '0.7rem', color: 'var(--color-accent)' }}>Chairman, Cardiology</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 2. ABOUT PREVIEW SECTION ── */}
-      <section className="section home-about" aria-label="About Doctor Preview">
-        <SectionBackground variant="telemetry-grid" opacity={0.65} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="home-about-layout">
-            {/* Visual Column with Dual Real Photos */}
-            <div className="home-about-media-col">
-              <div className="about-dual-frame">
-                <img
-                  src={DOCTOR.images.cathLab}
-                  alt="Dr. Praveen Chandra in Cath Lab"
-                  className="about-main-img"
-                  loading="lazy"
-                />
-                <img
-                  src={DOCTOR.images.consultation}
-                  alt="Dr. Praveen Chandra Consultation"
-                  className="about-sub-img"
-                  loading="lazy"
-                />
-                <div className="about-exp-callout">
-                  <span>30+</span>
-                  <span>Years Clinical Mastery</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Text Column */}
-            <div className="home-about-text-col">
-              <div className="section-label">Pioneering Legacy</div>
-              <h2 className="section-title">
-                Redefining Cardiac Care with Precision & Empathy
-              </h2>
-
-              <p style={{ color: 'var(--color-text-light)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '1rem' }}>
-                Dr. Praveen Chandra has stood at the vanguard of Asian cardiology for three decades.
-                From establishing groundbreaking structural heart valve programs to training generations
-                of interventional fellows, his clinical leadership at Medanta – The Medicity brings
-                world-standard surgical alternatives to high-risk cardiac patients.
+        <div className="container home-z1">
+          <div className="hero-split-layout">
+            {/* Left Copy */}
+            <div className="hero-copy-col">
+              <p className="hero-kicker hero-enter-left">
+                Padma Shri 2016 · Chairman, Interventional Cardiology
               </p>
 
-              <div className="about-key-highlights">
-                <div className="about-highlight-card">
-                  <h4>50,000+ Interventions</h4>
-                  <p>Comprehensive spectrum of structural, coronary and vascular catheterizations.</p>
-                </div>
-                <div className="about-highlight-card">
-                  <h4>KGMC Alumnus</h4>
-                  <p>MBBS, MD (Medicine) & DM (Cardiology) from King George’s Medical College.</p>
-                </div>
-                <div className="about-highlight-card">
-                  <h4>5 Global Fellowships</h4>
-                  <p>Conferred FACC (USA), FESC (Europe), FSCAI (USA), FAPSIC, and FCSI honors.</p>
-                </div>
-                <div className="about-highlight-card">
-                  <h4>Pioneering Devices</h4>
-                  <p>First to introduce TAVI, MitraClip, bioabsorbable stents & AngioJet in India.</p>
-                </div>
-              </div>
+              <h1 className="hero-display-title hero-enter-left">
+                Non-Surgical Heart Valve &amp; Coronary Care
+              </h1>
 
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                <Link to="/about" className="btn btn-dark">
-                  Read Full Journey →
-                </Link>
-                <AppointmentButton variant="outline" size="md" showIcon={false} label="Book Consultation" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+              <p className="hero-short-lead hero-enter-left">
+                Dr. Praveen Chandra leads structural heart interventions at{' '}
+                <strong>Medanta – The Medicity, Gurugram</strong>.
+              </p>
 
-      {/* ── 3. AREAS OF EXPERTISE ── */}
-      <section className="section home-expertise" aria-label="Areas of Expertise">
-        <SectionBackground variant="coronary-tree" opacity={0.7} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="section-label" style={{ justifyContent: 'center' }}>Specialized Disciplines</div>
-            <h2 className="section-title light">Areas of Advanced Expertise</h2>
-            <p className="section-subtitle light" style={{ margin: '0 auto' }}>
-              Specialized, image-guided catheter solutions designed to eliminate open-heart trauma and accelerate patient recovery.
-            </p>
-          </div>
-
-          <div className="expertise-asymmetric-grid">
-            {EXPERTISE_AREAS.map((item, i) => (
-              <div className="expertise-modern-tile" key={i}>
-                <div className="tile-top-row">
-                  <div className="tile-icon-bubble">{item.icon}</div>
-                  <span className="tile-category-tag">{item.category}</span>
-                </div>
-                <h3 className="tile-title">{item.title}</h3>
-                <p className="tile-summary">{item.desc}</p>
-                <Link to="/treatments" className="tile-footer-link">
-                  Explore Technique <span>→</span>
+              <div className="hero-cta-group hero-enter-left">
+                <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
+                <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
+                  Explore Procedures
                 </Link>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── 4. FEATURED TREATMENTS SHOWCASE ── */}
-      <section className="section home-treatments" aria-label="Featured Treatments">
-        <SectionBackground variant="valve-motion" opacity={0.65} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="section-label" style={{ justifyContent: 'center' }}>Landmark Interventions</div>
-            <h2 className="section-title">Breakthrough Procedures</h2>
-            <p className="section-subtitle" style={{ margin: '0 auto' }}>
-              Catheter-delivered valve therapies and complex coronary reconstructions pioneered in India by Dr. Praveen Chandra.
-            </p>
-          </div>
-
-          <div className="treatments-split-showcase">
-            {TREATMENTS.slice(0, 2).map((t) => (
-              <div className="treatment-visual-card" key={t.id}>
-                <div className="treatment-card-photo-wrap">
-                  <img src={t.image} alt={t.name} loading="lazy" />
-                  {t.pioneer && (
-                    <div className="treatment-pioneer-ribbon">
-                      🏆 First in India
-                    </div>
-                  )}
-                </div>
-
-                <div className="treatment-card-details">
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: t.color, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
-                    {t.category}
-                  </span>
-                  <h3>{t.name}</h3>
-                  <p>{t.description}</p>
-
-                  <ul className="treatment-bullet-strip">
-                    {t.details.slice(0, 3).map((d, idx) => (
-                      <li key={idx}>{d}</li>
-                    ))}
-                  </ul>
-
-                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: 'auto' }}>
-                    <AppointmentButton variant="primary" size="sm" label={`Consult for ${t.name}`} />
-                    <Link to={`/treatments#${t.id}`} className="treatment-link">
-                      Details →
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <Link to="/treatments" className="btn btn-dark">
-              View All 6 Clinical Treatments →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. ACHIEVEMENTS & PADMA SHRI ── */}
-      <section className="section home-achievements" aria-label="Achievements & Honors">
-        <SectionBackground variant="awards-constellation" opacity={0.8} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="achievements-rich-layout">
-            {/* Authentic Felicitation Photo */}
-            <div className="achievements-photo-banner">
-              <img
-                src={DOCTOR.images.awardPodium}
-                alt="Dr. Praveen Chandra Padma Shri Ceremony"
-                loading="lazy"
-              />
-              <div className="achievements-overlay-card">
-                <h4>Padma Shri Award (2016)</h4>
-                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>
-                  Conferred by the President of India for transformative service in cardiovascular medicine.
-                </p>
-              </div>
-            </div>
-
-            {/* Interactive Milestones List */}
-            <div>
-              <div className="section-label">Honors & Milestones</div>
-              <h2 className="section-title light" style={{ marginBottom: '1.75rem' }}>
-                National Recognition & Pioneer Breakthroughs
-              </h2>
-
-              <div className="achievements-milestone-list">
-                {ACHIEVEMENTS.map((a) => (
-                  <div className="milestone-interactive-row" key={a.id}>
-                    <div className="milestone-year-pill">{a.year}</div>
-                    <div className="milestone-info">
-                      <h4>{a.title}</h4>
-                      <p>{a.description}</p>
-                    </div>
+              <div className="hero-inline-metrics">
+                {VERIFIED_METRICS.slice(0, 3).map((m) => (
+                  <div className="hero-inline-stat hero-enter-bottom" key={m.label}>
+                    <span className="hero-stat-value tabular-nums">{m.value}</span>
+                    <span className="hero-stat-label">{m.label}</span>
                   </div>
                 ))}
               </div>
             </div>
+
+            {/* Right Dynamic Auto-Cycling Visual Stage (Large & Uncropped) */}
+            <div className="hero-visual-col hero-enter-right">
+              <div className="hero-stage-frame">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentHero.id}
+                    className="hero-slide-inner"
+                    initial={{ opacity: 0, scale: 0.96, x: 24 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 1.02, x: -24 }}
+                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <img
+                      src={currentHero.image}
+                      alt={currentHero.caption}
+                      loading="eager"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+
+                <div className="hero-stage-caption">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={currentHero.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.28 }}
+                    >
+                      {currentHero.caption}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              {/* Interactive Auto-Synced Hero Slide Switcher */}
+              <div className="hero-switcher-bar" role="tablist" aria-label="Doctor highlights">
+                {HERO_SLIDES.map((slide, idx) => {
+                  const isActive = heroCycle.activeIndex === idx;
+                  return (
+                    <button
+                      key={slide.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`hero-switch-item ${isActive ? 'is-active' : ''}`}
+                      onClick={() => heroCycle.selectIndex(idx)}
+                    >
+                      <div className="hero-switch-top">
+                        <span className="tabular-nums">{slide.index}</span>
+                        <span>{slide.label}</span>
+                      </div>
+                      <div className="cycle-progress-track">
+                        {isActive && (
+                          <div
+                            key={`hero-prog-${heroCycle.cycleKey}`}
+                            className="cycle-progress-bar"
+                            style={{ animationDuration: '5.2s' }}
+                          />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 6. STATS STRIP ── */}
-      <div className="home-stats-strip" aria-label="Clinical Metrics">
-        <SectionBackground variant="cellular-particles" opacity={0.4} />
-        <div className="container">
-          <div className="stats-grid-quad">
-            {STATS.map((s, i) => (
-              <div className="stat-unit" key={i}>
-                <div className="stat-unit-val">{s.value}</div>
-                <span className="stat-unit-lbl">{s.label}</span>
-                <span className="stat-unit-sub">{s.highlight}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── 7. MEDIA SPOTLIGHT ── */}
-      <section className="section home-media-spotlight" aria-label="Media & Video Spotlight">
-        <SectionBackground variant="multimedia-waves" opacity={0.7} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="section-label" style={{ justifyContent: 'center' }}>Watch & Learn</div>
-            <h2 className="section-title light">Featured Patient Stories & Insights</h2>
-            <p className="section-subtitle light" style={{ margin: '0 auto' }}>
-              Authentic video documentaries, patient recoveries, and cardiology lectures with Dr. Praveen Chandra.
+      {/* ── 2. INTERACTIVE CARDIAC ANATOMY STAGE (RICH SAPPHIRE-TEAL) ── */}
+      <section className="section home-anatomy-stage" id="anatomy" aria-label="Interactive Cardiac Anatomy">
+        <SectionBackground variant="telemetry-grid" opacity={0.22} />
+        <div className="container home-z1">
+          <div className="stage-header-row">
+            <div>
+              <div className="section-kicker section-kicker--light">01 · Interactive Cardiac Atlas</div>
+              <h2 className="section-heading section-heading--light">
+                Target Zone &amp; Catheter Therapy
+              </h2>
+            </div>
+            <p className="section-lead section-lead--light">
+              Cycles automatically or click any cardiac zone to inspect its matched catheter device.
             </p>
           </div>
 
-          <div className="media-cards-triad">
-            {MEDIA_VIDEOS.slice(0, 3).map((v) => (
-              <div
-                className="media-interactive-thumb"
-                key={v.id}
-                onClick={() => setActiveVideo(v)}
-                role="button"
-                tabIndex={0}
-                aria-label={`Play video: ${v.title}`}
-                onKeyDown={(e) => { if (e.key === 'Enter') setActiveVideo(v); }}
-              >
-                <div className="media-thumb-img-box">
-                  <img src={v.thumbnail} alt={v.title} loading="lazy" />
-                  <div className="media-play-center-icon">
-                    <span>▶</span>
-                  </div>
-                  <span style={{
-                    position: 'absolute',
-                    top: '10px',
-                    left: '10px',
-                    padding: '4px 10px',
-                    borderRadius: '999px',
-                    background: 'rgba(6,15,30,0.85)',
-                    color: 'var(--color-accent)',
-                    fontSize: '0.65rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em'
-                  }}>
-                    {v.category}
-                  </span>
-                </div>
-                <div className="media-thumb-content">
-                  <h4>{v.title}</h4>
-                  <p>{v.description}</p>
-                </div>
+          <div className="anatomy-stage-grid">
+            {/* Left Large Uncropped Heart Diagram */}
+            <div className="anatomy-diagram-stage anat-from-left">
+              <div className="anatomy-circle-backdrop" aria-hidden="true" />
+              <div className="anatomy-image-holder">
+                <img
+                  src={DOCTOR.illustrations.anatomy}
+                  alt="Human cardiac anatomy illustration showing valves and coronary arteries"
+                  loading="lazy"
+                />
+                {ANATOMY_HOTSPOTS.map((spot, idx) => {
+                  const isActive = anatomyCycle.activeIndex === idx;
+                  return (
+                    <button
+                      key={spot.id}
+                      type="button"
+                      className={`anat-pin-btn ${isActive ? 'is-active' : ''}`}
+                      style={{ left: `${spot.coords.x}%`, top: `${spot.coords.y}%` }}
+                      onClick={() => anatomyCycle.selectIndex(idx)}
+                      aria-label={`Select ${spot.zone}: ${spot.procedure}`}
+                      aria-pressed={isActive}
+                    >
+                      <span className="tabular-nums">{spot.index}</span>
+                      {isActive && <span className="anat-pin-ripple" aria-hidden="true" />}
+                    </button>
+                  );
+                })}
               </div>
-            ))}
+            </div>
+
+            {/* Right Dynamic Matching Content + Matched Visual (Open Stage, Zero Box) */}
+            <div className="anatomy-dynamic-stage anat-from-right">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentHotspot.id}
+                  className="anatomy-dynamic-inner"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <motion.div
+                    className="anat-text-block"
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 18 }}
+                    transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div className="anat-zone-kicker">
+                      <span className="tabular-nums">{currentHotspot.index}</span>
+                      <span>·</span>
+                      <span>{currentHotspot.zone}</span>
+                      <span>·</span>
+                      <span className="anat-milestone-gold">{currentHotspot.milestone}</span>
+                    </div>
+                    <h3 className="anat-proc-title">{currentHotspot.procedure}</h3>
+                    <p className="anat-proc-summary">{currentHotspot.summary}</p>
+                  </motion.div>
+
+                  {/* Large Matched Procedure Visual (contain so 100% uncropped) */}
+                  <motion.div
+                    className="anat-matched-visual"
+                    initial={{ opacity: 0, x: 32, scale: 0.94 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -24, scale: 0.96 }}
+                    transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <img
+                      src={currentHotspot.image}
+                      alt={`${currentHotspot.procedure} illustration`}
+                      loading="lazy"
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    className="anat-action-row"
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.32 }}
+                  >
+                    <Link to={`/treatments#${currentHotspot.id}`} className="btn-clinical btn-clinical--light">
+                      Inspect {currentHotspot.procedure.split(' ')[0]} →
+                    </Link>
+                    <span className="anat-device-note">{currentHotspot.device}</span>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <Link to="/media" className="btn btn-outline-gold">
-              Explore Complete Media & Articles Hub →
+          {/* Bottom Interactive Zone Bar */}
+          <div className="anatomy-zone-rail anat-from-bottom" role="tablist" aria-label="Cardiac zones">
+            {ANATOMY_HOTSPOTS.map((spot, idx) => {
+              const isActive = anatomyCycle.activeIndex === idx;
+              return (
+                <button
+                  key={spot.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`anat-rail-tab ${isActive ? 'is-active' : ''}`}
+                  onClick={() => anatomyCycle.selectIndex(idx)}
+                >
+                  <div className="anat-rail-label">
+                    <span className="tabular-nums">{spot.index}</span>
+                    <span>{spot.zone}</span>
+                  </div>
+                  <div className="cycle-progress-track cycle-progress-track--light">
+                    {isActive && (
+                      <div
+                        key={`anat-prog-${anatomyCycle.cycleKey}`}
+                        className="cycle-progress-bar"
+                      />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. PIONEERING DEVICES & CLINICAL FIRSTS (OPEN ASYMMETRIC STAGE) ── */}
+      <section className="section home-devices-stage" aria-label="Medical Devices Showcase">
+        <div className="devices-bg-shape" aria-hidden="true" />
+        <SectionBackground variant="valve-motion" opacity={0.5} />
+
+        <div className="container home-z1">
+          <div className="devices-split-layout">
+            {/* Left Vertical Selector + Active Mechanism */}
+            <div className="devices-selector-col dev-from-left">
+              <div className="section-kicker">02 · Pioneering Technologies</div>
+              <h2 className="section-heading">Devices &amp; Breakthroughs</h2>
+
+              <div className="devices-vertical-list" role="tablist" aria-label="Medical devices">
+                {DEVICES_SHOWCASE.map((dev, idx) => {
+                  const isActive = deviceCycle.activeIndex === idx;
+                  return (
+                    <button
+                      key={dev.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`dev-list-row ${isActive ? 'is-active' : ''}`}
+                      onClick={() => deviceCycle.selectIndex(idx)}
+                    >
+                      <div className="dev-row-header">
+                        <span className="dev-row-num tabular-nums">0{idx + 1}</span>
+                        <span className="dev-row-name">{dev.name}</span>
+                      </div>
+                      {isActive && (
+                        <div className="cycle-progress-track" style={{ marginTop: '0.55rem' }}>
+                          <div
+                            key={`dev-prog-${deviceCycle.cycleKey}`}
+                            className="cycle-progress-bar"
+                          />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right Huge Uncropped Visual & Dynamic Text */}
+            <div className="devices-showcase-col dev-from-right">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentDevice.id}
+                  className="device-hero-display"
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 1.03, y: -20 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="device-big-visual">
+                    <img
+                      src={currentDevice.image}
+                      alt={currentDevice.name}
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <motion.div
+                    className="device-overlay-strip"
+                    initial={{ opacity: 0, x: -18 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.35, delay: 0.08 }}
+                  >
+                    <span className="device-tag-mono">{currentDevice.tag}</span>
+                    <h3>{currentDevice.name}</h3>
+                    <p>{currentDevice.benefit}</p>
+                    <div className="device-strip-actions">
+                      <Link to="/treatments" className="btn-clinical btn-clinical--primary">
+                        View All Treatments →
+                      </Link>
+                      <div className="device-arrow-pair">
+                        <button
+                          type="button"
+                          onClick={deviceCycle.prev}
+                          aria-label="Previous device"
+                          className="round-nav-btn"
+                        >
+                          ←
+                        </button>
+                        <button
+                          type="button"
+                          onClick={deviceCycle.next}
+                          aria-label="Next device"
+                          className="round-nav-btn"
+                        >
+                          →
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. PADMA SHRI & CLINICAL LEADERSHIP (LUMINOUS AZURE GALLERY) ── */}
+      <section className="section home-legacy-stage" aria-label="National Honors and Heritage">
+        <SectionBackground variant="awards-constellation" opacity={0.65} />
+        <div className="container home-z1">
+          <div className="legacy-split-grid">
+            {/* Left Large Uncropped Photo Stage */}
+            <div className="legacy-visual-col leg-from-bottom">
+              <div className="legacy-photo-stage">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentLegacy.id}
+                    className="legacy-photo-inner"
+                    initial={{ opacity: 0, x: -28 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 28 }}
+                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <img
+                      src={currentLegacy.image}
+                      alt={currentLegacy.caption}
+                      loading="lazy"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+                <div className="legacy-photo-bar">
+                  <span>{currentLegacy.caption}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Interactive Milestone Selector */}
+            <div className="legacy-copy-col">
+              <div className="section-kicker leg-from-right">03 · National Honor &amp; Heritage</div>
+              <h2 className="section-heading leg-from-right">
+                Three Decades of Pioneering Firsts
+              </h2>
+
+              <div className="legacy-selector-stack leg-from-right" role="tablist" aria-label="Career milestones">
+                {LEGACY_SCENES.map((scene, idx) => {
+                  const isActive = legacyCycle.activeIndex === idx;
+                  return (
+                    <button
+                      key={scene.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`legacy-row-btn ${isActive ? 'is-active' : ''}`}
+                      onClick={() => legacyCycle.selectIndex(idx)}
+                    >
+                      <div className="legacy-row-meta tabular-nums">{scene.year}</div>
+                      <div className="legacy-row-text">
+                        <h4>{scene.title}</h4>
+                        <p>{scene.subtitle}</p>
+                      </div>
+                      {isActive && (
+                        <div className="cycle-progress-track" style={{ gridColumn: '1 / -1', marginTop: '0.5rem' }}>
+                          <div
+                            key={`leg-prog-${legacyCycle.cycleKey}`}
+                            className="cycle-progress-bar"
+                          />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="leg-from-right" style={{ marginTop: '1.25rem' }}>
+                <Link to="/about" className="btn-clinical btn-clinical--primary">
+                  Full Biography &amp; Qualifications →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. AUTO-CYCLING VIDEO CINEMA & CONSULTATION RIBBON ── */}
+      <section className="section home-cinema-stage" aria-label="Featured Videos">
+        <SectionBackground variant="multimedia-waves" opacity={0.45} />
+        <div className="container home-z1">
+          <div className="stage-header-row">
+            <div>
+              <div className="section-kicker">04 · Watch &amp; Learn</div>
+              <h2 className="section-heading">Clinical Explainers &amp; Patient Stories</h2>
+            </div>
+            <Link to="/media" className="btn-clinical btn-clinical--secondary">
+              View All 10 Videos →
             </Link>
           </div>
+
+          <div className="cinema-stage-split">
+            {/* Left Dynamic 16:9 Cinema Stage */}
+            <div className="cinema-main-col vid-from-left">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentVideo.id}
+                  className="cinema-player-stage"
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div
+                    className="cinema-thumb-hero"
+                    onClick={() => setActiveVideoModal(currentVideo)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveVideoModal(currentVideo);
+                      }
+                    }}
+                    aria-label={`Play video: ${currentVideo.title}`}
+                  >
+                    <img
+                      src={currentVideo.thumbnail}
+                      alt={currentVideo.title}
+                      loading="lazy"
+                    />
+                    <div className="cinema-play-circle" aria-hidden="true">
+                      <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="cinema-caption-strip">
+                    <div>
+                      <span className="cinema-cat-text">
+                        {currentVideo.category} · <span className="tabular-nums">{currentVideo.duration}</span>
+                      </span>
+                      <h3>{currentVideo.title}</h3>
+                    </div>
+                    <div className="cinema-links-group">
+                      <button
+                        type="button"
+                        className="btn-clinical btn-clinical--primary"
+                        onClick={() => setActiveVideoModal(currentVideo)}
+                      >
+                        Play Video
+                      </button>
+                      <a
+                        href={`https://www.youtube.com/watch?v=${currentVideo.youtubeId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-clinical btn-clinical--secondary"
+                      >
+                        YouTube ↗
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Right Selectable Video Playlist */}
+            <div className="cinema-list-col vid-from-right" role="tablist" aria-label="Spotlight videos">
+              {SPOTLIGHT_VIDEOS.map((vid, idx) => {
+                const isActive = videoCycle.activeIndex === idx;
+                return (
+                  <button
+                    key={vid.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`cinema-playlist-row ${isActive ? 'is-active' : ''}`}
+                    onClick={() => videoCycle.selectIndex(idx)}
+                  >
+                    <div className="cinema-pl-thumb">
+                      <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
+                    </div>
+                    <div className="cinema-pl-info">
+                      <span className="cinema-pl-cat">{vid.category}</span>
+                      <span className="cinema-pl-title">{vid.title}</span>
+                      {isActive && (
+                        <div className="cycle-progress-track" style={{ marginTop: '0.45rem' }}>
+                          <div
+                            key={`vid-prog-${videoCycle.cycleKey}`}
+                            className="cycle-progress-bar"
+                            style={{ animationDuration: '6s' }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── 8. APPOINTMENT CTA ── */}
-      <section className="section home-cta-section" aria-label="Book Appointment">
-        <SectionBackground variant="ecg-monitor" opacity={0.5} />
-        <div className="container">
-          <div className="home-cta-box">
-            <span style={{ fontSize: '3.5rem', display: 'block', marginBottom: '1rem', animation: 'heartbeat 1.8s ease-in-out infinite' }}>🫀</span>
-            <h2>Your Heart Deserves Direct Pioneer Care</h2>
-            <p>
-              Schedule an in-person OPD consultation or virtual second opinion with Dr. Praveen Chandra at Medanta – The Medicity, Gurugram.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <AppointmentButton variant="primary" size="xl" showPulse label="Book Appointment at Medanta" />
-              <Link to="/contact" className="btn btn-secondary" style={{ padding: '20px 36px' }}>
-                Hospital Coordinates →
+      {/* ── 6. VIBRANT CONSULTATION RIBBON WITH SCRUBBED ECG ── */}
+      <section className="home-consult-ribbon" aria-label="Book Appointment">
+        <svg className="consult-ecg-svg" viewBox="0 0 1200 100" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            className="consult-ecg-path"
+            d="M0,55 L220,55 L245,42 L262,55 L310,55 L325,76 L345,14 L365,90 L385,46 L402,55 L640,55 L665,42 L682,55 L730,55 L745,76 L765,14 L785,90 L805,46 L822,55 L1200,55"
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.22)"
+            strokeWidth="2"
+            strokeDasharray="900"
+            strokeDashoffset="900"
+          />
+        </svg>
+
+        <div className="container home-z1">
+          <div className="consult-ribbon-flex">
+            <div className="consult-ribbon-copy">
+              <h2>Consult Dr. Praveen Chandra at Medanta</h2>
+              <p className="tabular-nums">
+                Sector 38, Gurugram · <a href={`tel:${CONTACT_INFO.phones[0]}`}>{CONTACT_INFO.phones[0]}</a> · <a href={`tel:${CONTACT_INFO.phones[1]}`}>{CONTACT_INFO.phones[1]}</a> · Emergency 1068
+              </p>
+            </div>
+            <div className="consult-ribbon-actions">
+              <AppointmentButton variant="white" size="lg" label="Book Appointment" />
+              <Link to="/contact" className="btn-clinical btn-clinical--light">
+                Map &amp; OPD Checklist
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Video Modal Player */}
-      {activeVideo && (
-        <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />
+      {activeVideoModal && (
+        <VideoModal video={activeVideoModal} onClose={() => setActiveVideoModal(null)} />
       )}
     </div>
   );

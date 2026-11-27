@@ -1,53 +1,50 @@
-// App.jsx – Root application with routing
+// App.jsx – Root application with routing and bright clinical loader
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect, Suspense, lazy } from 'react';
 import Navbar from './components/navigation/Navbar';
 import Footer from './components/layout/Footer';
 
-// Lazy-loaded pages
 const Home = lazy(() => import('./pages/Home/Home'));
 const About = lazy(() => import('./pages/About/About'));
 const Treatments = lazy(() => import('./pages/Treatments/Treatments'));
 const Media = lazy(() => import('./pages/Media/Media'));
 const Contact = lazy(() => import('./pages/Contact/Contact'));
 
-// Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [pathname]);
   return null;
 }
 
-// Page loader
 function PageLoader() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'var(--gradient-hero)',
-      flexDirection: 'column',
-      gap: '1.5rem',
-    }}>
-      <div style={{ fontSize: '3rem', animation: 'heartbeat 1s ease-in-out infinite' }}>🫀</div>
-      <div style={{
-        width: '200px',
-        height: '3px',
-        background: 'rgba(255,255,255,0.1)',
-        borderRadius: '999px',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          height: '100%',
-          background: 'linear-gradient(90deg, #c9a84c, #e8c97e)',
-          borderRadius: '999px',
-          animation: 'shimmer 1.5s ease-in-out infinite',
-          backgroundSize: '200% auto',
-        }} />
-      </div>
+    <div
+      style={{
+        minHeight: '72vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#F6F9FC',
+        flexDirection: 'column',
+        gap: '1rem',
+        paddingTop: 'var(--header-height)',
+      }}
+    >
+      <svg width="44" height="44" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <rect width="64" height="64" rx="16" fill="#005B94" fillOpacity="0.1" />
+        <path
+          d="M12 34h10l5-12 7 22 6-15 4 5h8"
+          stroke="#005B94"
+          strokeWidth="3.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span style={{ fontSize: '0.88rem', color: '#5A738C', fontWeight: 500 }}>
+        Loading clinical section…
+      </span>
     </div>
   );
 }
@@ -57,7 +54,7 @@ function AppContent() {
     <>
       <ScrollToTop />
       <Navbar />
-      <main>
+      <main style={{ paddingTop: 'var(--header-height)' }}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />

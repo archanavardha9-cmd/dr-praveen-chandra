@@ -1,125 +1,109 @@
-// Navbar.jsx – Premium sticky navigation component
+// Navbar.jsx – Clean 3-zone Top Bar Contract with bright frost surface
 import { useState, useEffect, useCallback } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import { CONTACT_INFO } from '../../data/doctorData';
 import './Navbar.css';
 
 const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Treatments', path: '/treatments' },
-  { label: 'Media & Videos', path: '/media' },
+  { label: 'Media', path: '/media' },
   { label: 'Contact', path: '/contact' },
 ];
 
-const APPOINTMENT_URL =
-  'https://www.medanta.org/hospitals-near-me/gurugram-hospital/speciality/cardiology/doctor/dr-praveen-chandra';
-
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(() => (typeof window !== 'undefined' ? window.scrollY > 24 : false));
   const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
-  const isHome = location.pathname === '/';
 
   const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 40);
+    setScrolled(window.scrollY > 24);
   }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Close menu on route change
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [location]);
-
-  // Lock body scroll when menu open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [menuOpen]);
 
   return (
     <>
-      <nav className={`navbar ${scrolled ? 'scrolled' : (isHome ? 'transparent' : 'inner-page-nav')}`}>
-        <div className="navbar-inner">
-          {/* Logo */}
-          <Link to="/" className="nav-logo" aria-label="Dr. Praveen Chandra Home">
-            <div className="nav-logo-icon">🫀</div>
-            <div className="nav-logo-text">
-              <span className="nav-logo-name">Dr. Praveen Chandra</span>
-              <span className="nav-logo-title">Padma Shri · Cardiologist</span>
-            </div>
+      <header className={`site-navbar ${scrolled ? 'is-scrolled' : ''}`}>
+        <div className="site-navbar-inner">
+          {/* Zone 1: Single-element text wordmark */}
+          <Link to="/" className="nav-brand-wordmark" onClick={() => setMenuOpen(false)}>
+            Dr. Praveen Chandra
           </Link>
 
-          {/* Desktop Navigation */}
-          <ul className="nav-links" role="navigation" aria-label="Main navigation">
+          {/* Zone 2: Concise single-line navigation links */}
+          <nav className="nav-desktop-links" aria-label="Primary navigation">
             {NAV_LINKS.map(({ label, path }) => (
-              <li key={path}>
-                <NavLink
-                  to={path}
-                  className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
-                  end={path === '/'}
-                >
-                  {label}
-                </NavLink>
-              </li>
+              <NavLink
+                key={path}
+                to={path}
+                end={path === '/'}
+                className={({ isActive }) => `nav-text-link${isActive ? ' is-active' : ''}`}
+              >
+                {label}
+              </NavLink>
             ))}
-          </ul>
+          </nav>
 
-          {/* Book Appointment CTA */}
-          <a
-            href={APPOINTMENT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-cta"
-            aria-label="Book Appointment at Medanta"
-          >
-            <span className="nav-cta-pulse" aria-hidden="true" />
-            Book Appointment
-          </a>
+          {/* Zone 3: Single primary CTA */}
+          <div className="nav-action-zone">
+            <a
+              href={CONTACT_INFO.appointmentUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nav-book-btn"
+            >
+              Book Appointment
+            </a>
 
-          {/* Hamburger */}
-          <button
-            className={`nav-hamburger${menuOpen ? ' open' : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-          >
-            <span className="hamburger-line" />
-            <span className="hamburger-line" />
-            <span className="hamburger-line" />
-          </button>
+            <button
+              type="button"
+              className={`nav-mobile-toggle${menuOpen ? ' is-open' : ''}`}
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={menuOpen}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Mobile Menu */}
-      <div className={`mobile-menu${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
-        <div
-          className="mobile-menu-backdrop"
-          onClick={() => setMenuOpen(false)}
-          aria-hidden="true"
-        />
-        <nav className="mobile-menu-panel" aria-label="Mobile navigation">
+      {/* Mobile Drawer */}
+      <div className={`mobile-drawer${menuOpen ? ' is-open' : ''}`} aria-hidden={!menuOpen}>
+        <div className="mobile-drawer-backdrop" onClick={() => setMenuOpen(false)} />
+        <nav className="mobile-drawer-panel" aria-label="Mobile navigation">
           {NAV_LINKS.map(({ label, path }) => (
             <NavLink
               key={path}
               to={path}
-              className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`}
               end={path === '/'}
+              className={({ isActive }) => `mobile-drawer-link${isActive ? ' is-active' : ''}`}
+              onClick={() => setMenuOpen(false)}
             >
               {label}
             </NavLink>
           ))}
           <a
-            href={APPOINTMENT_URL}
+            href={CONTACT_INFO.appointmentUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mobile-menu-cta"
+            className="mobile-drawer-cta"
+            onClick={() => setMenuOpen(false)}
           >
-            🫀 Book Appointment
+            Book Appointment
           </a>
         </nav>
       </div>

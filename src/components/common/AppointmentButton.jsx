@@ -1,29 +1,38 @@
-// AppointmentButton.jsx – Reusable appointment CTA button
+// AppointmentButton.jsx – Accessible Medanta booking link button
+import { CONTACT_INFO } from '../../data/doctorData';
 import './AppointmentButton.css';
-
-const APPOINTMENT_URL =
-  'https://www.medanta.org/hospitals-near-me/gurugram-hospital/speciality/cardiology/doctor/dr-praveen-chandra';
 
 export default function AppointmentButton({
   variant = 'primary',
   size = 'md',
   label = 'Book Appointment',
   className = '',
-  showIcon = true,
-  showPulse = false,
 }) {
   return (
     <a
-      href={APPOINTMENT_URL}
+      href={CONTACT_INFO.appointmentUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`appt-btn appt-btn--${variant} appt-btn--${size} ${className}`}
-      aria-label={`${label} at Medanta – opens in new tab`}
+      className={`appt-cta appt-cta--${variant} appt-cta--${size} ${className}`}
+      aria-label={`${label} at Medanta (opens in new tab)`}
     >
-      {showPulse && <span className="appt-pulse" aria-hidden="true" />}
-      {showIcon && <span className="appt-icon" aria-hidden="true">🫀</span>}
-      <span className="appt-label">{label}</span>
-      <span className="appt-arrow" aria-hidden="true">→</span>
+      <span>{label}</span>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+        className="appt-cta-arrow"
+      >
+        <path
+          d="M3.5 8h9m0 0L9 4.5M12.5 8 9 11.5"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </a>
   );
 }

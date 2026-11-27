@@ -1,277 +1,254 @@
-// About.jsx – Imposing Hero, Balanced Viewport-Compact Sections & Reversible Bidirectional Animations
-import { useEffect, useRef } from 'react';
+// About.jsx – Dynamic auto-cycling stages, open editorial biography & multi-directional GSAP scroll motion
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
 import SectionBackground from '../../components/backgrounds/SectionBackground';
-import { DOCTOR, QUALIFICATIONS, FELLOWSHIPS, CAREER_TIMELINE, ACHIEVEMENTS } from '../../data/doctorData';
+import { useAutoCycle } from '../../hooks/useAutoCycle';
+import {
+  DOCTOR,
+  QUALIFICATIONS,
+  FELLOWSHIPS,
+  CAREER_TIMELINE,
+  ACHIEVEMENTS,
+} from '../../data/doctorData';
 import './About.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const MILESTONE_FILTERS = ['All', 'National Honor', 'Structural Heart', 'Academic & Leadership'];
+
+const MILESTONE_VISUALS = {
+  1: DOCTOR.images.awardPodium,
+  2: '/images/treatments/valve-replacement-tavi.webp',
+  3: DOCTOR.illustrations.mitraclip,
+  4: DOCTOR.illustrations.stentIvl,
+  5: DOCTOR.illustrations.stentIvl,
+  6: DOCTOR.images.speaking,
+  7: DOCTOR.images.consultation,
+  8: '/images/publications/tavi-multidisciplinary-planning.webp',
+};
+
+const FELLOWSHIP_DETAILS = {
+  FACC: 'Recognized by the American College of Cardiology for sustained excellence in cardiovascular medicine.',
+  FESC: 'Awarded by the European Society of Cardiology for contributions to international interventional trials and care.',
+  FSCAI: 'Conferred by the Society for Cardiovascular Angiography & Interventions (USA) for catheter therapy leadership.',
+  FAPSIC: 'Elected Fellow of the Asia Pacific Society of Interventional Cardiology celebrating regional innovation.',
+  FCSI: 'Life Fellow of India’s Cardiological Society advancing national interventional training and standards.',
+};
+
 export default function About() {
+  const careerCycle = useAutoCycle(CAREER_TIMELINE.length, 5500);
+  const fellowshipCycle = useAutoCycle(FELLOWSHIPS.length, 4800);
+  const [milestoneFilter, setMilestoneFilter] = useState('All');
   const pageRef = useRef(null);
 
+  const filteredMilestones = ACHIEVEMENTS.filter((item) => {
+    if (milestoneFilter === 'All') return true;
+    if (milestoneFilter === 'National Honor') {
+      return item.category === 'National Honor' || item.category === 'Clinical Honor';
+    }
+    if (milestoneFilter === 'Structural Heart') {
+      return (
+        item.category === 'Structural Heart' ||
+        item.category === 'Coronary Innovation' ||
+        item.category === 'Device Pioneer'
+      );
+    }
+    return item.category === 'Leadership' || item.category === 'Research';
+  });
+
+  const milestoneCycle = useAutoCycle(filteredMilestones.length, 5500);
+
+  const activeEra = CAREER_TIMELINE[careerCycle.activeIndex];
+  const activeFellowship = FELLOWSHIPS[fellowshipCycle.activeIndex];
+  const activeMilestone = filteredMilestones[milestoneCycle.activeIndex] || filteredMilestones[0];
+
+  const handleFilterChange = (tab) => {
+    setMilestoneFilter(tab);
+    milestoneCycle.selectIndex(0);
+  };
+
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // ── HERO BIDIRECTIONAL ENTRANCE ──
-      gsap.fromTo('.about-hero-text-col > *',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out', delay: 0.1,
-          scrollTrigger: {
-            trigger: '.about-hero-revamp',
-            start: 'top 85%',
-            end: 'bottom 15%',
-            toggleActions: 'play reverse play reverse',
-          }
-        }
-      );
+    const mm = gsap.matchMedia();
 
-      gsap.fromTo('.about-hero-card-stack',
-        { opacity: 0, scale: 0.92, y: 30 },
-        {
-          opacity: 1, scale: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.25,
-          scrollTrigger: {
-            trigger: '.about-hero-revamp',
-            start: 'top 85%',
-            end: 'bottom 15%',
-            toggleActions: 'play reverse play reverse',
-          }
-        }
-      );
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ctx = gsap.context(() => {
+        gsap.fromTo(
+          '.abt-hero-left',
+          { opacity: 0, x: -42 },
+          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
+        );
+        gsap.fromTo(
+          '.abt-hero-right',
+          { opacity: 0, x: 40 },
+          { opacity: 1, x: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out', delay: 0.08 }
+        );
 
-      // ── 1. EXECUTIVE BIO BIDIRECTIONAL REVEAL ──
-      gsap.fromTo('.exec-portrait-frame',
-        { opacity: 0, x: -50, scale: 0.95 },
-        {
-          opacity: 1, x: 0, scale: 1, duration: 0.85, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.about-exec-section',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play reverse play reverse',
+        gsap.fromTo(
+          '.abt-career-left',
+          { opacity: 0, x: -44 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.78,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.about-career-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
           }
-        }
-      );
-      gsap.fromTo('.exec-text-block > *',
-        { opacity: 0, x: 40 },
-        {
-          opacity: 1, x: 0, duration: 0.75, stagger: 0.08, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.about-exec-section',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play reverse play reverse',
+        );
+        gsap.fromTo(
+          '.abt-career-right',
+          { opacity: 0, x: 46, scale: 0.96 },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.about-career-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
           }
-        }
-      );
+        );
 
-      // ── 2. CAREER TIMELINE REVERSIBLE STAGGER ──
-      gsap.fromTo('.career-card-row',
-        { opacity: 0, y: 40, scale: 0.97 },
-        {
-          opacity: 1, y: 0, scale: 1, duration: 0.75, stagger: 0.12, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.career-cards-stack',
-            start: 'top 80%',
-            end: 'bottom 15%',
-            toggleActions: 'play reverse play reverse',
+        gsap.fromTo(
+          '.abt-acad-left',
+          { opacity: 0, x: -40 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.about-academic-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
           }
-        }
-      );
+        );
+        gsap.fromTo(
+          '.abt-acad-right',
+          { opacity: 0, x: 40 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.about-academic-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
 
-      // ── 3. HERITAGE DEGREE CARDS BIDIRECTIONAL ──
-      gsap.fromTo('.heritage-degree-card',
-        { opacity: 0, y: 35, scale: 0.94 },
-        {
-          opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.heritage-grid',
-            start: 'top 85%',
-            end: 'bottom 15%',
-            toggleActions: 'play reverse play reverse',
+        gsap.fromTo(
+          '.abt-ledger-left',
+          { opacity: 0, x: -38 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.about-ledger-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
           }
-        }
-      );
+        );
+        gsap.fromTo(
+          '.abt-ledger-right',
+          { opacity: 0, x: 42 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.about-ledger-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+      }, pageRef);
 
-      // ── 4. FELLOWSHIPS MATRIX REVERSIBLE ──
-      gsap.fromTo('.fellowship-badge-tile',
-        { opacity: 0, y: 30, scale: 0.92 },
-        {
-          opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.08, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.fellowships-flex-matrix',
-            start: 'top 85%',
-            end: 'bottom 15%',
-            toggleActions: 'play reverse play reverse',
-          }
-        }
-      );
+      return () => ctx.revert();
+    });
 
-      // ── 5. PADMA SHRI BANNER REVERSIBLE ──
-      gsap.fromTo('.padma-photo-side',
-        { opacity: 0, scale: 0.92, x: -40 },
-        {
-          opacity: 1, scale: 1, x: 0, duration: 0.85, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.about-padma-section',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play reverse play reverse',
-          }
-        }
-      );
-      gsap.fromTo('.padma-text-side > *',
-        { opacity: 0, x: 40 },
-        {
-          opacity: 1, x: 0, duration: 0.75, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.about-padma-section',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play reverse play reverse',
-          }
-        }
-      );
-    }, pageRef);
-
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
-    <div ref={pageRef}>
-      {/* ── REDESIGNED IMPOSING HERO (~88vh) ── */}
-      <section className="about-hero-revamp" aria-label="About Dr. Praveen Chandra Hero">
-        <div className="about-hero-bg-overlay" />
-        <SectionBackground variant="about-monument" opacity={0.7} />
+    <div ref={pageRef} className="about-root">
+      {/* ── 1. MONOGRAPH SPLIT HERO ── */}
+      <section className="about-hero-stage" aria-label="Biography Overview">
+        <div className="about-hero-wedge" aria-hidden="true" />
+        <SectionBackground variant="awards-constellation" opacity={0.45} />
 
-        <div className="about-hero-container">
-          <div className="about-hero-grid-2col">
-            <div className="about-hero-text-col">
-              <div className="about-hero-badge-strip">
-                <span className="about-hero-award-tag">🏅 Padma Shri 2016</span>
-                <span className="about-hero-award-tag" style={{ background: 'rgba(26,74,124,0.3)', borderColor: 'rgba(201,168,76,0.2)' }}>
-                  Chairman, Interventional Cardiology
-                </span>
+        <div className="container abt-z1">
+          <div className="about-hero-grid">
+            {/* Left Large Uncropped Portrait Frame */}
+            <div className="about-hero-visual abt-hero-left">
+              <div className="about-portrait-frame">
+                <img
+                  src={DOCTOR.images.profile}
+                  alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
+                  loading="eager"
+                />
               </div>
-
-              <h1 className="about-hero-title">
-                Architect of <span>Modern Transcatheter Cardiology</span> in India
-              </h1>
-
-              <p className="about-hero-subtitle">
-                Over 30 Years of Clinical Mastery · Pioneer of TAVI, MitraClip & Laser Revascularization
-              </p>
-
-              <p className="about-hero-desc">
-                From performing India’s historic first transcatheter valve replacement to establishing
-                international treatment protocols at Medanta – The Medicity, Dr. Praveen Chandra has
-                redefined cardiac care for patients worldwide.
-              </p>
-
-              <div className="about-hero-actions">
-                <AppointmentButton variant="primary" size="lg" showPulse label="Schedule Consultation" />
-                <a href="#biography" className="btn btn-secondary">
-                  Explore Journey ↓
-                </a>
-              </div>
-
-              <div className="about-hero-ticker">
-                <div className="ticker-item">
-                  <span className="ticker-num">50,000+</span>
-                  <span className="ticker-lbl">Interventions</span>
-                </div>
-                <div className="ticker-item">
-                  <span className="ticker-num">100+</span>
-                  <span className="ticker-lbl">Publications</span>
-                </div>
-                <div className="ticker-item">
-                  <span className="ticker-num">5</span>
-                  <span className="ticker-lbl">Int'l Fellowships</span>
-                </div>
-                <div className="ticker-item">
-                  <span className="ticker-num">1st</span>
-                  <span className="ticker-lbl">TAVI in India</span>
-                </div>
+              <div className="about-portrait-caption">
+                Padma Shri 2016 · Medanta – The Medicity, Gurugram
               </div>
             </div>
 
-            {/* Right Visual Stack with Badges */}
-            <div className="about-hero-visual">
-              <div className="about-hero-card-stack">
-                <div className="about-hero-portrait-box">
-                  <img
-                    src={DOCTOR.images.hero}
-                    alt="Dr. Praveen Chandra - Padma Shri"
-                    loading="eager"
-                  />
-                </div>
-
-                <div className="about-hero-floating-pill ahfp-1">
-                  <span style={{ fontSize: '1.3rem' }}>🫀</span>
-                  <div>
-                    <strong style={{ fontSize: '0.78rem', color: 'var(--color-accent)', display: 'block' }}>First TAVI in India</strong>
-                    <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.7)' }}>Non-Surgical Valve</span>
-                  </div>
-                </div>
-
-                <div className="about-hero-floating-pill ahfp-2">
-                  <span style={{ fontSize: '1.3rem' }}>🔬</span>
-                  <div>
-                    <strong style={{ fontSize: '0.78rem', color: '#fff', display: 'block' }}>First MitraClip</strong>
-                    <span style={{ fontSize: '0.68rem', color: 'var(--color-accent)' }}>Percutaneous Repair</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 1. COMPACT EXECUTIVE SUMMARY SECTION ── */}
-      <section className="section about-exec-section" id="biography" aria-label="Executive Biography">
-        <SectionBackground variant="cellular-particles" opacity={0.45} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="about-exec-grid">
-            <div className="exec-portrait-frame">
-              <img
-                src={DOCTOR.images.speaking}
-                alt="Dr. Praveen Chandra Speaking"
-                loading="lazy"
-              />
-              <div className="exec-portrait-badge">
-                <h4>Dr. Praveen Chandra</h4>
-                <span>MBBS, MD, DM · Padma Shri Awardee</span>
-              </div>
-            </div>
-
-            <div className="exec-text-block">
-              <div className="section-label">Executive Biography</div>
-              <h2>Pioneering Leadership with Compassion</h2>
-              <p>
-                Recognized by the President of India with the **Padma Shri** in 2016, Dr. Praveen Chandra
-                bridges the divide between invasive surgical trauma and high-precision catheter therapies.
-                He serves as Chairman of Interventional Cardiology at Medanta – The Medicity, leading high-volume
-                catheter laboratories handling complex structural and coronary cases.
+            {/* Right Clean Typographic Monograph */}
+            <div className="about-hero-copy">
+              <p className="hero-kicker abt-hero-right">
+                Clinical Monograph · King George’s Medical College Alumnus
               </p>
-              <p>
-                Dr. Chandra has authored over 100 indexed publications in premier medical journals and
-                regularly trains interventional cardiology fellows globally in advanced structural interventions.
+              <h1 className="about-display-title abt-hero-right">Dr. Praveen Chandra</h1>
+              <p className="about-role-sub abt-hero-right">
+                {DOCTOR.title} · {DOCTOR.hospital}
+              </p>
+              <p className="about-short-bio abt-hero-right">
+                {DOCTOR.bio}
               </p>
 
-              <div className="exec-pills-row">
-                <span className="exec-pill">🫀 1st TAVI Operator in India</span>
-                <span className="exec-pill">🔬 1st MitraClip Specialist</span>
-                <span className="exec-pill">⚡ Asia 1st Laser Revascularization</span>
-                <span className="exec-pill">📚 100+ Peer-Reviewed Papers</span>
-              </div>
+              <dl className="about-anchor-facts abt-hero-right">
+                <div>
+                  <dt>Training</dt>
+                  <dd className="tabular-nums">MBBS 1985 · MD 1989 · DM Cardiology 1991</dd>
+                </div>
+                <div>
+                  <dt>National Honor</dt>
+                  <dd>Padma Shri Award (2016), President of India</dd>
+                </div>
+                <div>
+                  <dt>Fellowships</dt>
+                  <dd>FACC · FESC · FSCAI · FAPSIC · FCSI</dd>
+                </div>
+              </dl>
 
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <AppointmentButton variant="primary" size="md" showPulse label="Schedule Consultation" />
-                <Link to="/treatments" className="btn btn-dark">
-                  Explore Treatments →
+              <div className="about-hero-cta abt-hero-right">
+                <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
+                <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
+                  View Procedures →
                 </Link>
               </div>
             </div>
@@ -279,114 +256,276 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── 2. COMPACT VISUAL CAREER TIMELINE ── */}
-      <section className="section about-career-section" aria-label="Career Milestones">
-        <SectionBackground variant="laser-energy" opacity={0.65} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="section-label" style={{ justifyContent: 'center' }}>Leadership Milestones</div>
-            <h2 className="section-title light">Three Decades of Clinical Excellence</h2>
-            <p className="section-subtitle light" style={{ margin: '0 auto' }}>
-              Pioneering cardiac programs and establishing benchmark catheterization registries across India.
+      {/* ── 2. AUTO-CYCLING CAREER TRAJECTORY (1992 – PRESENT) ── */}
+      <section className="section about-career-stage" aria-label="Career Trajectory">
+        <div className="container abt-z1">
+          <div className="about-stage-header">
+            <div>
+              <div className="section-kicker">01 · Career Trajectory</div>
+              <h2 className="section-heading">Three Decades of Institutional Leadership</h2>
+            </div>
+            <p className="section-lead">
+              Cycles automatically across three landmark appointments from 1992 to the present day.
             </p>
           </div>
 
-          <div className="career-cards-stack">
-            {CAREER_TIMELINE.map((item, i) => (
-              <div className="career-card-row" key={i}>
-                <div className="career-period-col">
-                  <span className="career-period-badge">{item.period}</span>
-                  <div className="career-inst-title">{item.institution}</div>
-                </div>
-
-                <div className="career-detail-col">
-                  <h3>{item.role}</h3>
-                  <p>{item.description}</p>
-                </div>
-
-                <div className="career-thumb-col">
-                  <img src={item.photo} alt={item.role} loading="lazy" />
-                </div>
+          <div className="career-split-stage">
+            {/* Left Dynamic Role Selector + Live Copy */}
+            <div className="career-left-col abt-career-left">
+              <div className="career-era-tabs" role="tablist" aria-label="Career chapters">
+                {CAREER_TIMELINE.map((era, idx) => {
+                  const isActive = careerCycle.activeIndex === idx;
+                  return (
+                    <button
+                      key={era.period}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`career-era-tab ${isActive ? 'is-active' : ''}`}
+                      onClick={() => careerCycle.selectIndex(idx)}
+                    >
+                      <div className="career-tab-head">
+                        <span className="career-tab-period tabular-nums">{era.period}</span>
+                        <span className="career-tab-inst">{era.institution.split(',')[0]}</span>
+                      </div>
+                      {isActive && (
+                        <div className="cycle-progress-track" style={{ marginTop: '0.5rem' }}>
+                          <div
+                            key={`car-prog-${careerCycle.cycleKey}`}
+                            className="cycle-progress-bar"
+                          />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── 3. COMPACT EDUCATION & HERITAGE ── */}
-      <section className="section about-heritage-section" aria-label="Education & Qualifications">
-        <SectionBackground variant="ecg-monitor" opacity={0.4} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="section-label" style={{ justifyContent: 'center' }}>Academic Foundation</div>
-            <h2 className="section-title">King George’s Medical College Heritage</h2>
-            <p className="section-subtitle" style={{ margin: '0 auto' }}>
-              Foundational and super-specialty training from one of India's most venerated medical institutions.
-            </p>
-          </div>
-
-          <div className="heritage-grid">
-            {QUALIFICATIONS.map((q, i) => (
-              <div className="heritage-degree-card" key={i}>
-                <div className="degree-seal-icon">🎓</div>
-                <div className="degree-name">{q.degree}</div>
-                <div className="degree-inst">{q.institution}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. COMPACT FELLOWSHIPS MATRIX ── */}
-      <section className="section about-fellowships-section" aria-label="International Fellowships">
-        <SectionBackground variant="awards-constellation" opacity={0.7} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="section-label" style={{ justifyContent: 'center' }}>Global Recognition</div>
-            <h2 className="section-title light">Elected International Fellowships</h2>
-            <p className="section-subtitle light" style={{ margin: '0 auto' }}>
-              Recognized by premier cardiovascular colleges across North America, Europe, and Asia.
-            </p>
-          </div>
-
-          <div className="fellowships-flex-matrix">
-            {FELLOWSHIPS.map((f) => (
-              <div className="fellowship-badge-tile" key={f.short}>
-                <span className="fbadge-acronym">{f.short}</span>
-                <span className="fbadge-region">{f.region}</span>
-                <p className="fbadge-full-name">{f.full}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. COMPACT PADMA SHRI BANNER ── */}
-      <section className="section about-padma-section" aria-label="Padma Shri Award">
-        <SectionBackground variant="valve-motion" opacity={0.35} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="padma-highlight-box">
-            <div className="padma-photo-side">
-              <img
-                src={DOCTOR.images.awardPodium}
-                alt="Padma Shri Award Felicitation"
-                loading="lazy"
-              />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeEra.period}
+                  className="career-era-copy"
+                  initial={{ opacity: 0, x: -24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 24 }}
+                  transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <span className="career-copy-period tabular-nums">{activeEra.period}</span>
+                  <h3>{activeEra.role}</h3>
+                  <p className="career-copy-org">{activeEra.institution}</p>
+                  <p className="career-copy-desc">{activeEra.description}</p>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            <div className="padma-text-side">
-              <div className="section-label" style={{ color: '#fff' }}>National Honor</div>
-              <h2>Conferred the Padma Shri (2016)</h2>
-              <p>
-                Conferred by the President of India in recognition of distinguished service to medicine,
-                advancing life-saving transcatheter alternatives for patients across the nation.
-              </p>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <AppointmentButton variant="white" size="lg" label="Book Appointment at Medanta" />
-                <Link to="/media" className="btn btn-outline-gold" style={{ borderColor: 'rgba(255,255,255,0.4)', color: '#fff' }}>
-                  Watch Ceremony Video →
-                </Link>
+            {/* Right Large Uncropped Scene Stage */}
+            <div className="career-right-col abt-career-right">
+              <div className="career-visual-stage">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeEra.period}
+                    className="career-visual-inner"
+                    initial={{ opacity: 0, x: 32, scale: 0.96 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -28, scale: 0.97 }}
+                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <img
+                      src={activeEra.photo}
+                      alt={`${activeEra.role} at ${activeEra.institution}`}
+                      loading="lazy"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+                <div className="career-visual-caption">
+                  <span>{activeEra.caption}</span>
+                </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. KGMC QUALIFICATIONS & AUTO-CYCLING FELLOWSHIPS (SAPPHIRE STAGE) ── */}
+      <section className="section about-academic-stage" aria-label="Academic Qualifications and Fellowships">
+        <SectionBackground variant="telemetry-grid" opacity={0.2} />
+        <div className="container abt-z1">
+          <div className="acad-split-grid">
+            {/* Left Hairline Academic Degrees */}
+            <div className="acad-degrees-col abt-acad-left">
+              <div className="section-kicker section-kicker--light">02 · Academic Heritage</div>
+              <h2 className="section-heading section-heading--light">
+                King George’s Medical College, Lucknow
+              </h2>
+              <p className="section-lead section-lead--light" style={{ marginBottom: '1.5rem' }}>
+                Foundational internal medicine and cardiology super-specialization from India’s historic medical institution.
+              </p>
+
+              <div className="acad-rows-list">
+                {QUALIFICATIONS.map((q) => (
+                  <div className="acad-degree-row" key={q.degree}>
+                    <span className="acad-year-mono tabular-nums">{q.year}</span>
+                    <div>
+                      <h4>
+                        {q.degree} — {q.field}
+                      </h4>
+                      <p>{q.institution}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Interactive Auto-Cycling Global Fellowships Spotlight */}
+            <div className="acad-fellow-col abt-acad-right">
+              <div className="fellow-selector-bar" role="tablist" aria-label="International fellowships">
+                {FELLOWSHIPS.map((f, idx) => {
+                  const isActive = fellowshipCycle.activeIndex === idx;
+                  return (
+                    <button
+                      key={f.short}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`fellow-tab-btn ${isActive ? 'is-active' : ''}`}
+                      onClick={() => fellowshipCycle.selectIndex(idx)}
+                    >
+                      <span>{f.short}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="cycle-progress-track cycle-progress-track--light" style={{ margin: '0.85rem 0 1.4rem' }}>
+                <div
+                  key={`fel-prog-${fellowshipCycle.cycleKey}`}
+                  className="cycle-progress-bar"
+                  style={{ animationDuration: '4.8s' }}
+                />
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeFellowship.short}
+                  className="fellow-spotlight-body"
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <span className="fellow-region-mono">{activeFellowship.region}</span>
+                  <div className="fellow-big-code">{activeFellowship.short}</div>
+                  <h3>{activeFellowship.full}</h3>
+                  <p>{FELLOWSHIP_DETAILS[activeFellowship.short]}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. AUTO-CYCLING HONORS & HISTORIC FIRSTS STAGE ── */}
+      <section className="section about-ledger-stage" aria-label="Honors and Milestones">
+        <div className="container abt-z1">
+          <div className="about-stage-header">
+            <div>
+              <div className="section-kicker">03 · Honors &amp; Clinical Firsts</div>
+              <h2 className="section-heading">Padma Shri &amp; Pioneer Milestones</h2>
+            </div>
+
+            <div className="ledger-filter-bar" role="tablist" aria-label="Filter milestones">
+              {MILESTONE_FILTERS.map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  role="tab"
+                  aria-selected={milestoneFilter === tab}
+                  className={`ledger-filter-tab ${milestoneFilter === tab ? 'is-active' : ''}`}
+                  onClick={() => handleFilterChange(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="ledger-interactive-grid">
+            {/* Left Clickable / Auto-Cycling Milestone List */}
+            <div className="ledger-list-col abt-ledger-left">
+              {filteredMilestones.map((item, idx) => {
+                const isActive = milestoneCycle.activeIndex === idx;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`ledger-select-row ${isActive ? 'is-active' : ''}`}
+                    onClick={() => milestoneCycle.selectIndex(idx)}
+                  >
+                    <div className="ledger-row-top">
+                      <span className="ledger-row-year tabular-nums">{item.year}</span>
+                      <span className="ledger-row-cat">{item.category}</span>
+                    </div>
+                    <h4>{item.title}</h4>
+                    {isActive && (
+                      <div className="cycle-progress-track" style={{ marginTop: '0.55rem' }}>
+                        <div
+                          key={`ms-prog-${milestoneCycle.cycleKey}`}
+                          className="cycle-progress-bar"
+                        />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right Synchronized Uncropped Visual + Detail */}
+            <div className="ledger-visual-col abt-ledger-right">
+              {activeMilestone && (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeMilestone.id}
+                    className="ledger-spotlight-stage"
+                    initial={{ opacity: 0, x: 28 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -24 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div className="ledger-stage-visual">
+                      <img
+                        src={activeMilestone.photo || MILESTONE_VISUALS[activeMilestone.id] || DOCTOR.images.awardPodium}
+                        alt={activeMilestone.title}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="ledger-stage-copy">
+                      <span className="ledger-stage-meta tabular-nums">
+                        {activeMilestone.year} · {activeMilestone.category}
+                      </span>
+                      <h3>{activeMilestone.title}</h3>
+                      <p>{activeMilestone.description}</p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. COMPACT CTA RIBBON ── */}
+      <section className="about-cta-ribbon" aria-label="Schedule Consultation">
+        <div className="container">
+          <div className="about-cta-flex">
+            <div>
+              <h2>Evaluate Non-Surgical Valve &amp; Coronary Options</h2>
+              <p>Outpatient clinics &amp; angiogram second opinions at Medanta – The Medicity, Gurugram.</p>
+            </div>
+            <div className="about-cta-actions">
+              <AppointmentButton variant="white" size="lg" label="Book Appointment" />
+              <Link to="/contact" className="btn-clinical btn-clinical--light">
+                Hospital &amp; OPD Access
+              </Link>
             </div>
           </div>
         </div>

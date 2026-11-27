@@ -1,84 +1,91 @@
 /* AppointmentButton.css */
-.appt-btn {
+
+.appt-cta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  text-decoration: none;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-md);
   font-family: var(--font-body);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border-radius: var(--radius-full);
-  transition: all var(--transition-spring);
-  position: relative;
+  font-weight: 600;
   white-space: nowrap;
-  cursor: pointer;
-}
-
-.appt-arrow {
-  transition: transform var(--transition-fast);
-}
-.appt-btn:hover .appt-arrow {
-  transform: translateX(4px);
-}
-
-/* Variants */
-.appt-btn--primary {
-  background: var(--gradient-gold);
-  color: var(--color-primary);
-  box-shadow: 0 6px 24px rgba(201,168,76,0.4);
-}
-.appt-btn--primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(201,168,76,0.55);
-}
-
-.appt-btn--outline {
-  background: transparent;
-  color: var(--color-accent);
-  border: 2px solid var(--color-accent);
-}
-.appt-btn--outline:hover {
-  background: var(--gradient-gold);
-  color: var(--color-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(201,168,76,0.4);
-  border-color: transparent;
-}
-
-.appt-btn--white {
-  background: var(--color-white);
-  color: var(--color-primary);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
-}
-.appt-btn--white:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-}
-
-.appt-btn--dark {
-  background: var(--color-primary);
-  color: var(--color-white);
-  box-shadow: 0 6px 24px rgba(10,35,66,0.3);
-}
-.appt-btn--dark:hover {
-  background: var(--color-secondary);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(10,35,66,0.5);
-}
-
-/* Sizes */
-.appt-btn--sm { padding: 10px 20px; font-size: 0.75rem; }
-.appt-btn--md { padding: 14px 28px; font-size: 0.8125rem; }
-.appt-btn--lg { padding: 18px 36px; font-size: 0.9375rem; }
-.appt-btn--xl { padding: 20px 44px; font-size: 1rem; }
-
-/* Pulse dot */
-.appt-pulse {
-  width: 8px;
-  height: 8px;
-  background: var(--color-crimson-light);
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
   flex-shrink: 0;
+  transition: transform 180ms var(--ease-out-expo),
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.appt-cta--sm {
+  padding: 9px 16px;
+  font-size: 0.84rem;
+  min-height: 40px;
+}
+
+.appt-cta--md {
+  padding: 11px 22px;
+  font-size: 0.9rem;
+  min-height: 42px;
+}
+
+.appt-cta--lg,
+.appt-cta--xl {
+  padding: 13px 26px;
+  font-size: 0.95rem;
+  min-height: 46px;
+}
+
+.appt-cta--primary {
+  background: var(--accent-blue);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 91, 148, 0.22);
+}
+
+.appt-cta--primary:hover {
+  background: var(--accent-blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 91, 148, 0.28);
+}
+
+.appt-cta--outline,
+.appt-cta--secondary {
+  background: #ffffff;
+  color: var(--ink-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.appt-cta--outline:hover,
+.appt-cta--secondary:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  transform: translateY(-1px);
+}
+
+.appt-cta--teal {
+  background: var(--accent-teal);
+  color: #ffffff;
+}
+
+.appt-cta--teal:hover {
+  background: #076161;
+  transform: translateY(-1px);
+}
+
+.appt-cta--white {
+  background: #ffffff;
+  color: var(--accent-blue);
+  box-shadow: var(--shadow-card);
+}
+
+.appt-cta--white:hover {
+  background: var(--canvas-ice);
+  transform: translateY(-1px);
+}
+
+.appt-cta-arrow {
+  transition: transform 180ms var(--ease-out-expo);
+}
+
+.appt-cta:hover .appt-cta-arrow {
+  transform: translateX(3px);
 }

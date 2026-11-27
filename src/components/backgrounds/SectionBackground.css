@@ -1,251 +1,71 @@
-/* ============================================================
-   SectionBackground.css – Section-Specific Animated Visual Environments
-   ============================================================ */
+/* SectionBackground.css – Subtle light clinical background motion */
 
-.section-bg-wrapper {
+.sec-bg-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
   z-index: 0;
-  opacity: 0.85;
-  transition: opacity 0.8s ease;
 }
 
-.section-bg-svg {
+.sec-bg-svg {
   width: 100%;
   height: 100%;
-  display: block;
 }
 
-/* 1. Coronary Tree Variant */
-.coronary-main-branch {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: drawBranch 4s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+.clinical-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 91, 148, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 91, 148, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
 }
 
-.coronary-pulse-glow {
-  animation: arteryBreath 3s ease-in-out infinite;
+.clinical-sweep-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 91, 148, 0.28), transparent);
+  animation: telemetrySweep 9s ease-in-out infinite;
 }
 
-@keyframes drawBranch {
-  0% { stroke-dashoffset: 600; opacity: 0.2; }
-  50% { stroke-dashoffset: 0; opacity: 0.8; }
-  100% { stroke-dashoffset: 0; opacity: 0.4; }
+.valve-ring-rot {
+  transform-origin: 720px 250px;
+  animation: bgSpinSlow 42s linear infinite;
 }
 
-@keyframes arteryBreath {
-  0%, 100% { filter: drop-shadow(0 0 2px rgba(192, 57, 43, 0.4)); stroke-width: 3; }
-  50% { filter: drop-shadow(0 0 12px rgba(192, 57, 43, 0.9)); stroke-width: 4.5; }
+.vessel-flow {
+  stroke-dasharray: 10 6;
+  animation: vesselDash 18s linear infinite;
 }
 
-.coronary-flow-particle {
-  animation: pulseFlow 2.5s ease-in-out infinite;
+.ecg-wave-trace {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: ecgTraceRun 6s ease-in-out infinite;
 }
 
-@keyframes pulseFlow {
-  0% { r: 2; opacity: 0.2; }
-  50% { r: 5; opacity: 0.9; }
-  100% { r: 2; opacity: 0.2; }
+@keyframes telemetrySweep {
+  0% { top: 8%; opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.7; }
+  100% { top: 92%; opacity: 0; }
 }
 
-/* 2. Valve Motion Variant */
-.valve-leaflet-left {
-  transform-origin: 320px 250px;
-  animation: openCloseLeft 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+@keyframes bgSpinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.valve-leaflet-right {
-  transform-origin: 480px 250px;
-  animation: openCloseRight 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+@keyframes vesselDash {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -160; }
 }
 
-@keyframes openCloseLeft {
-  0%, 100% { transform: rotate(0deg); }
-  35% { transform: rotate(-24deg); }
-  65% { transform: rotate(4deg); }
-}
-
-@keyframes openCloseRight {
-  0%, 100% { transform: rotate(0deg); }
-  35% { transform: rotate(24deg); }
-  65% { transform: rotate(-4deg); }
-}
-
-.valve-ring-pulse {
-  animation: ringDilate 2.2s ease-in-out infinite;
-  transform-origin: 400px 250px;
-}
-
-@keyframes ringDilate {
-  0%, 100% { transform: scale(1); opacity: 0.4; }
-  35% { transform: scale(1.08); opacity: 0.85; stroke: #c9a84c; }
-  70% { transform: scale(0.97); opacity: 0.3; }
-}
-
-/* 3. ECG Monitor Variant */
-.ecg-continuous-line {
-  stroke-dasharray: 1200;
-  stroke-dashoffset: 1200;
-  animation: ecgSweep 4s linear infinite;
-}
-
-@keyframes ecgSweep {
-  0% { stroke-dashoffset: 1200; }
-  100% { stroke-dashoffset: 0; }
-}
-
-.ecg-grid-overlay {
-  background-image: 
-    linear-gradient(rgba(201, 168, 76, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 168, 76, 0.05) 1px, transparent 1px);
-  background-size: 25px 25px;
-}
-
-/* 4. Constellation / Achievements Variant */
-.constellation-node {
-  animation: nodeFloat 6s ease-in-out infinite alternate;
-}
-
-@keyframes nodeFloat {
-  0% { transform: translateY(0px) scale(1); }
-  100% { transform: translateY(-18px) scale(1.2); }
-}
-
-.constellation-line {
-  stroke-dasharray: 10 5;
-  animation: dashMove 20s linear infinite;
-}
-
-@keyframes dashMove {
-  to { stroke-dashoffset: -300; }
-}
-
-/* 5. Cellular Microvascular Variant */
-.cell-rbc {
-  animation: rbcDrift 14s ease-in-out infinite alternate;
-}
-
-@keyframes rbcDrift {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(40px, -35px) rotate(180deg); }
-  100% { transform: translate(-30px, 25px) rotate(360deg); }
-}
-
-/* 6. DNA Helix / Science Variant */
-.dna-strand {
-  animation: dnaRotate 12s linear infinite;
-  transform-origin: center;
-}
-
-@keyframes dnaRotate {
-  0% { transform: translateY(0) scaleY(1); }
-  50% { transform: translateY(-15px) scaleY(0.95); }
-  100% { transform: translateY(0) scaleY(1); }
-}
-
-/* 7. Laser Revascularization Energy Variant */
-.laser-beam {
-  animation: laserShoot 3s ease-in-out infinite;
-}
-
-@keyframes laserShoot {
-  0% { stroke-dasharray: 0 400; opacity: 0; }
-  50% { stroke-dasharray: 300 0; opacity: 1; filter: drop-shadow(0 0 10px #c9a84c); }
-  100% { stroke-dasharray: 0 400; opacity: 0; }
-}
-
-/* 8. Telemetry Grid Variant */
-.telemetry-scanner {
-  animation: scanVertical 5s ease-in-out infinite;
-}
-
-@keyframes scanVertical {
-  0%, 100% { transform: translateY(-10%); opacity: 0.15; }
-  50% { transform: translateY(110%); opacity: 0.6; }
-}
-
-/* Media Waves Variant */
-.audio-bar {
-  animation: barScale 1.4s ease-in-out infinite alternate;
-  transform-origin: bottom;
-}
-
-@keyframes barScale {
-  0% { transform: scaleY(0.3); opacity: 0.3; }
-  100% { transform: scaleY(1.2); opacity: 0.8; }
-}
-
-/* ── 9. About Monument Hero Variant ── */
-.monument-ring-outer {
-  animation: rotateCW 35s linear infinite;
-  transform-origin: 500px 300px;
-}
-
-.monument-ring-inner {
-  animation: rotateCCW 25s linear infinite;
-  transform-origin: 500px 300px;
-}
-
-.monument-pulse-node {
-  animation: pulseScale 3s ease-in-out infinite alternate;
-  transform-origin: center;
-}
-
-@keyframes pulseScale {
-  0% { transform: scale(0.9); opacity: 0.4; }
-  100% { transform: scale(1.15); opacity: 0.95; }
-}
-
-/* ── 10. Treatments Cathlab Hero Variant ── */
-.cath-wire-active {
-  stroke-dasharray: 800;
-  stroke-dashoffset: 800;
-  animation: cathFeed 6s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
-}
-
-@keyframes cathFeed {
-  0% { stroke-dashoffset: 800; opacity: 0.2; }
-  50% { stroke-dashoffset: 0; opacity: 0.9; }
-  100% { stroke-dashoffset: 0; opacity: 0.5; }
-}
-
-.stent-mesh-strut {
-  animation: stentBreathe 3s ease-in-out infinite alternate;
-}
-
-@keyframes stentBreathe {
-  0% { stroke-width: 1.5; opacity: 0.3; }
-  100% { stroke-width: 3.5; opacity: 0.85; stroke: #c9a84c; }
-}
-
-/* ── 11. Media Broadcasting Hero Variant ── */
-.broadcast-ripple {
-  animation: rippleExpand 4s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
-  transform-origin: 500px 250px;
-}
-
-.br-1 { animation-delay: 0s; }
-.br-2 { animation-delay: 1.3s; }
-.br-3 { animation-delay: 2.6s; }
-
-@keyframes rippleExpand {
-  0% { transform: scale(0.4); opacity: 0.9; }
-  100% { transform: scale(1.8); opacity: 0; }
-}
-
-/* ── 12. Contact Radar Hero Variant ── */
-.radar-sweep-beam {
-  animation: rotateCW 8s linear infinite;
-  transform-origin: 500px 280px;
-}
-
-.radar-ping-dot {
-  animation: pingGlow 2s ease-in-out infinite;
-}
-
-@keyframes pingGlow {
-  0%, 100% { r: 4; opacity: 0.4; }
-  50% { r: 9; opacity: 1; filter: drop-shadow(0 0 8px #c9a84c); }
+@keyframes ecgTraceRun {
+  0% { stroke-dashoffset: 1400; opacity: 0.4; }
+  65% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0.3; }
 }
