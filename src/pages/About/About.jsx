@@ -321,7 +321,7 @@ export default function About() {
                 {DOCTOR.title} · {DOCTOR.hospital}
               </p>
               <p className="about-short-bio abt-hero-right">
-                {DOCTOR.bio}
+                Padma Shri Dr. Praveen Chandra is Chairman of Interventional Cardiology at Medanta – The Medicity, Gurugram, and India's pioneer of TAVI, MitraClip, and laser myocardial revascularization across three decades of clinical leadership.
               </p>
 
               <dl className="about-anchor-facts abt-hero-right">

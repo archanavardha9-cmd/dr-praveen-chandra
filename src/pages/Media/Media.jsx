@@ -393,7 +393,7 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 3. AUTHENTIC NEWSPAPER & NEWS ARTICLES SECTION ── */}
+      {/* ── 3. AUTHENTIC NEWSPAPER CLIPPINGS PRESS ARCHIVE ── */}
       <section className="section media-news-stage" aria-label="Newspaper and News Coverage">
         <SectionBackground variant="telemetry-grid" opacity={0.25} />
 
@@ -404,42 +404,44 @@ export default function Media() {
               <h2 className="section-heading">Newspaper &amp; Media Coverage</h2>
             </div>
             <p className="section-lead">
-              Verified clinical breakthroughs and national honors reported by leading news publications.
+              Genuine press clippings from leading national publications covering Dr. Praveen Chandra's breakthroughs and honors.
             </p>
           </div>
 
-          <div className="news-editorial-grid">
+          <div className="news-clippings-grid">
             {NEWS_ARTICLES.map((article, idx) => {
-              const isEven = idx % 2 === 0;
+              const fromLeft = idx % 2 === 0;
               return (
                 <article
                   key={article.id}
-                  className={`news-editorial-card ${isEven ? 'news-align-left' : 'news-align-right'}`}
+                  className={`news-clipping-card ${fromLeft ? 'clip-from-left' : 'clip-from-right'} news-editorial-card`}
+                  onClick={() => setLightboxPhoto({ src: article.image, title: article.headline, caption: article.source + ' · ' + article.date })}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setLightboxPhoto({ src: article.image, title: article.headline, caption: article.source + ' · ' + article.date });
+                    }
+                  }}
+                  aria-label={`Enlarge newspaper clipping: ${article.headline}`}
                 >
-                  <div className="news-card-visual">
+                  <div className="clip-image-frame">
                     <img src={article.image} alt={article.headline} loading="lazy" />
+                    <div className="clip-zoom-overlay" aria-hidden="true">
+                      <span className="clip-zoom-icon">🔍 Enlarge</span>
+                    </div>
                   </div>
 
-                  <div className="news-card-content">
-                    <div className="news-meta-strip">
-                      <span className="news-source-badge">{article.source}</span>
-                      <span className="news-date-tag">{article.date}</span>
-                    </div>
+                  <div className="clip-meta-strip">
+                    <span className="clip-source-badge">{article.source}</span>
+                    <span className="clip-date-tag">{article.date}</span>
+                    <span className="clip-topic-pill">{article.tag}</span>
+                  </div>
 
+                  <div className="clip-caption-area">
                     <h3>{article.headline}</h3>
                     <p>{article.excerpt}</p>
-
-                    <div className="news-action-row">
-                      <a
-                        href={article.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="news-read-link"
-                      >
-                        Read Press Report ↗
-                      </a>
-                      <span className="news-topic-pill">{article.tag}</span>
-                    </div>
                   </div>
                 </article>
               );
@@ -506,14 +508,6 @@ export default function Media() {
               <div className="section-kicker">Clinical Writings &amp; Research</div>
               <h2 className="section-heading">100+ Indexed Papers &amp; Clinical Briefs</h2>
             </div>
-            <a
-              href="https://drpraveenchandra.com/blogs/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-clinical btn-clinical--secondary"
-            >
-              Visit Official Blog ↗
-            </a>
           </div>
 
           <div className="pubs-split-stage med-pubs-reveal">
@@ -537,14 +531,6 @@ export default function Media() {
                     </span>
                     <h3>{activePub.title}</h3>
                     <p>{activePub.excerpt}</p>
-                    <a
-                      href={activePub.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-clinical btn-clinical--primary"
-                    >
-                      Read Full Brief ↗
-                    </a>
                   </div>
                 </motion.div>
               </AnimatePresence>

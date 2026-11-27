@@ -438,6 +438,152 @@
   gap: 1.25rem;
 }
 
+/* ── Genuine Newspaper Clipping Cards ── */
+.news-clippings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.news-clipping-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  text-align: left;
+}
+
+.news-clipping-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 91, 148, 0.12);
+  border-color: var(--accent-blue);
+}
+
+/* Flip layout for odd cards */
+.news-clipping-card.clip-from-right {
+  direction: rtl;
+}
+.news-clipping-card.clip-from-right > * {
+  direction: ltr;
+}
+
+.clip-image-frame {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-hairline);
+  background: #f8fbfe;
+  aspect-ratio: 4/3;
+}
+
+.clip-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 300ms ease;
+}
+
+.news-clipping-card:hover .clip-image-frame img {
+  transform: scale(1.03);
+}
+
+.clip-zoom-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 56, 112, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  border-radius: 14px;
+}
+
+.news-clipping-card:hover .clip-zoom-overlay {
+  opacity: 1;
+}
+
+.clip-zoom-icon {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.clip-meta-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+}
+
+.clip-source-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+  background: var(--canvas-ice);
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-hairline);
+}
+
+.clip-date-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.clip-topic-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-teal);
+  background: rgba(0, 162, 155, 0.1);
+  padding: 0.18rem 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 162, 155, 0.25);
+}
+
+.clip-caption-area h3 {
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: var(--ink-primary);
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.clip-caption-area p {
+  font-size: 0.9rem;
+  color: var(--ink-body);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .news-clipping-card {
+    grid-template-columns: 1fr;
+    direction: ltr !important;
+  }
+  .news-clipping-card.clip-from-right > * {
+    direction: ltr;
+  }
+  .clip-image-frame {
+    aspect-ratio: 16/9;
+  }
+}
+
 .news-editorial-card {
   display: grid;
   grid-template-columns: 220px 1fr;

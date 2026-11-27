@@ -130,6 +130,14 @@
   flex-wrap: wrap;
 }
 
+.about-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
 /* ── 2. AUTO-CYCLING CAREER STAGE (LUMINOUS AZURE) ── */
 .about-career-stage {
   background: linear-gradient(180deg, var(--canvas-azure) 0%, var(--canvas-ice) 100%);
