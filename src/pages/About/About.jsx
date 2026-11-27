@@ -99,7 +99,7 @@ export default function About() {
         gsap.fromTo(
           '.abt-hero-left',
           { opacity: 0, x: -48, scale: 0.94 },
-          { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out' }
+          { opacity: 1, x: 0, scale: 1, duration: 0.65, ease: 'power3.out' }
         );
         gsap.fromTo(
           '.abt-hero-right',

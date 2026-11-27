@@ -1,4 +1,4 @@
-// Media.jsx – Redesigned Cinema Hero, Dynamic Video Hub, Zigzag Photo Archive, Newspaper Coverage & Publications
+// Media.jsx – Cinema Hero, Interactive Video Hub with embedded player, Swipeable Newspaper Stack & Publications
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
@@ -18,7 +18,6 @@ import './Media.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const VIDEO_TABS = [
-  { id: 'all', label: 'All Videos' },
   { id: 'procedure', label: 'Procedure Guides' },
   { id: 'patient-story', label: 'Patient Stories' },
   { id: 'informational', label: 'Doctor Talks' },
@@ -26,9 +25,14 @@ const VIDEO_TABS = [
 ];
 
 export default function Media() {
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [activeTab, setActiveTab] = useState('all');
+  const [modalVideo, setModalVideo] = useState(null);
+  const [activeTab, setActiveTab] = useState('procedure');
+  const [activeInlineVideo, setActiveInlineVideo] = useState(null);
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
+
+  // Swipeable Stack State for Newspaper Coverage
+  const [stackIndex, setStackIndex] = useState(0);
+  const [isStackPaused, setIsStackPaused] = useState(false);
   const pageRef = useRef(null);
 
   // Auto-cycle for featured hero spotlight
@@ -38,8 +42,28 @@ export default function Media() {
   const pubCycle = useAutoCycle(PUBLICATIONS_ARTICLES.length, 5500);
   const activePub = PUBLICATIONS_ARTICLES[pubCycle.activeIndex];
 
-  const filteredVideos =
-    activeTab === 'all' ? MEDIA_VIDEOS : MEDIA_VIDEOS.filter((v) => v.type === activeTab);
+  const filteredVideos = MEDIA_VIDEOS.filter((v) => v.type === activeTab);
+
+  // Reset active inline video when tab changes
+  useEffect(() => {
+    setActiveInlineVideo(filteredVideos[0] || null);
+  }, [activeTab]);
+
+  // Automatic stack rotation (pauses on user interaction)
+  useEffect(() => {
+    if (isStackPaused) return;
+    const timer = setInterval(() => {
+      setStackIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [isStackPaused]);
+
+  const handleDismissCard = (direction) => {
+    setIsStackPaused(true);
+    setStackIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
+    // Resume auto rotation after 8 seconds
+    setTimeout(() => setIsStackPaused(false), 8000);
+  };
 
   useEffect(() => {
     const mm = gsap.matchMedia();
@@ -73,7 +97,7 @@ export default function Media() {
 
         // 2. Video Hub Section Reveals (Reversible)
         gsap.fromTo(
-          '.med-hub-featured',
+          '.med-hub-featured-container',
           { opacity: 0, x: -40, scale: 0.96 },
           {
             opacity: 1,
@@ -106,27 +130,24 @@ export default function Media() {
           }
         );
 
-        // 3. Newspaper Editorial Archive Reveals (Staggered Bottom Up)
-        const newsItems = gsap.utils.toArray('.news-editorial-card');
-        newsItems.forEach((item, idx) => {
-          gsap.fromTo(
-            item,
-            { opacity: 0, y: 35, scale: 0.97 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.7,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: item,
-                start: 'top 88%',
-                end: 'bottom 12%',
-                toggleActions: 'play reverse play reverse',
-              },
-            }
-          );
-        });
+        // 3. Swipeable Newspaper Editorial Stack Reveal
+        gsap.fromTo(
+          '.press-stack-wrapper',
+          { opacity: 0, y: 35, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.media-news-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
 
         // 4. Zigzag Photo Archive Reveals (Alternating progressive expansion)
         const photoRows = gsap.utils.toArray('.photo-zigzag-item');
@@ -134,12 +155,12 @@ export default function Media() {
           const fromLeft = idx % 2 === 0;
           gsap.fromTo(
             item,
-            { opacity: 0, x: fromLeft ? -50 : 50, scale: 0.94 },
+            { opacity: 0, x: fromLeft ? -45 : 45, scale: 0.94 },
             {
               opacity: 1,
               x: 0,
               scale: 1,
-              duration: 0.8,
+              duration: 0.75,
               ease: 'power3.out',
               scrollTrigger: {
                 trigger: item,
@@ -178,7 +199,7 @@ export default function Media() {
 
   return (
     <div ref={pageRef} className="media-root">
-      {/* ── 1. REDESIGNED CINEMA HERO (HIGH-IMPACT STUDIO THEATER) ── */}
+      {/* ── 1. UNIQUE CINEMA HERO (IMMERSIVE STUDIO THEATER) ── */}
       <section className="media-cinema-hero" aria-label="Clinical Cinema Hero">
         <SectionBackground variant="multimedia-waves" opacity={0.65} />
 
@@ -202,7 +223,7 @@ export default function Media() {
                   <span className="med-metric-label">Research Papers</span>
                 </div>
                 <div className="med-metric-chip">
-                  <span className="med-metric-num">5</span>
+                  <span className="med-metric-num">7</span>
                   <span className="med-metric-label">National Press Reports</span>
                 </div>
               </div>
@@ -211,7 +232,7 @@ export default function Media() {
                 <button
                   type="button"
                   className="btn-clinical btn-clinical--primary"
-                  onClick={() => setSelectedVideo(currentHeroVideo)}
+                  onClick={() => setModalVideo(currentHeroVideo)}
                 >
                   Watch Featured Film
                 </button>
@@ -230,13 +251,13 @@ export default function Media() {
             <div className="med-hero-theater">
               <div
                 className="theater-screen-box"
-                onClick={() => setSelectedVideo(currentHeroVideo)}
+                onClick={() => setModalVideo(currentHeroVideo)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    setSelectedVideo(currentHeroVideo);
+                    setModalVideo(currentHeroVideo);
                   }
                 }}
                 aria-label={`Play featured film: ${currentHeroVideo.title}`}
@@ -265,7 +286,7 @@ export default function Media() {
                 <button
                   type="button"
                   className="round-nav-btn"
-                  onClick={() => setSelectedVideo(currentHeroVideo)}
+                  onClick={() => setModalVideo(currentHeroVideo)}
                   aria-label="Play video"
                 >
                   ▶
@@ -276,13 +297,13 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 2. REDESIGNED FULL VIDEO ARCHIVE (CREATIVE MEDIA HUB) ── */}
+      {/* ── 2. VIDEO DIRECTORY WITH INLINE PLAYER & COMPACT SIDE LIST ── */}
       <section className="section media-archive-stage" id="videos" aria-label="Complete Video Archive">
         <div className="container med-z1">
           <div className="media-stage-header">
             <div>
               <div className="section-kicker">Video Directory</div>
-              <h2 className="section-heading">Browse All {MEDIA_VIDEOS.length} Educational Videos</h2>
+              <h2 className="section-heading">Educational Cardiology Video Library</h2>
             </div>
 
             <div className="media-filter-tabs" role="tablist" aria-label="Filter videos by category">
@@ -301,151 +322,210 @@ export default function Media() {
             </div>
           </div>
 
-          {/* Asymmetrical Media Hub Layout: Featured Video + Sleek Playlist Rail */}
+          {/* Interactive Player Hub: Left Inline Player / Visual, Right Compact Side List */}
           <div className="media-hub-grid">
-            {/* Left Featured Large Premiere Video */}
-            {filteredVideos[0] && (
-              <article className="med-hub-featured">
-                <div
-                  className="hub-featured-poster"
-                  onClick={() => setSelectedVideo(filteredVideos[0])}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedVideo(filteredVideos[0]);
-                    }
-                  }}
-                  aria-label={`Play: ${filteredVideos[0].title}`}
-                >
-                  <img
-                    src={filteredVideos[0].thumbnail}
-                    alt={filteredVideos[0].title}
-                    loading="lazy"
-                  />
-                  <div className="hub-play-circle" aria-hidden="true">
-                    <svg width="22" height="22" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
-                    </svg>
+            {/* Left Active Embedded Video / Main Visual Display */}
+            <div className="med-hub-featured-container">
+              {activeInlineVideo ? (
+                <div className="med-hub-inline-player">
+                  <div className="inline-video-wrapper">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${activeInlineVideo.youtubeId}?autoplay=0&rel=0`}
+                      title={activeInlineVideo.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="inline-iframe"
+                    />
                   </div>
-                  <span className="hub-duration-tag">{filteredVideos[0].duration}</span>
-                </div>
-
-                <div className="hub-featured-details">
-                  <span className="hub-tag-mono">{filteredVideos[0].category}</span>
-                  <h3>{filteredVideos[0].title}</h3>
-                  <p>{filteredVideos[0].description}</p>
-                  <div className="hub-featured-actions">
-                    <button
-                      type="button"
-                      className="btn-clinical btn-clinical--primary"
-                      onClick={() => setSelectedVideo(filteredVideos[0])}
-                    >
-                      Watch Video
-                    </button>
-                    <a
-                      href={`https://www.youtube.com/watch?v=${filteredVideos[0].youtubeId}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-clinical btn-clinical--secondary"
-                    >
-                      YouTube ↗
-                    </a>
-                  </div>
-                </div>
-              </article>
-            )}
-
-            {/* Right Compact Sleek Playlist Rail */}
-            <div className="med-hub-rail" role="list" aria-label="Playlist items">
-              {filteredVideos.slice(1).map((vid) => (
-                <article
-                  key={vid.id}
-                  className="hub-rail-card"
-                  onClick={() => setSelectedVideo(vid)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedVideo(vid);
-                    }
-                  }}
-                  aria-label={`Play: ${vid.title}`}
-                >
-                  <div className="hub-rail-thumb">
-                    <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
-                    <span className="hub-rail-play" aria-hidden="true">▶</span>
-                  </div>
-                  <div className="hub-rail-info">
-                    <div className="hub-rail-meta">
-                      <span className="hub-cat-name">{vid.category}</span>
-                      <span className="tabular-nums">{vid.duration}</span>
+                  <div className="inline-video-caption">
+                    <div className="inline-meta-bar">
+                      <span className="hub-tag-mono">{activeInlineVideo.category}</span>
+                      <span className="tabular-nums" style={{ fontSize: '0.82rem', color: 'var(--ink-muted)' }}>
+                        Duration: {activeInlineVideo.duration}
+                      </span>
                     </div>
-                    <h4>{vid.title}</h4>
-                    <p>{vid.description}</p>
+                    <h3>{activeInlineVideo.title}</h3>
+                    <p>{activeInlineVideo.description}</p>
                   </div>
-                </article>
-              ))}
+                </div>
+              ) : (
+                <div className="inline-placeholder-box">
+                  <img
+                    src="/images/illustrations/cardiac-anatomy-bright.webp"
+                    alt="Cardiac Anatomy Illustration"
+                    style={{ maxHeight: '300px', objectFit: 'contain' }}
+                  />
+                  <p style={{ marginTop: '1rem', fontWeight: 600, color: 'var(--ink-muted)' }}>
+                    Select a video from the list to begin watching
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Right Compact Side List */}
+            <div className="med-hub-rail" role="list" aria-label="Playlist items">
+              {filteredVideos.map((vid) => {
+                const isSelected = activeInlineVideo?.id === vid.id;
+                return (
+                  <article
+                    key={vid.id}
+                    className={`hub-rail-card ${isSelected ? 'is-selected' : ''}`}
+                    onClick={() => setActiveInlineVideo(vid)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveInlineVideo(vid);
+                      }
+                    }}
+                    aria-label={`Play: ${vid.title}`}
+                  >
+                    <div className="hub-rail-thumb">
+                      <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
+                      <span className="hub-rail-play" aria-hidden="true">
+                        {isSelected ? '■' : '▶'}
+                      </span>
+                    </div>
+                    <div className="hub-rail-info">
+                      <div className="hub-rail-meta">
+                        <span className="hub-cat-name">{vid.category}</span>
+                        <span className="tabular-nums">{vid.duration}</span>
+                      </div>
+                      <h4>{vid.title}</h4>
+                      <p>{vid.description}</p>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 3. AUTHENTIC NEWSPAPER CLIPPINGS PRESS ARCHIVE ── */}
+      {/* ── 3. SWIPEABLE EDITORIAL STACK — AUTHENTIC NEWSPAPER ARCHIVE ── */}
       <section className="section media-news-stage" aria-label="Newspaper and News Coverage">
         <SectionBackground variant="telemetry-grid" opacity={0.25} />
 
         <div className="container med-z1">
-          <div className="stage-header-row" style={{ marginBottom: '2.5rem' }}>
-            <div>
+          <div className="stage-header-row" style={{ marginBottom: '2rem', textAlign: 'center' }}>
+            <div style={{ margin: '0 auto', maxWidth: '680px' }}>
               <div className="section-kicker">Press Archive</div>
-              <h2 className="section-heading">Newspaper &amp; Media Coverage</h2>
+              <h2 className="section-heading">Genuine Newspaper &amp; Media Coverage</h2>
+              <p className="section-lead" style={{ margin: '0.5rem auto 0' }}>
+                Centred editorial stack featuring authentic scanned clippings from national publications. Drag left or right or use the navigation arrows.
+              </p>
             </div>
-            <p className="section-lead">
-              Genuine press clippings from leading national publications covering Dr. Praveen Chandra's breakthroughs and honors.
-            </p>
           </div>
 
-          <div className="news-clippings-grid">
-            {NEWS_ARTICLES.map((article, idx) => {
-              const fromLeft = idx % 2 === 0;
-              return (
-                <article
-                  key={article.id}
-                  className={`news-clipping-card ${fromLeft ? 'clip-from-left' : 'clip-from-right'} news-editorial-card`}
-                  onClick={() => setLightboxPhoto({ src: article.image, title: article.headline, caption: article.source + ' · ' + article.date })}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setLightboxPhoto({ src: article.image, title: article.headline, caption: article.source + ' · ' + article.date });
-                    }
-                  }}
-                  aria-label={`Enlarge newspaper clipping: ${article.headline}`}
-                >
-                  <div className="clip-image-frame">
-                    <img src={article.image} alt={article.headline} loading="lazy" />
-                    <div className="clip-zoom-overlay" aria-hidden="true">
-                      <span className="clip-zoom-icon">🔍 Enlarge</span>
+          {/* Centered Editorial Stack */}
+          <div className="press-stack-wrapper">
+            <div className="press-stack-container">
+              {NEWS_ARTICLES.map((article, idx) => {
+                // Determine stack layer relative to current index
+                const offset = (idx - stackIndex + NEWS_ARTICLES.length) % NEWS_ARTICLES.length;
+                if (offset > 2) return null; // Show top 3 cards in stack
+
+                const isTop = offset === 0;
+
+                return (
+                  <motion.div
+                    key={article.id}
+                    className={`press-stack-card ${isTop ? 'is-top-card' : ''}`}
+                    style={{
+                      zIndex: 10 - offset,
+                    }}
+                    animate={{
+                      scale: 1 - offset * 0.05,
+                      y: offset * 18,
+                      opacity: offset === 0 ? 1 : 0.75 - offset * 0.2,
+                    }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    drag={isTop ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    onDragEnd={(e, { offset: dragOffset }) => {
+                      if (Math.abs(dragOffset.x) > 80) {
+                        handleDismissCard(dragOffset.x > 0 ? 'right' : 'left');
+                      }
+                    }}
+                    onClick={() => {
+                      if (isTop) {
+                        setLightboxPhoto({
+                          src: article.image,
+                          title: article.headline,
+                          caption: `${article.source} · ${article.date}`,
+                        });
+                      }
+                    }}
+                  >
+                    <div className="stack-card-visual">
+                      <img src={article.image} alt={article.headline} />
+                      <div className="stack-card-zoom-hint">
+                        <span>🔍 Click to Enlarge Clipping</span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="clip-meta-strip">
-                    <span className="clip-source-badge">{article.source}</span>
-                    <span className="clip-date-tag">{article.date}</span>
-                    <span className="clip-topic-pill">{article.tag}</span>
-                  </div>
+                    <div className="stack-card-body">
+                      <div className="stack-meta-strip">
+                        <span className="clip-source-badge">{article.source}</span>
+                        <span className="clip-date-tag">{article.date}</span>
+                        <span className="clip-topic-pill">{article.tag}</span>
+                      </div>
+                      <h3>{article.headline}</h3>
+                      <p>{article.excerpt}</p>
 
-                  <div className="clip-caption-area">
-                    <h3>{article.headline}</h3>
-                    <p>{article.excerpt}</p>
-                  </div>
-                </article>
-              );
-            })}
+                      <div className="stack-card-action">
+                        <span className="stack-tap-hint">← Swipe card to advance →</span>
+                        <span className="stack-counter-mono">
+                          {stackIndex + 1} / {NEWS_ARTICLES.length}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Stack Manual Navigation Controls */}
+            <div className="press-stack-controls">
+              <button
+                type="button"
+                className="round-nav-btn"
+                onClick={() => {
+                  setIsStackPaused(true);
+                  setStackIndex((prev) => (prev - 1 + NEWS_ARTICLES.length) % NEWS_ARTICLES.length);
+                  setTimeout(() => setIsStackPaused(false), 8000);
+                }}
+                aria-label="Previous article"
+              >
+                ←
+              </button>
+              <span className="stack-indicator-dots">
+                {NEWS_ARTICLES.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`stack-dot ${i === stackIndex ? 'is-active' : ''}`}
+                    onClick={() => {
+                      setIsStackPaused(true);
+                      setStackIndex(i);
+                      setTimeout(() => setIsStackPaused(false), 8000);
+                    }}
+                  />
+                ))}
+              </span>
+              <button
+                type="button"
+                className="round-nav-btn"
+                onClick={() => {
+                  setIsStackPaused(true);
+                  setStackIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
+                  setTimeout(() => setIsStackPaused(false), 8000);
+                }}
+                aria-label="Next article"
+              >
+                →
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -500,7 +580,7 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 5. AUTO-CYCLING PUBLICATIONS & CLINICAL BRIEFS ── */}
+      {/* ── 5. PUBLICATIONS & CLINICAL BRIEFS (FULL PREVIEWS, NO OLD REDIRECTS) ── */}
       <section className="section media-pubs-stage" aria-label="Medical Publications">
         <div className="container med-z1">
           <div className="media-stage-header med-pubs-reveal">
@@ -511,7 +591,7 @@ export default function Media() {
           </div>
 
           <div className="pubs-split-stage med-pubs-reveal">
-            {/* Left Dynamic Uncropped Visual + Article Detail */}
+            {/* Left Dynamic Uncropped Visual + Full Article Excerpt */}
             <div className="pubs-visual-col">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -598,8 +678,8 @@ export default function Media() {
       )}
 
       {/* Video Modal Component */}
-      {selectedVideo && (
-        <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
+      {modalVideo && (
+        <VideoModal video={modalVideo} onClose={() => setModalVideo(null)} />
       )}
     </div>
   );

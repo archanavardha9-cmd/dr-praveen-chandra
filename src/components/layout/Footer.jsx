@@ -7,7 +7,8 @@ const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'About Dr. Chandra', path: '/about' },
   { label: 'Treatments & Devices', path: '/treatments' },
-  { label: 'Media & Publications', path: '/media' },
+  { label: 'Media & Press Archive', path: '/media' },
+  { label: 'Cardiology Blog', path: '/blog' },
   { label: 'Contact & OPD', path: '/contact' },
 ];
 

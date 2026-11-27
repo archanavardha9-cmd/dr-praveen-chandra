@@ -136,13 +136,8 @@ export default function Treatments() {
         );
         gsap.fromTo(
           '.trt-hero-centerpiece',
-          { opacity: 0, scale: 0.92 },
-          { opacity: 1, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.2 }
-        );
-        gsap.fromTo(
-          '.trt-specialty-card',
-          { opacity: 0, x: 40 },
-          { opacity: 1, x: 0, duration: 0.75, stagger: 0.08, ease: 'power3.out', delay: 0.25 }
+          { opacity: 0, scale: 0.92, x: 40 },
+          { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.2 }
         );
 
         // Continuous Hero Parallax on Scroll
@@ -279,7 +274,7 @@ export default function Treatments() {
             </div>
           </div>
 
-          {/* Panoramic 3-Column Command Grid */}
+          {/* Premium 2-Column Hero: Left Directives & Verifications, Right Prominent Clinical Centerpiece */}
           <div className="trt-hero-command-grid">
             {/* Col 1: Directive & Typography */}
             <div className="trt-hero-directive-col">
@@ -288,7 +283,7 @@ export default function Treatments() {
                 Precision Catheter Therapies &amp; Transcatheter Valve Repair
               </h1>
               <p className="trt-hero-lead">
-                Advanced percutaneous techniques eliminating sternotomy and heart-lung bypass for severe aortic stenosis, mitral regurgitation, and complex coronary blockages.
+                Advanced percutaneous techniques eliminating sternotomy and heart-lung bypass for severe aortic stenosis, mitral regurgitation, and complex multi-vessel coronary blockages under the leadership of Padma Shri Dr. Praveen Chandra.
               </p>
 
               <div className="trt-hero-actions">
@@ -298,7 +293,7 @@ export default function Treatments() {
                 </a>
               </div>
 
-              {/* Verified Metrics Strip */}
+              {/* Verified Clinical Credentials */}
               <div className="trt-hero-metrics-row">
                 <div className="trt-metric-pill">
                   <span className="trt-metric-val">1st in India</span>
@@ -306,16 +301,16 @@ export default function Treatments() {
                 </div>
                 <div className="trt-metric-pill">
                   <span className="trt-metric-val">Beating Heart</span>
-                  <span className="trt-metric-lbl">Zero Bypass</span>
+                  <span className="trt-metric-lbl">Zero Bypass Required</span>
                 </div>
                 <div className="trt-metric-pill">
-                  <span className="trt-metric-val">48–72h</span>
-                  <span className="trt-metric-lbl">Typical Ambulation</span>
+                  <span className="trt-metric-val">100+ Papers</span>
+                  <span className="trt-metric-lbl">Indexed Publications</span>
                 </div>
               </div>
             </div>
 
-            {/* Col 2: Centerpiece Cardiology Spotlight (Uncropped Contain Stage) */}
+            {/* Col 2: Prominent Medical Centerpiece Showcase (Full Width & Clean) */}
             <div className="trt-hero-centerpiece">
               <div className="trt-centerpiece-visual">
                 <img
@@ -327,23 +322,8 @@ export default function Treatments() {
               </div>
               <div className="trt-centerpiece-readout">
                 <span className="trt-readout-indicator" />
-                <span>Transcatheter Aortic Valve Implantation · Femoral Access</span>
+                <span>Transcatheter Aortic Valve Implantation · Non-Surgical Femoral Deployment</span>
               </div>
-            </div>
-
-            {/* Col 3: Verified Specialties Matrix */}
-            <div className="trt-hero-specialties-matrix" aria-label="Verified Cardiology Specialties">
-              {SPECIALTY_TILES.map((spec) => (
-                <div className="trt-specialty-card" key={spec.code}>
-                  <div className="trt-spec-head">
-                    <span className="trt-spec-icon">{spec.icon}</span>
-                    <span className="trt-spec-tag">{spec.tag}</span>
-                  </div>
-                  <h3>{spec.code}</h3>
-                  <div className="trt-spec-name">{spec.name}</div>
-                  <p>{spec.desc}</p>
-                </div>
-              ))}
             </div>
           </div>
         </div>

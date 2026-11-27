@@ -8,6 +8,8 @@ const Home = lazy(() => import('./pages/Home/Home'));
 const About = lazy(() => import('./pages/About/About'));
 const Treatments = lazy(() => import('./pages/Treatments/Treatments'));
 const Media = lazy(() => import('./pages/Media/Media'));
+const Blog = lazy(() => import('./pages/Blog/Blog'));
+const BlogDetail = lazy(() => import('./pages/Blog/BlogDetail'));
 const Contact = lazy(() => import('./pages/Contact/Contact'));
 
 function ScrollToTop() {
@@ -61,7 +63,10 @@ function AppContent() {
             <Route path="/about" element={<About />} />
             <Route path="/treatments" element={<Treatments />} />
             <Route path="/media" element={<Media />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<Home />} />
           </Routes>
         </Suspense>
       </main>
