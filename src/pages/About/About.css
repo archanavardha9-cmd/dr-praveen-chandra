@@ -365,22 +365,24 @@
   line-height: 1.6;
 }
 
-/* ── 4. HONORS & MILESTONES INTERACTIVE STAGE (PURE WHITE + SOFT TEAL ACCENT) ── */
+/* ── 4. HONORS & MILESTONES INTERACTIVE STAGE (VISUALLY BALANCED & COMPACT) ── */
 .about-ledger-stage {
   background: var(--canvas-white);
+  padding: clamp(48px, 6vw, 80px) 0;
+  border-bottom: 1px solid var(--border-hairline);
 }
 
 .ledger-filter-bar {
   display: flex;
-  gap: 0.45rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
 .ledger-filter-tab {
-  padding: 0.5rem 0.95rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
   font-size: 0.84rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-body);
   border: 1px solid var(--border-hairline);
   background: var(--canvas-ice);
@@ -391,31 +393,49 @@
   background: var(--accent-blue);
   color: #ffffff;
   border-color: var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(0, 91, 148, 0.15);
 }
 
 .ledger-interactive-grid {
   display: grid;
-  grid-template-columns: 0.94fr 1.06fr;
-  gap: clamp(1.75rem, 3.5vw, 3rem);
-  align-items: start;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .ledger-interactive-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .ledger-list-col {
-  border-top: 1px solid var(--border-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: space-between;
 }
 
 .ledger-select-row {
   width: 100%;
   text-align: left;
-  padding: 0.8rem 0.95rem;
-  border-bottom: 1px solid var(--border-hairline);
-  transition: background-color 180ms ease, padding-left 180ms ease;
+  padding: 1.1rem 1.25rem;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid var(--border-hairline);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .ledger-select-row:hover,
 .ledger-select-row.is-active {
-  background: var(--canvas-azure);
-  padding-left: 1.25rem;
+  background: #f8fbfe;
+  border-color: var(--accent-blue);
+  transform: translateX(4px);
+  box-shadow: 0 8px 24px rgba(0, 91, 148, 0.08);
 }
 
 .ledger-row-top {
@@ -423,43 +443,61 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.35rem;
 }
 
 .ledger-row-year {
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--accent-blue);
+  background: rgba(0, 91, 148, 0.08);
+  padding: 0.18rem 0.55rem;
+  border-radius: 9999px;
 }
 
 .ledger-row-cat {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--accent-teal);
 }
 
 .ledger-select-row h4 {
-  font-size: 0.96rem;
+  font-size: 1.02rem;
   color: var(--ink-primary);
+  margin-bottom: 0.25rem;
+  line-height: 1.35;
 }
 
+.ledger-item-summary {
+  font-size: 0.85rem;
+  color: var(--ink-body);
+  line-height: 1.45;
+}
+
+/* Right Balanced Spotlight Card */
 .ledger-spotlight-stage {
-  border-radius: var(--radius-xl);
-  background: linear-gradient(160deg, var(--canvas-ice) 0%, var(--canvas-teal) 100%);
+  border-radius: 20px;
+  background: #ffffff;
   border: 1px solid var(--border-strong);
   overflow: hidden;
   box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .ledger-stage-visual {
-  height: clamp(270px, 36vh, 360px);
-  background: #ffffff;
-  padding: 0.85rem;
+  height: clamp(220px, 28vh, 280px);
+  background: linear-gradient(180deg, #f8fbfe 0%, #edf5fc 100%);
+  padding: 1.15rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid var(--border-hairline);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .ledger-stage-visual img {
@@ -469,7 +507,11 @@
 }
 
 .ledger-stage-copy {
-  padding: 1.25rem 1.4rem;
+  padding: 1.15rem 1.4rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .ledger-stage-meta {
@@ -478,18 +520,20 @@
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--accent-blue);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.35rem;
 }
 
 .ledger-stage-copy h3 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
+  color: var(--ink-primary);
+  line-height: 1.3;
   margin-bottom: 0.45rem;
 }
 
 .ledger-stage-copy p {
-  font-size: 0.93rem;
+  font-size: 0.9rem;
   color: var(--ink-body);
-  line-height: 1.6;
+  line-height: 1.52;
 }
 
 /* ── 5. CTA RIBBON ── */

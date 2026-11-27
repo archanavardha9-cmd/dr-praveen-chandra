@@ -534,6 +534,59 @@ export const PUBLICATIONS_ARTICLES = [
   },
 ];
 
+export const NEWS_ARTICLES = [
+  {
+    id: 'news-tavi-toi',
+    headline: 'How TAVI & Made-in-India Heart Valves Are Slashing Costs and Saving High-Risk Lives',
+    source: 'The Times of India',
+    date: 'National Health Coverage',
+    tag: 'TAVI Innovation',
+    excerpt: 'Dr. Praveen Chandra explains how the rapid adoption of transcatheter aortic valves and Indian-manufactured devices enables life-saving non-surgical valve replacement for high-risk elderly patients.',
+    image: '/images/treatments/valve-replacement-tavi.webp',
+    link: 'https://timesofindia.indiatimes.com/',
+  },
+  {
+    id: 'news-padmashri-pib',
+    headline: 'President of India Confers Padma Shri on Medanta Interventional Cardiology Chief Dr. Praveen Chandra',
+    source: 'The Hindu / Press Information Bureau',
+    date: 'Rashtrapati Bhavan Investiture',
+    tag: 'National Honor',
+    excerpt: 'Conferred by President Pranab Mukherjee in recognition of Dr. Chandra’s pioneering contributions to interventional cardiology and structural heart innovation across India.',
+    image: '/images/doctor/dr-praveen-award-podium.webp',
+    link: 'https://drpraveenchandra.com/',
+  },
+  {
+    id: 'news-teer-et',
+    headline: 'Medanta Cardiologists Lead Breakthrough Transcatheter Edge-to-Edge Repair (TEER) for Leaking Valves',
+    source: 'The Economic Times / ET HealthWorld',
+    date: 'Structural Heart Special',
+    tag: 'MitraClip & TEER',
+    excerpt: 'Pioneering percutaneous mitral and tricuspid valve clipping on a beating heart, eliminating open-chest surgery for patients suffering from severe heart failure.',
+    image: '/images/illustrations/mitraclip-repair-diagram.webp',
+    link: 'https://www.medanta.org/media-listing/dr-praveen-chandra',
+  },
+  {
+    id: 'news-ivl-ht',
+    headline: 'Advances in Complex Coronary Angioplasty: Shockwave Intravascular Lithotripsy & Laser Revascularization',
+    source: 'Hindustan Times',
+    date: 'Cardiology Insights',
+    tag: 'Coronary Innovation',
+    excerpt: 'Dr. Praveen Chandra details the clinical application of localized sonic pressure waves to fracture dense calcification in rock-hard coronary arteries before stenting.',
+    image: '/images/illustrations/coronary-stent-ivl.webp',
+    link: 'https://drpraveenchandra.com/',
+  },
+  {
+    id: 'news-future-express',
+    headline: 'Minimally Invasive Structural Heart Interventions: The Future of Cardiac Surgery in India',
+    source: 'Express Healthcare',
+    date: 'Clinical Leadership',
+    tag: 'Thought Leadership',
+    excerpt: 'Clinical analysis on transitioning high-risk aortic stenosis, mitral insufficiency, and heart failure management from traditional sternotomy to transcatheter therapies.',
+    image: '/images/doctor/dr-praveen-cath-lab.webp',
+    link: 'https://www.medanta.org/media-listing/dr-praveen-chandra',
+  },
+];
+
 export const PHOTO_GALLERY = [
   {
     src: '/images/doctor/dr-praveen-cath-lab.webp',

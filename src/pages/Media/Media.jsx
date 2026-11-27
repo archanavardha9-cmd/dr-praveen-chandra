@@ -1,16 +1,16 @@
-// Media.jsx – Dynamic auto-cycling cinema stage, video archive, publications stage & gallery lightbox
+// Media.jsx – Redesigned Cinema Hero, Dynamic Video Hub, Zigzag Photo Archive, Newspaper Coverage & Publications
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SectionBackground from '../../components/backgrounds/SectionBackground';
 import VideoModal from '../../components/media/VideoModal';
-import AppointmentButton from '../../components/common/AppointmentButton';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import {
   MEDIA_VIDEOS,
   PUBLICATIONS_ARTICLES,
   PHOTO_GALLERY,
+  NEWS_ARTICLES,
   DOCTOR,
 } from '../../data/doctorData';
 import './Media.css';
@@ -25,21 +25,18 @@ const VIDEO_TABS = [
   { id: 'media', label: 'Ceremony & Telemedicine' },
 ];
 
-const SPOTLIGHT_VIDEOS = MEDIA_VIDEOS.slice(0, 4);
-
 export default function Media() {
-  const spotlightCycle = useAutoCycle(SPOTLIGHT_VIDEOS.length, 6000);
-  const pubCycle = useAutoCycle(PUBLICATIONS_ARTICLES.length, 5500);
-  const galleryCycle = useAutoCycle(PHOTO_GALLERY.length, 5200);
-
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
   const pageRef = useRef(null);
 
-  const activeSpotlight = SPOTLIGHT_VIDEOS[spotlightCycle.activeIndex];
+  // Auto-cycle for featured hero spotlight
+  const heroCycle = useAutoCycle(MEDIA_VIDEOS.slice(0, 4).length, 6000);
+  const currentHeroVideo = MEDIA_VIDEOS.slice(0, 4)[heroCycle.activeIndex];
+
+  const pubCycle = useAutoCycle(PUBLICATIONS_ARTICLES.length, 5500);
   const activePub = PUBLICATIONS_ARTICLES[pubCycle.activeIndex];
-  const activePhoto = PHOTO_GALLERY[galleryCycle.activeIndex];
 
   const filteredVideos =
     activeTab === 'all' ? MEDIA_VIDEOS : MEDIA_VIDEOS.filter((v) => v.type === activeTab);
@@ -49,22 +46,22 @@ export default function Media() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Cinema Hero Entrance & Continuous Scrub
+        // 1. Media Cinema Hero Entrance
         gsap.fromTo(
-          '.med-hero-left',
-          { opacity: 0, x: -48 },
+          '.med-hero-content',
+          { opacity: 0, x: -45 },
           { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
         );
         gsap.fromTo(
-          '.med-hero-right',
-          { opacity: 0, x: 48 },
-          { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
+          '.med-hero-theater',
+          { opacity: 0, scale: 0.93, x: 45 },
+          { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
         );
 
-        // Continuous Cinema Elevation on Scroll
-        gsap.to('.media-stage-box', {
-          yPercent: 12,
-          scale: 1.05,
+        // Continuous Hero Parallax
+        gsap.to('.med-hero-theater', {
+          yPercent: 10,
+          scale: 1.04,
           ease: 'none',
           scrollTrigger: {
             trigger: '.media-cinema-hero',
@@ -73,100 +70,90 @@ export default function Media() {
             scrub: 1,
           },
         });
-        gsap.to('.med-orbital-1', {
-          yPercent: -42,
-          xPercent: 12,
-          rotation: -3,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.media-cinema-hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
-        gsap.to('.med-orbital-2', {
-          yPercent: 32,
-          xPercent: -10,
-          rotation: 3,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.media-cinema-hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
 
-        // 2. Video Archive — entrance + continuous thumbnail zoom
+        // 2. Video Hub Section Reveals (Reversible)
         gsap.fromTo(
-          '.med-archive-row',
-          { opacity: 0, y: 32 },
+          '.med-hub-featured',
+          { opacity: 0, x: -40, scale: 0.96 },
           {
             opacity: 1,
-            y: 0,
-            duration: 0.7,
-            stagger: 0.08,
+            x: 0,
+            scale: 1,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.media-archive-stage',
-              start: 'top 86%',
-              end: 'bottom 10%',
+              start: 'top 85%',
+              end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
             },
           }
         );
         gsap.fromTo(
-          '.archive-thumb-wrap img',
-          { scale: 0.94 },
+          '.med-hub-rail',
+          { opacity: 0, x: 40 },
           {
-            scale: 1.06,
-            ease: 'none',
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
             scrollTrigger: {
               trigger: '.media-archive-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.2,
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
             },
           }
         );
 
-        // 3. Publications & Articles — entrance + continuous scrub
+        // 3. Newspaper Editorial Archive Reveals (Staggered Bottom Up)
+        const newsItems = gsap.utils.toArray('.news-editorial-card');
+        newsItems.forEach((item, idx) => {
+          gsap.fromTo(
+            item,
+            { opacity: 0, y: 35, scale: 0.97 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.7,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top 88%',
+                end: 'bottom 12%',
+                toggleActions: 'play reverse play reverse',
+              },
+            }
+          );
+        });
+
+        // 4. Zigzag Photo Archive Reveals (Alternating progressive expansion)
+        const photoRows = gsap.utils.toArray('.photo-zigzag-item');
+        photoRows.forEach((item, idx) => {
+          const fromLeft = idx % 2 === 0;
+          gsap.fromTo(
+            item,
+            { opacity: 0, x: fromLeft ? -50 : 50, scale: 0.94 },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top 86%',
+                end: 'bottom 12%',
+                toggleActions: 'play reverse play reverse',
+              },
+            }
+          );
+        });
+
+        // 5. Publications Showcase Reveal
         gsap.fromTo(
           '.med-pubs-reveal',
-          { opacity: 0, y: 34 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.media-pubs-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.pub-cover-image img',
-          { scale: 1.15, yPercent: -8 },
-          {
-            scale: 1.0,
-            yPercent: 8,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.media-pubs-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          }
-        );
-
-        // 4. Photo Gallery Mosaic
-        gsap.fromTo(
-          '.med-gal-reveal',
           { opacity: 0, y: 32 },
           {
             opacity: 1,
@@ -174,25 +161,10 @@ export default function Media() {
             duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
-              trigger: '.media-gallery-stage',
+              trigger: '.media-pubs-stage',
               start: 'top 85%',
               end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.gallery-hero-photo img',
-          { scale: 1.18, rotate: -2 },
-          {
-            scale: 1.02,
-            rotate: 2,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.media-gallery-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.2,
             },
           }
         );
@@ -206,142 +178,111 @@ export default function Media() {
 
   return (
     <div ref={pageRef} className="media-root">
-      {/* ── 1. AUTO-CYCLING SPOTLIGHT VIDEO CINEMA HERO ── */}
-      <section className="media-cinema-hero" aria-label="Featured Clinical Cinema">
-        <div className="media-hero-wedge" aria-hidden="true" />
-        <SectionBackground variant="multimedia-waves" opacity={0.45} />
+      {/* ── 1. REDESIGNED CINEMA HERO (HIGH-IMPACT STUDIO THEATER) ── */}
+      <section className="media-cinema-hero" aria-label="Clinical Cinema Hero">
+        <SectionBackground variant="multimedia-waves" opacity={0.65} />
 
         <div className="container med-z1">
-          <div className="media-cinema-header med-hero-left">
-            <div>
-              <div className="section-kicker">Media, Videos &amp; Research</div>
-              <h1 className="media-main-title">
-                Patient Guides, Stories &amp; Clinical Insights
-              </h1>
-            </div>
-            <p className="media-main-lead">
-              10 verified clinical videos covering TAVI valve replacement, IVL angioplasty, patient recovery journeys, and preventive guidance.
-            </p>
-          </div>
+          <div className="med-hero-split">
+            {/* Left Typography & Quick Media Counters */}
+            <div className="med-hero-content">
+              <div className="section-kicker">Clinical Media Library</div>
+              <h1 className="med-hero-title">Cardiology Cinema &amp; Clinical Explainers</h1>
+              <p className="med-hero-lead">
+                Verified video guides, surgical animations, and patient recovery stories covering TAVI valve replacement, Intravascular Lithotripsy, and beating-heart interventions with Dr. Praveen Chandra.
+              </p>
 
-          <div className="media-spotlight-grid">
-            {/* Left Large 16:9 Cinema Stage with 3D Depth */}
-            <div className="media-player-col med-hero-left perspective-stage" style={{ position: 'relative' }}>
-              <div className="floating-orbital-badge floating-orbital-badge--gold med-orbital-1" style={{ top: '-14px', right: '-10px' }}>
-                <span>🎬</span>
-                <span>11+ Verified Films</span>
-              </div>
-              <div className="floating-orbital-badge floating-orbital-badge--teal med-orbital-2" style={{ bottom: '16px', left: '-10px' }}>
-                <span>📺</span>
-                <span>Live YouTube Demonstrations</span>
+              <div className="med-hero-metrics">
+                <div className="med-metric-chip">
+                  <span className="med-metric-num">10+</span>
+                  <span className="med-metric-label">Clinical Films</span>
+                </div>
+                <div className="med-metric-chip">
+                  <span className="med-metric-num">100+</span>
+                  <span className="med-metric-label">Research Papers</span>
+                </div>
+                <div className="med-metric-chip">
+                  <span className="med-metric-num">5</span>
+                  <span className="med-metric-label">National Press Reports</span>
+                </div>
               </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeSpotlight.id}
-                  className="media-stage-box"
-                  initial={{ opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              <div className="med-hero-actions">
+                <button
+                  type="button"
+                  className="btn-clinical btn-clinical--primary"
+                  onClick={() => setSelectedVideo(currentHeroVideo)}
                 >
-                  <div
-                    className="media-stage-poster"
-                    onClick={() => setSelectedVideo(activeSpotlight)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setSelectedVideo(activeSpotlight);
-                      }
-                    }}
-                    aria-label={`Play video: ${activeSpotlight.title}`}
-                  >
-                    <img src={activeSpotlight.thumbnail} alt={activeSpotlight.title} loading="eager" />
-                    <div className="media-play-ring" aria-hidden="true">
-                      <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  <div className="media-stage-caption">
-                    <div>
-                      <span className="media-cap-meta">
-                        {activeSpotlight.category} · <span className="tabular-nums">{activeSpotlight.duration}</span>
-                      </span>
-                      <h2>{activeSpotlight.title}</h2>
-                      <p>{activeSpotlight.description}</p>
-                    </div>
-                    <div className="media-cap-actions">
-                      <button
-                        type="button"
-                        className="btn-clinical btn-clinical--primary"
-                        onClick={() => setSelectedVideo(activeSpotlight)}
-                      >
-                        Play Video
-                      </button>
-                      <a
-                        href={`https://www.youtube.com/watch?v=${activeSpotlight.youtubeId}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-clinical btn-clinical--secondary"
-                      >
-                        YouTube ↗
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+                  Watch Featured Film
+                </button>
+                <a
+                  href={DOCTOR.medantaMediaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-clinical btn-clinical--secondary"
+                >
+                  Medanta Press Desk ↗
+                </a>
+              </div>
             </div>
 
-            {/* Right Auto-Cycling Spotlight Selector */}
-            <div className="media-spotlight-list med-hero-right" role="tablist" aria-label="Spotlight playlist">
-              {SPOTLIGHT_VIDEOS.map((vid, idx) => {
-                const isActive = spotlightCycle.activeIndex === idx;
-                return (
-                  <button
-                    key={vid.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`med-spot-row ${isActive ? 'is-active' : ''}`}
-                    onClick={() => spotlightCycle.selectIndex(idx)}
-                  >
-                    <div className="med-spot-thumb">
-                      <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
-                    </div>
-                    <div className="med-spot-info">
-                      <span className="med-spot-cat">
-                        {vid.category} · <span className="tabular-nums">{vid.duration}</span>
-                      </span>
-                      <h3>{vid.title}</h3>
-                      {isActive && (
-                        <div className="cycle-progress-track" style={{ marginTop: '0.45rem' }}>
-                          <div
-                            key={`ms-vid-prog-${spotlightCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                            style={{ animationDuration: '6s' }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+            {/* Right Sleek 16:9 Featured Cinema Frame */}
+            <div className="med-hero-theater">
+              <div
+                className="theater-screen-box"
+                onClick={() => setSelectedVideo(currentHeroVideo)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedVideo(currentHeroVideo);
+                  }
+                }}
+                aria-label={`Play featured film: ${currentHeroVideo.title}`}
+              >
+                <img
+                  src={currentHeroVideo.thumbnail}
+                  alt={currentHeroVideo.title}
+                  loading="eager"
+                />
+                <div className="theater-play-badge" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
+                  </svg>
+                </div>
+                <div className="theater-live-tag">
+                  <span className="live-dot" />
+                  <span>Featured Film</span>
+                </div>
+              </div>
+
+              <div className="theater-caption-bar">
+                <div>
+                  <span className="theater-cat-mono">{currentHeroVideo.category} · {currentHeroVideo.duration}</span>
+                  <h3>{currentHeroVideo.title}</h3>
+                </div>
+                <button
+                  type="button"
+                  className="round-nav-btn"
+                  onClick={() => setSelectedVideo(currentHeroVideo)}
+                  aria-label="Play video"
+                >
+                  ▶
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 2. FILTERABLE FULL VIDEO ARCHIVE (OPEN VISUAL ROWS) ── */}
-      <section className="section media-archive-stage" aria-label="Complete Video Archive">
+      {/* ── 2. REDESIGNED FULL VIDEO ARCHIVE (CREATIVE MEDIA HUB) ── */}
+      <section className="section media-archive-stage" id="videos" aria-label="Complete Video Archive">
         <div className="container med-z1">
           <div className="media-stage-header">
             <div>
-              <div className="section-kicker">01 · Full Video Archive</div>
-              <h2 className="section-heading">All {MEDIA_VIDEOS.length} Verified Educational Videos</h2>
+              <div className="section-kicker">Video Directory</div>
+              <h2 className="section-heading">Browse All {MEDIA_VIDEOS.length} Educational Videos</h2>
             </div>
 
             <div className="media-filter-tabs" role="tablist" aria-label="Filter videos by category">
@@ -360,11 +301,68 @@ export default function Media() {
             </div>
           </div>
 
-          <div className="media-archive-list">
-            {filteredVideos.map((vid, idx) => (
-              <article key={vid.id} className="med-archive-row">
+          {/* Asymmetrical Media Hub Layout: Featured Video + Sleek Playlist Rail */}
+          <div className="media-hub-grid">
+            {/* Left Featured Large Premiere Video */}
+            {filteredVideos[0] && (
+              <article className="med-hub-featured">
                 <div
-                  className="med-row-poster"
+                  className="hub-featured-poster"
+                  onClick={() => setSelectedVideo(filteredVideos[0])}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedVideo(filteredVideos[0]);
+                    }
+                  }}
+                  aria-label={`Play: ${filteredVideos[0].title}`}
+                >
+                  <img
+                    src={filteredVideos[0].thumbnail}
+                    alt={filteredVideos[0].title}
+                    loading="lazy"
+                  />
+                  <div className="hub-play-circle" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
+                    </svg>
+                  </div>
+                  <span className="hub-duration-tag">{filteredVideos[0].duration}</span>
+                </div>
+
+                <div className="hub-featured-details">
+                  <span className="hub-tag-mono">{filteredVideos[0].category}</span>
+                  <h3>{filteredVideos[0].title}</h3>
+                  <p>{filteredVideos[0].description}</p>
+                  <div className="hub-featured-actions">
+                    <button
+                      type="button"
+                      className="btn-clinical btn-clinical--primary"
+                      onClick={() => setSelectedVideo(filteredVideos[0])}
+                    >
+                      Watch Video
+                    </button>
+                    <a
+                      href={`https://www.youtube.com/watch?v=${filteredVideos[0].youtubeId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-clinical btn-clinical--secondary"
+                    >
+                      YouTube ↗
+                    </a>
+                  </div>
+                </div>
+              </article>
+            )}
+
+            {/* Right Compact Sleek Playlist Rail */}
+            <div className="med-hub-rail" role="list" aria-label="Playlist items">
+              {filteredVideos.slice(1).map((vid) => (
+                <article
+                  key={vid.id}
+                  className="hub-rail-card"
                   onClick={() => setSelectedVideo(vid)}
                   role="button"
                   tabIndex={0}
@@ -374,53 +372,138 @@ export default function Media() {
                       setSelectedVideo(vid);
                     }
                   }}
-                  aria-label={`Play ${vid.title}`}
+                  aria-label={`Play: ${vid.title}`}
                 >
-                  <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
-                  <span className="med-row-play" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
-                    </svg>
-                  </span>
-                </div>
-
-                <div className="med-row-info">
-                  <span className="med-row-meta tabular-nums">
-                    0{idx + 1} · {vid.category} · {vid.duration}
-                  </span>
-                  <h3>{vid.title}</h3>
-                  <p>{vid.description}</p>
-                </div>
-
-                <div className="med-row-actions">
-                  <button
-                    type="button"
-                    className="btn-clinical btn-clinical--primary"
-                    onClick={() => setSelectedVideo(vid)}
-                  >
-                    Play Video
-                  </button>
-                  <a
-                    href={`https://www.youtube.com/watch?v=${vid.youtubeId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-clinical btn-clinical--secondary"
-                  >
-                    Open in YouTube ↗
-                  </a>
-                </div>
-              </article>
-            ))}
+                  <div className="hub-rail-thumb">
+                    <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
+                    <span className="hub-rail-play" aria-hidden="true">▶</span>
+                  </div>
+                  <div className="hub-rail-info">
+                    <div className="hub-rail-meta">
+                      <span className="hub-cat-name">{vid.category}</span>
+                      <span className="tabular-nums">{vid.duration}</span>
+                    </div>
+                    <h4>{vid.title}</h4>
+                    <p>{vid.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 3. AUTO-CYCLING PUBLICATIONS & INSIGHTS STAGE (LUMINOUS AZURE) ── */}
+      {/* ── 3. AUTHENTIC NEWSPAPER & NEWS ARTICLES SECTION ── */}
+      <section className="section media-news-stage" aria-label="Newspaper and News Coverage">
+        <SectionBackground variant="telemetry-grid" opacity={0.25} />
+
+        <div className="container med-z1">
+          <div className="stage-header-row" style={{ marginBottom: '2.5rem' }}>
+            <div>
+              <div className="section-kicker">Press Archive</div>
+              <h2 className="section-heading">Newspaper &amp; Media Coverage</h2>
+            </div>
+            <p className="section-lead">
+              Verified clinical breakthroughs and national honors reported by leading news publications.
+            </p>
+          </div>
+
+          <div className="news-editorial-grid">
+            {NEWS_ARTICLES.map((article, idx) => {
+              const isEven = idx % 2 === 0;
+              return (
+                <article
+                  key={article.id}
+                  className={`news-editorial-card ${isEven ? 'news-align-left' : 'news-align-right'}`}
+                >
+                  <div className="news-card-visual">
+                    <img src={article.image} alt={article.headline} loading="lazy" />
+                  </div>
+
+                  <div className="news-card-content">
+                    <div className="news-meta-strip">
+                      <span className="news-source-badge">{article.source}</span>
+                      <span className="news-date-tag">{article.date}</span>
+                    </div>
+
+                    <h3>{article.headline}</h3>
+                    <p>{article.excerpt}</p>
+
+                    <div className="news-action-row">
+                      <a
+                        href={article.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="news-read-link"
+                      >
+                        Read Press Report ↗
+                      </a>
+                      <span className="news-topic-pill">{article.tag}</span>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. COMPACT EDITORIAL ZIGZAG PHOTO ARCHIVE ── */}
+      <section className="section media-zigzag-gallery" aria-label="Clinical Photography Archive">
+        <div className="container med-z1">
+          <div className="stage-header-row" style={{ marginBottom: '2.25rem' }}>
+            <div>
+              <div className="section-kicker">Photo Archive</div>
+              <h2 className="section-heading">Clinical Practice &amp; Honors Gallery</h2>
+            </div>
+            <p className="section-lead">
+              Curated photographic record spanning catheterization suites, national investitures, and global faculty symposia.
+            </p>
+          </div>
+
+          {/* Compact Zigzag Editorial Arrangement */}
+          <div className="photo-zigzag-container">
+            {PHOTO_GALLERY.map((photo, idx) => {
+              const isLandscape = idx % 2 === 0;
+              return (
+                <div
+                  key={photo.src}
+                  className={`photo-zigzag-item ${isLandscape ? 'is-landscape' : 'is-portrait'}`}
+                  onClick={() => setLightboxPhoto(photo)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setLightboxPhoto(photo);
+                    }
+                  }}
+                  aria-label={`Enlarge photo: ${photo.title}`}
+                >
+                  <div className="photo-zigzag-frame">
+                    <img src={photo.src} alt={photo.title} loading="lazy" />
+                    <div className="photo-reveal-overlay">
+                      <span className="photo-zoom-icon">🔍</span>
+                    </div>
+                  </div>
+                  <div className="photo-zigzag-caption">
+                    <span className="photo-cat-mono">{photo.category}</span>
+                    <h4>{photo.title}</h4>
+                    <p>{photo.caption}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. AUTO-CYCLING PUBLICATIONS & CLINICAL BRIEFS ── */}
       <section className="section media-pubs-stage" aria-label="Medical Publications">
         <div className="container med-z1">
           <div className="media-stage-header med-pubs-reveal">
             <div>
-              <div className="section-kicker">02 · Clinical Writings &amp; Research</div>
+              <div className="section-kicker">Clinical Writings &amp; Research</div>
               <h2 className="section-heading">100+ Indexed Papers &amp; Clinical Briefs</h2>
             </div>
             <a
@@ -501,139 +584,36 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 4. AUTO-CYCLING PHOTO SHOWCASE & LIGHTBOX ── */}
-      <section className="section media-gallery-stage" aria-label="Clinical Photography Showcase">
-        <div className="container med-z1">
-          <div className="media-stage-header med-gal-reveal">
-            <div>
-              <div className="section-kicker">03 · Photo Archive</div>
-              <h2 className="section-heading">Clinical Practice, Padma Shri &amp; Symposia</h2>
-            </div>
-            <a
-              href={DOCTOR.medantaMediaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-clinical btn-clinical--secondary"
-            >
-              Medanta Press Archive ↗
-            </a>
-          </div>
-
-          <div className="gal-stage-layout med-gal-reveal">
-            <div className="gal-focal-frame">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activePhoto.src}
-                  className="gal-focal-inner"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-                  onClick={() => setLightboxPhoto(activePhoto)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setLightboxPhoto(activePhoto);
-                    }
-                  }}
-                  aria-label={`Zoom image: ${activePhoto.title}`}
-                >
-                  <img src={activePhoto.src} alt={activePhoto.title} loading="lazy" />
-                </motion.div>
-              </AnimatePresence>
-
-              <div className="gal-focal-caption">
-                <div>
-                  <span className="gal-cat-mono">{activePhoto.category}</span>
-                  <h3>{activePhoto.title}</h3>
-                  <p>{activePhoto.caption}</p>
-                </div>
-                <button
-                  type="button"
-                  className="btn-clinical btn-clinical--secondary"
-                  onClick={() => setLightboxPhoto(activePhoto)}
-                >
-                  Enlarge ↗
-                </button>
-              </div>
-            </div>
-
-            <div className="gal-strip-grid" role="tablist" aria-label="Select gallery photo">
-              {PHOTO_GALLERY.map((photo, idx) => {
-                const isActive = galleryCycle.activeIndex === idx;
-                return (
-                  <button
-                    key={photo.src}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`gal-thumb-btn ${isActive ? 'is-active' : ''}`}
-                    onClick={() => galleryCycle.selectIndex(idx)}
-                  >
-                    <div className="gal-thumb-img">
-                      <img src={photo.src} alt={photo.title} loading="lazy" />
-                    </div>
-                    <span>{photo.title}</span>
-                    {isActive && (
-                      <div className="cycle-progress-track" style={{ marginTop: '0.4rem' }}>
-                        <div
-                          key={`gal-prog-${galleryCycle.cycleKey}`}
-                          className="cycle-progress-bar"
-                          style={{ animationDuration: '5.2s' }}
-                        />
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. COMPACT CTA RIBBON ── */}
-      <section className="media-cta-ribbon" aria-label="Schedule Appointment">
-        <div className="container">
-          <div className="media-cta-flex">
-            <div>
-              <h2>Consult Dr. Praveen Chandra at Medanta</h2>
-              <p>In-person cardiology clinics &amp; remote record evaluations at Sector 38, Gurugram.</p>
-            </div>
-            <AppointmentButton variant="white" size="lg" label="Book Appointment" />
-          </div>
-        </div>
-      </section>
-
-      {selectedVideo && (
-        <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
-      )}
-
+      {/* Lightbox Modal */}
       {lightboxPhoto && (
         <div
-          className="photo-lightbox-overlay"
+          className="gal-lightbox"
           onClick={() => setLightboxPhoto(null)}
           role="dialog"
           aria-modal="true"
           aria-label={lightboxPhoto.title}
         >
-          <div className="photo-lightbox-dialog" onClick={(e) => e.stopPropagation()}>
+          <div className="gal-lightbox-inner" onClick={(e) => e.stopPropagation()}>
+            <img src={lightboxPhoto.src} alt={lightboxPhoto.title} />
+            <div className="gal-lightbox-info">
+              <h3>{lightboxPhoto.title}</h3>
+              <p>{lightboxPhoto.caption}</p>
+            </div>
             <button
               type="button"
-              className="photo-lightbox-close"
+              className="gal-lightbox-close"
               onClick={() => setLightboxPhoto(null)}
-              aria-label="Close photo preview"
+              aria-label="Close image"
             >
               ✕
             </button>
-            <img src={lightboxPhoto.src} alt={lightboxPhoto.title} />
-            <div className="photo-lightbox-meta">
-              <h4>{lightboxPhoto.title}</h4>
-              <p>{lightboxPhoto.caption}</p>
-            </div>
           </div>
         </div>
+      )}
+
+      {/* Video Modal Component */}
+      {selectedVideo && (
+        <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
       )}
     </div>
   );

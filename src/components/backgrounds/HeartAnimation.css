@@ -1,4 +1,4 @@
-/* HeartAnimation.css – Bright subtle clinical motion */
+/* HeartAnimation.css – Bright visible clinical motion */
 
 .heart-bg-layer {
   position: absolute;
@@ -15,16 +15,16 @@
 
 .spin-slow {
   transform-origin: 520px 260px;
-  animation: gentleSpin 48s linear infinite;
+  animation: gentleSpin 42s linear infinite;
 }
 
 .spin-reverse {
   transform-origin: 520px 260px;
-  animation: gentleSpinReverse 64s linear infinite;
+  animation: gentleSpinReverse 52s linear infinite;
 }
 
 .ambient-node {
-  animation: nodeFloat 5.5s ease-in-out infinite;
+  animation: nodeFloat 4.8s ease-in-out infinite;
 }
 
 @keyframes clinicalEcgDraw {
@@ -44,6 +44,6 @@
 }
 
 @keyframes nodeFloat {
-  0%, 100% { transform: translateY(0px); opacity: 0.35; }
-  50% { transform: translateY(-6px); opacity: 0.85; }
+  0%, 100% { transform: translateY(0px) scale(1); opacity: 0.55; }
+  50% { transform: translateY(-7px) scale(1.15); opacity: 1; }
 }

@@ -215,11 +215,11 @@
 .anatomy-image-holder {
   position: relative;
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
   aspect-ratio: 1 / 1;
-  border-radius: 9999px;
+  border-radius: 28px;
   background: #ffffff;
-  padding: 1.25rem;
+  padding: 1.75rem;
   box-shadow: 0 22px 54px rgba(4, 32, 54, 0.28);
 }
 
@@ -306,10 +306,10 @@
 
 .anat-matched-visual {
   width: 100%;
-  height: 250px;
+  height: clamp(280px, 35vh, 360px);
   border-radius: var(--radius-lg);
   background: #ffffff;
-  padding: 0.65rem;
+  padding: 1.25rem;
   box-shadow: 0 16px 38px rgba(4, 32, 54, 0.26);
   display: flex;
   align-items: center;

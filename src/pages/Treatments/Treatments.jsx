@@ -1,67 +1,90 @@
-// Treatments.jsx – Dynamic auto-cycling procedure showcase, open alternating rows & interactive comparison
+// Treatments.jsx – Redesigned Hero, Auto-Cycling Procedure Showcase, Alternating Catalog & Premium Appointment Banner
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
 import SectionBackground from '../../components/backgrounds/SectionBackground';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
-import { TREATMENTS } from '../../data/doctorData';
+import { TREATMENTS, CONTACT_INFO } from '../../data/doctorData';
 import './Treatments.css';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const FILTER_TABS = [
-  'All Procedures',
-  'Structural Heart',
-  'Coronary',
-  'Emergency',
-  'Vascular & Rhythm',
-];
 
 const COMPARISON_PARAMS = [
   {
     id: 'access',
     label: 'Access',
     param: 'Access & Incision',
-    surgery: 'Full sternotomy chest incision',
-    catheter: 'Femoral groin micro-puncture',
+    surgery: 'Full sternotomy chest incision with surgical rib spreading',
+    catheter: 'Femoral groin micro-puncture (pinhole access, zero chest scar)',
   },
   {
     id: 'bypass',
     label: 'Bypass',
     param: 'Cardiopulmonary Bypass',
-    surgery: 'Requires heart-lung bypass machine',
-    catheter: 'Performed on a beating heart without bypass',
+    surgery: 'Requires heart-lung machine to arrest the heart during surgery',
+    catheter: 'Performed on a beating heart without cardiopulmonary bypass',
   },
   {
     id: 'anesthesia',
     label: 'Anesthesia',
     param: 'Anesthesia Protocol',
-    surgery: 'Deep general anesthesia with ventilator',
-    catheter: 'Local anesthesia with twilight sedation in most cases',
+    surgery: 'Deep general anesthesia requiring mechanical endotracheal ventilation',
+    catheter: 'Local anesthesia with conscious twilight sedation in most candidates',
   },
   {
     id: 'stay',
     label: 'Hospital Stay',
     param: 'Typical Hospital Stay',
-    surgery: '7 to 14 days including intensive care',
-    catheter: 'Commonly 48 to 72 hours for uncomplicated TAVI',
+    surgery: '7 to 14 days including intensive care recovery',
+    catheter: 'Commonly 48 to 72 hours for uncomplicated catheter procedures',
   },
   {
     id: 'recovery',
     label: 'Recovery',
     param: 'Mobilization & Return',
-    surgery: '2 to 3 months of restricted chest recovery',
-    catheter: 'Early ambulation; rapid return to daily routine',
+    surgery: '2 to 3 months of restricted sternal bone healing and physical care',
+    catheter: 'Ambulation within 24 hours; fast return to daily activities',
   },
   {
     id: 'safety',
     label: 'High-Risk',
     param: 'High-Risk / Elderly Patients',
-    surgery: 'Often prohibitive due to age or frailty',
-    catheter: 'Established alternative evaluated by the Heart Team',
+    surgery: 'Often prohibitive or high risk due to age, frailty, or co-morbidities',
+    catheter: 'Gold standard established therapy evaluated by the Heart Team',
+  },
+];
+
+const SPECIALTY_TILES = [
+  {
+    code: 'TAVI / TAVR',
+    name: 'Transcatheter Aortic Valve',
+    tag: '1st in India',
+    desc: 'Catheter bioprosthesis deployed inside native aortic valve without open surgery.',
+    icon: '🫀',
+  },
+  {
+    code: 'MitraClip / TEER',
+    name: 'Percutaneous Mitral Repair',
+    tag: '1st in India',
+    desc: 'Beating-heart edge-to-edge clip therapy for severe mitral and tricuspid leakage.',
+    icon: '🩺',
+  },
+  {
+    code: 'CTO & Left Main',
+    name: 'Complex Coronary PCI',
+    tag: 'High Precision',
+    desc: 'Multi-vessel revascularization for 100% chronically occluded arteries.',
+    icon: '🔬',
+  },
+  {
+    code: 'Shockwave IVL & FFR',
+    name: 'Sonic Lithotripsy & Physiology',
+    tag: 'Dense Calcium',
+    desc: 'Intravascular acoustic waves fracture severe calcium for safe stent expansion.',
+    icon: '⚡',
   },
 ];
 
@@ -69,32 +92,28 @@ export default function Treatments() {
   const location = useLocation();
   const pageRef = useRef(null);
 
-  const stageCycle = useAutoCycle(TREATMENTS.length, 5600);
-  const compCycle = useAutoCycle(COMPARISON_PARAMS.length, 4600);
+  // Auto-cycling 7 procedures in the directory showcase
+  const procedureCycle = useAutoCycle(TREATMENTS.length, 6200);
+  const compCycle = useAutoCycle(COMPARISON_PARAMS.length, 4800);
 
-  const [activeFilter, setActiveFilter] = useState('All Procedures');
   const [compareView, setCompareView] = useState('interactive');
 
-  const activeProcedure = TREATMENTS[stageCycle.activeIndex];
+  const activeProcedure = TREATMENTS[procedureCycle.activeIndex];
   const activeComp = COMPARISON_PARAMS[compCycle.activeIndex];
 
-  const filteredTreatments =
-    activeFilter === 'All Procedures'
-      ? TREATMENTS
-      : TREATMENTS.filter((t) => t.category === activeFilter);
-
+  // Handle deep link hashes to auto-select matching procedure
   useEffect(() => {
     if (!location.hash) return;
     const id = location.hash.replace('#', '');
     const matchedIdx = TREATMENTS.findIndex((t) => t.id === id);
     if (matchedIdx !== -1) {
-      stageCycle.selectIndex(matchedIdx);
+      procedureCycle.selectIndex(matchedIdx);
     }
     const el = document.getElementById(id);
     if (el) {
       setTimeout(() => {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 140);
+      }, 150);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.hash]);
@@ -104,94 +123,103 @@ export default function Treatments() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Hero entrance & Continuous 3D scrub
+        // 1. Treatments Hero — Progressive Staged Reveal
         gsap.fromTo(
-          '.trt-hero-left',
-          { opacity: 0, x: -48 },
-          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
+          '.trt-hero-status-strip',
+          { opacity: 0, y: -24 },
+          { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }
         );
         gsap.fromTo(
-          '.trt-hero-right',
-          { opacity: 0, x: 48, scale: 0.94 },
-          { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.1 }
+          '.trt-hero-directive-col',
+          { opacity: 0, x: -50 },
+          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay: 0.1 }
+        );
+        gsap.fromTo(
+          '.trt-hero-centerpiece',
+          { opacity: 0, scale: 0.92 },
+          { opacity: 1, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.2 }
+        );
+        gsap.fromTo(
+          '.trt-specialty-card',
+          { opacity: 0, x: 40 },
+          { opacity: 1, x: 0, duration: 0.75, stagger: 0.08, ease: 'power3.out', delay: 0.25 }
         );
 
-        // Continuous Hero Scrubbed 3D Tilt
-        gsap.to('.trt-display-visual img', {
-          yPercent: -14,
-          scale: 1.08,
-          rotateX: 6,
+        // Continuous Hero Parallax on Scroll
+        gsap.to('.trt-hero-centerpiece img', {
+          yPercent: -12,
+          scale: 1.05,
           ease: 'none',
           scrollTrigger: {
-            trigger: '.trt-stage-hero',
+            trigger: '.treatments-hero-monument',
             start: 'top top',
             end: 'bottom top',
             scrub: 1,
           },
         });
-        gsap.to('.trt-orbital-1', {
-          yPercent: -42,
-          xPercent: 12,
-          rotation: -3,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.trt-stage-hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
-        gsap.to('.trt-orbital-2', {
-          yPercent: 34,
-          xPercent: -10,
-          rotation: 3,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.trt-stage-hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
 
-        // 2. Catalog Rows with Continuous Parallax Zoom
+        // 2. Full Procedure Directory Showcase — Reversible Split Animation
         gsap.fromTo(
-          '.trt-alt-row',
-          { opacity: 0, y: 40 },
+          '.dir-showcase-rail',
+          { opacity: 0, x: -45 },
           {
             opacity: 1,
-            y: 0,
+            x: 0,
             duration: 0.8,
-            stagger: 0.1,
             ease: 'power3.out',
             scrollTrigger: {
-              trigger: '.trt-catalog-stage',
-              start: 'top 84%',
-              end: 'bottom 10%',
+              trigger: '.trt-directory-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
             },
           }
         );
         gsap.fromTo(
-          '.trt-row-visual img',
-          { scale: 0.9, rotate: -3 },
+          '.dir-showcase-display',
+          { opacity: 0, x: 45, scale: 0.96 },
           {
-            scale: 1.06,
-            rotate: 2,
-            ease: 'none',
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.85,
+            ease: 'power3.out',
             scrollTrigger: {
-              trigger: '.trt-catalog-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.2,
+              trigger: '.trt-directory-stage',
+              start: 'top 85%',
+              end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
             },
           }
         );
 
-        // 3. Comparison Stage Reveal
+        // 3. Alternating Catalog Rows — Alternating Directional Reveals
+        const rows = gsap.utils.toArray('.trt-zigzag-row');
+        rows.forEach((row, i) => {
+          const fromLeft = i % 2 === 0;
+          gsap.fromTo(
+            row,
+            { opacity: 0, x: fromLeft ? -45 : 45, y: 25 },
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              duration: 0.8,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: row,
+                start: 'top 88%',
+                end: 'bottom 12%',
+                toggleActions: 'play reverse play reverse',
+              },
+            }
+          );
+        });
+
+        // 4. Comparison Stage Reveal
         gsap.fromTo(
           '.trt-comp-reveal',
-          { opacity: 0, y: 32 },
+          { opacity: 0, y: 35 },
           {
             opacity: 1,
             y: 0,
@@ -199,8 +227,27 @@ export default function Treatments() {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.trt-compare-stage',
-              start: 'top 84%',
+              start: 'top 85%',
               end: 'bottom 12%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+
+        // 5. Final Appointment Banner Reveal
+        gsap.fromTo(
+          '.trt-appointment-content',
+          { opacity: 0, scale: 0.94, y: 30 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.trt-appointment-banner',
+              start: 'top 85%',
+              end: 'bottom 15%',
               toggleActions: 'play reverse play reverse',
             },
           }
@@ -211,80 +258,156 @@ export default function Treatments() {
     });
 
     return () => mm.revert();
-  }, [activeFilter]);
+  }, []);
 
   return (
     <div ref={pageRef} className="treatments-root">
-      {/* ── 1. AUTO-CYCLING 7-PROCEDURE INTERACTIVE HERO STAGE ── */}
-      <section className="trt-stage-hero" aria-label="Interactive Procedures Stage">
-        <div className="trt-hero-wedge" aria-hidden="true" />
-        <SectionBackground variant="valve-motion" opacity={0.48} />
+      {/* ── 1. BRAND-NEW PREMIUM TREATMENTS HERO (ARCHITECTURAL COMMAND CENTER) ── */}
+      <section className="treatments-hero-monument" aria-label="Cardiology Treatments Overview">
+        <SectionBackground variant="valve-motion" opacity={0.65} />
 
         <div className="container trt-z1">
-          <div className="trt-stage-top">
-            <div className="trt-hero-left">
-              <div className="section-kicker">Specialized Interventions</div>
-              <h1 className="trt-main-title">
-                Catheter Therapies &amp; Heart Valve Care
+          {/* Top Clinical Accreditation Strip */}
+          <div className="trt-hero-status-strip">
+            <div className="trt-hero-chip">
+              <span className="trt-chip-pulse" />
+              <span>Chairman, Interventional Cardiology · Medanta – The Medicity, Gurugram</span>
+            </div>
+            <div className="trt-hero-chip trt-hero-chip--gold">
+              <span>🏅</span>
+              <span>Padma Shri Awardee 2016 · Pioneer of TAVI &amp; MitraClip in India</span>
+            </div>
+          </div>
+
+          {/* Panoramic 3-Column Command Grid */}
+          <div className="trt-hero-command-grid">
+            {/* Col 1: Directive & Typography */}
+            <div className="trt-hero-directive-col">
+              <div className="section-kicker">Catheter Interventions</div>
+              <h1 className="trt-hero-headline">
+                Precision Catheter Therapies &amp; Transcatheter Valve Repair
               </h1>
-              <p className="trt-main-lead">
-                Cycles through 7 verified procedures or click any option to inspect clinical details and matched medical visuals.
+              <p className="trt-hero-lead">
+                Advanced percutaneous techniques eliminating sternotomy and heart-lung bypass for severe aortic stenosis, mitral regurgitation, and complex coronary blockages.
               </p>
 
-              {/* Compact Selectable List */}
-              <div className="trt-selector-rail" role="tablist" aria-label="Select procedure">
-                {TREATMENTS.map((proc, idx) => {
-                  const isActive = stageCycle.activeIndex === idx;
-                  return (
-                    <button
-                      key={proc.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`trt-rail-btn ${isActive ? 'is-active' : ''}`}
-                      onClick={() => stageCycle.selectIndex(idx)}
-                    >
-                      <div className="trt-rail-row">
-                        <span className="trt-rail-idx tabular-nums">0{idx + 1}</span>
-                        <span className="trt-rail-name">{proc.name}</span>
-                        {proc.pioneer && <span className="trt-rail-first">{proc.pioneerLabel}</span>}
-                      </div>
-                      {isActive && (
-                        <div className="cycle-progress-track" style={{ marginTop: '0.45rem' }}>
-                          <div
-                            key={`trt-prog-${stageCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                            style={{ animationDuration: '5.6s' }}
-                          />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
+              <div className="trt-hero-actions">
+                <AppointmentButton variant="primary" size="lg" label="Book Procedure Evaluation" />
+                <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
+                  Call {CONTACT_INFO.phones[0]}
+                </a>
+              </div>
+
+              {/* Verified Metrics Strip */}
+              <div className="trt-hero-metrics-row">
+                <div className="trt-metric-pill">
+                  <span className="trt-metric-val">1st in India</span>
+                  <span className="trt-metric-lbl">TAVI &amp; MitraClip</span>
+                </div>
+                <div className="trt-metric-pill">
+                  <span className="trt-metric-val">Beating Heart</span>
+                  <span className="trt-metric-lbl">Zero Bypass</span>
+                </div>
+                <div className="trt-metric-pill">
+                  <span className="trt-metric-val">48–72h</span>
+                  <span className="trt-metric-lbl">Typical Ambulation</span>
+                </div>
               </div>
             </div>
 
-            {/* Right Synchronized Uncropped Visual + Details Stage with 3D Depth */}
-            <div className="trt-stage-display trt-hero-right perspective-stage" style={{ position: 'relative' }}>
-              <div className="floating-orbital-badge floating-orbital-badge--gold trt-orbital-1" style={{ top: '-14px', right: '-12px' }}>
-                <span>⚡</span>
-                <span>0 Sternotomy · Beating Heart</span>
+            {/* Col 2: Centerpiece Cardiology Spotlight (Uncropped Contain Stage) */}
+            <div className="trt-hero-centerpiece">
+              <div className="trt-centerpiece-visual">
+                <img
+                  src="/images/treatments/valve-replacement-tavi.webp"
+                  alt="Transcatheter Aortic Valve Implantation bioprosthetic frame"
+                  loading="eager"
+                />
+                <div className="trt-scanline-beam" aria-hidden="true" />
               </div>
-              <div className="floating-orbital-badge floating-orbital-badge--teal trt-orbital-2" style={{ bottom: '16px', left: '-12px' }}>
-                <span>⏱️</span>
-                <span>48-Hour Rapid Recovery</span>
+              <div className="trt-centerpiece-readout">
+                <span className="trt-readout-indicator" />
+                <span>Transcatheter Aortic Valve Implantation · Femoral Access</span>
               </div>
+            </div>
 
+            {/* Col 3: Verified Specialties Matrix */}
+            <div className="trt-hero-specialties-matrix" aria-label="Verified Cardiology Specialties">
+              {SPECIALTY_TILES.map((spec) => (
+                <div className="trt-specialty-card" key={spec.code}>
+                  <div className="trt-spec-head">
+                    <span className="trt-spec-icon">{spec.icon}</span>
+                    <span className="trt-spec-tag">{spec.tag}</span>
+                  </div>
+                  <h3>{spec.code}</h3>
+                  <div className="trt-spec-name">{spec.name}</div>
+                  <p>{spec.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2. FULL PROCEDURE DIRECTORY — AUTO-CYCLING SHOWCASE ── */}
+      <section className="section trt-directory-stage" id="directory" aria-label="Full Procedure Directory">
+        <div className="container trt-z1">
+          <div className="stage-header-row">
+            <div>
+              <div className="section-kicker">Full Procedure Directory</div>
+              <h2 className="section-heading">Auto-Cycling Clinical Protocols</h2>
+            </div>
+            <p className="section-lead">
+              Cycles automatically across all 7 catheter procedures. Select any procedure to inspect clinical indications and mechanism.
+            </p>
+          </div>
+
+          <div className="dir-showcase-grid">
+            {/* Left 7-Procedure Rail with Synchronized Auto-Cycle Progress */}
+            <div className="dir-showcase-rail" role="tablist" aria-label="Procedures list">
+              {TREATMENTS.map((proc, idx) => {
+                const isActive = procedureCycle.activeIndex === idx;
+                return (
+                  <button
+                    key={proc.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`dir-rail-item ${isActive ? 'is-active' : ''}`}
+                    onClick={() => procedureCycle.selectIndex(idx)}
+                  >
+                    <div className="dir-rail-top">
+                      <span className="dir-rail-num tabular-nums">0{idx + 1}</span>
+                      <span className="dir-rail-title">{proc.name}</span>
+                      {proc.pioneer && <span className="dir-rail-badge">{proc.pioneerLabel}</span>}
+                    </div>
+                    <span className="dir-rail-cat">{proc.category}</span>
+                    {isActive && (
+                      <div className="cycle-progress-track" style={{ marginTop: '0.45rem' }}>
+                        <div
+                          key={`proc-prog-${procedureCycle.cycleKey}`}
+                          className="cycle-progress-bar"
+                          style={{ animationDuration: '6.2s' }}
+                        />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right Synchronized Uncropped Visual Showcase */}
+            <div className="dir-showcase-display">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeProcedure.id}
-                  className="trt-display-inner"
-                  initial={{ opacity: 0, x: 32 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -24 }}
+                  className="dir-display-card"
+                  initial={{ opacity: 0, x: 28, scale: 0.96 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -24, scale: 0.98 }}
                   transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="trt-display-visual">
+                  <div className="dir-card-media">
                     <img
                       src={activeProcedure.image}
                       alt={activeProcedure.fullName}
@@ -292,29 +415,35 @@ export default function Treatments() {
                     />
                   </div>
 
-                  <div className="trt-display-body">
-                    <div className="trt-display-meta">
+                  <div className="dir-card-body">
+                    <div className="dir-card-meta">
                       <span>{activeProcedure.category}</span>
                       {activeProcedure.pioneer && (
                         <>
                           <span>·</span>
-                          <span className="trt-meta-gold">{activeProcedure.pioneerLabel}</span>
+                          <span className="dir-meta-gold">{activeProcedure.pioneerLabel}</span>
                         </>
                       )}
                     </div>
-                    <h2>{activeProcedure.fullName}</h2>
-                    <p>{activeProcedure.description}</p>
-                    <ul className="trt-display-points">
+                    <h3>{activeProcedure.fullName}</h3>
+                    <p className="dir-card-desc">{activeProcedure.description}</p>
+
+                    <ul className="dir-card-bullets">
                       {activeProcedure.details.slice(0, 3).map((pt) => (
                         <li key={pt}>{pt}</li>
                       ))}
                     </ul>
-                    <div className="trt-display-actions">
-                      <AppointmentButton variant="primary" size="md" label={`Consult for ${activeProcedure.name.split(' ')[0]}`} />
-                      <div className="trt-nav-arrows">
+
+                    <div className="dir-card-actions">
+                      <AppointmentButton
+                        variant="primary"
+                        size="md"
+                        label={`Consult for ${activeProcedure.name.split(' ')[0]}`}
+                      />
+                      <div className="dir-nav-btns">
                         <button
                           type="button"
-                          onClick={stageCycle.prev}
+                          onClick={procedureCycle.prev}
                           aria-label="Previous procedure"
                           className="round-nav-btn"
                         >
@@ -322,7 +451,7 @@ export default function Treatments() {
                         </button>
                         <button
                           type="button"
-                          onClick={stageCycle.next}
+                          onClick={procedureCycle.next}
                           aria-label="Next procedure"
                           className="round-nav-btn"
                         >
@@ -338,78 +467,71 @@ export default function Treatments() {
         </div>
       </section>
 
-      {/* ── 2. OPEN ALTERNATING FULL-CATALOG DIRECTORY (ZERO BOX CARDS) ── */}
-      <section className="section trt-catalog-stage" aria-label="Procedure Directory">
+      {/* ── 3. FULL CATALOG ZIGZAG EDITORIAL BREAKDOWN ── */}
+      <section className="section trt-zigzag-stage" aria-label="All Treatment Details">
         <div className="container trt-z1">
-          <div className="trt-catalog-header">
+          <div className="stage-header-row" style={{ marginBottom: '2.5rem' }}>
             <div>
-              <div className="section-kicker">01 · Full Procedure Directory</div>
-              <h2 className="section-heading">Clinical Indications &amp; Protocols</h2>
+              <div className="section-kicker">Clinical Catalog</div>
+              <h2 className="section-heading">Detailed Indications &amp; Device Anatomy</h2>
             </div>
-
-            <div className="trt-filter-tabs" role="tablist" aria-label="Filter treatments by category">
-              {FILTER_TABS.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeFilter === tab}
-                  className={`trt-filter-tab ${activeFilter === tab ? 'is-active' : ''}`}
-                  onClick={() => setActiveFilter(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+            <p className="section-lead">
+              Every procedure is individually tailored with intravascular diagnostics, physiological flow tests, and multidisciplinary Heart Team planning.
+            </p>
           </div>
 
-          <div className="trt-open-rows">
-            {filteredTreatments.map((trt, idx) => (
-              <article
-                id={trt.id}
-                key={trt.id}
-                className={`trt-alt-row ${idx % 2 === 1 ? 'is-reversed' : ''}`}
-              >
-                <div className="trt-row-visual">
-                  <img src={trt.image} alt={trt.fullName} loading="lazy" />
-                </div>
+          <div className="trt-zigzag-list">
+            {TREATMENTS.map((trt, idx) => {
+              const isEven = idx % 2 === 0;
+              return (
+                <article
+                  id={trt.id}
+                  key={trt.id}
+                  className={`trt-zigzag-row ${isEven ? 'is-normal' : 'is-reversed'}`}
+                >
+                  {/* Uncropped High-Fidelity Medical Visual */}
+                  <div className="trt-zigzag-media">
+                    <img src={trt.image} alt={trt.fullName} loading="lazy" />
+                  </div>
 
-                <div className="trt-row-content">
-                  <div className="trt-row-meta">
-                    <span className="tabular-nums">0{idx + 1}</span>
-                    <span>·</span>
-                    <span>{trt.category}</span>
-                    {trt.pioneer && (
-                      <>
-                        <span>·</span>
-                        <span className="trt-row-gold">{trt.pioneerLabel}</span>
-                      </>
-                    )}
+                  {/* Concise Clinical Text */}
+                  <div className="trt-zigzag-text">
+                    <div className="trt-zigzag-meta">
+                      <span className="tabular-nums">0{idx + 1}</span>
+                      <span>·</span>
+                      <span>{trt.category}</span>
+                      {trt.pioneer && (
+                        <>
+                          <span>·</span>
+                          <span className="trt-meta-gold">{trt.pioneerLabel}</span>
+                        </>
+                      )}
+                    </div>
+                    <h3>{trt.name}</h3>
+                    <div className="trt-zigzag-sub">{trt.fullName}</div>
+                    <p>{trt.description}</p>
+                    <ul className="trt-zigzag-points">
+                      {trt.details.slice(0, 3).map((pt) => (
+                        <li key={pt}>{pt}</li>
+                      ))}
+                    </ul>
+                    <div style={{ marginTop: '1.25rem' }}>
+                      <AppointmentButton variant="primary" size="md" label="Evaluate Candidacy" />
+                    </div>
                   </div>
-                  <h3>{trt.name}</h3>
-                  <p className="trt-row-sub">{trt.fullName}</p>
-                  <p className="trt-row-desc">{trt.description}</p>
-                  <ul className="trt-row-bullets">
-                    {trt.details.map((pt) => (
-                      <li key={pt}>{pt}</li>
-                    ))}
-                  </ul>
-                  <div style={{ marginTop: '1rem' }}>
-                    <AppointmentButton variant="primary" size="md" label="Evaluate Candidacy" />
-                  </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── 3. INTERACTIVE SURGERY VS CATHETER COMPARISON (LUMINOUS AZURE) ── */}
+      {/* ── 4. SURGERY VS CATHETER CLINICAL COMPARISON ── */}
       <section className="section trt-compare-stage" aria-label="Catheter vs Open Surgery">
         <div className="container trt-z1">
           <div className="trt-catalog-header trt-comp-reveal">
             <div>
-              <div className="section-kicker">02 · Clinical Comparison</div>
+              <div className="section-kicker">Clinical Comparison</div>
               <h2 className="section-heading">Open-Heart Surgery vs. Catheter Therapy</h2>
             </div>
 
@@ -421,7 +543,7 @@ export default function Treatments() {
                 className={`trt-filter-tab ${compareView === 'interactive' ? 'is-active' : ''}`}
                 onClick={() => setCompareView('interactive')}
               >
-                Interactive Stage
+                Interactive Comparison
               </button>
               <button
                 type="button"
@@ -430,7 +552,7 @@ export default function Treatments() {
                 className={`trt-filter-tab ${compareView === 'table' ? 'is-active' : ''}`}
                 onClick={() => setCompareView('table')}
               >
-                Full Table View
+                Full Parameter Table
               </button>
             </div>
           </div>
@@ -455,7 +577,7 @@ export default function Treatments() {
                           <div
                             key={`cmp-prog-${compCycle.cycleKey}`}
                             className="cycle-progress-bar"
-                            style={{ animationDuration: '4.6s' }}
+                            style={{ animationDuration: '4.8s' }}
                           />
                         </div>
                       )}
@@ -498,11 +620,11 @@ export default function Treatments() {
                   </tr>
                 </thead>
                 <tbody>
-                  {COMPARISON_PARAMS.map((row) => (
-                    <tr key={row.id}>
-                      <td><strong>{row.param}</strong></td>
-                      <td>{row.surgery}</td>
-                      <td className="is-highlight">{row.catheter}</td>
+                  {COMPARISON_PARAMS.map((p) => (
+                    <tr key={p.id}>
+                      <td className="param-cell">{p.param}</td>
+                      <td className="surgery-cell">{p.surgery}</td>
+                      <td className="catheter-cell">{p.catheter}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -512,19 +634,37 @@ export default function Treatments() {
         </div>
       </section>
 
-      {/* ── 4. SECOND OPINION SAPPHIRE RIBBON ── */}
-      <section className="trt-opinion-ribbon" aria-label="Second Opinion Consultation">
-        <div className="container">
-          <div className="trt-opinion-flex">
-            <div>
-              <h2>Advised Bypass Surgery or Open Valve Replacement?</h2>
-              <p>Review your echocardiogram &amp; angiogram films with Dr. Praveen Chandra at Medanta.</p>
+      {/* ── 5. COMPLETELY REDESIGNED PREMIUM APPOINTMENT BANNER ── */}
+      <section className="trt-appointment-banner" aria-label="Book Procedure Consultation">
+        <SectionBackground variant="ecg-monitor" opacity={0.35} />
+        <div className="container trt-z1">
+          <div className="trt-appointment-content">
+            <span className="trt-appt-kicker">
+              🏥 Medanta – The Medicity · Department of Cardiology, Gurugram
+            </span>
+
+            <h2 className="trt-appt-heading">
+              Schedule a Specialized Valve or Coronary Consultation
+            </h2>
+
+            <p className="trt-appt-desc">
+              Review prior coronary angiograms, determine non-surgical TAVI or MitraClip eligibility, or receive a dedicated second opinion with Padma Shri Dr. Praveen Chandra and the Medanta Heart Team.
+            </p>
+
+            <div className="trt-appt-actions">
+              <AppointmentButton variant="white" size="lg" label="Book OPD Consultation at Medanta" />
+              <a
+                href={`tel:${CONTACT_INFO.phones[0]}`}
+                className="btn-clinical btn-clinical--light tabular-nums"
+              >
+                Direct Clinic: {CONTACT_INFO.phones[0]}
+              </a>
             </div>
-            <div className="trt-opinion-actions">
-              <AppointmentButton variant="white" size="lg" label="Request Second Opinion" />
-              <Link to="/contact" className="btn-clinical btn-clinical--light">
-                OPD Visit Checklist
-              </Link>
+
+            <div className="trt-appt-footnote">
+              <span>Emergency 24/7 Heart Hotline: <strong>Dial {CONTACT_INFO.emergencyLine}</strong></span>
+              <span>·</span>
+              <span>Medanta Board: <strong>{CONTACT_INFO.hospitalBoard}</strong></span>
             </div>
           </div>
         </div>

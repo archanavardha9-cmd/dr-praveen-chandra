@@ -1,4 +1,4 @@
-/* SectionBackground.css – Subtle light clinical background motion */
+/* SectionBackground.css – High-visibility bright clinical background motion */
 
 .sec-bg-layer {
   position: absolute;
@@ -17,41 +17,86 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 91, 148, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 91, 148, 0.045) 1px, transparent 1px);
-  background-size: 44px 44px;
+    linear-gradient(rgba(0, 91, 148, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 91, 148, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 .clinical-sweep-line {
   position: absolute;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 91, 148, 0.28), transparent);
-  animation: telemetrySweep 9s ease-in-out infinite;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 91, 148, 0.55), rgba(11, 122, 122, 0.6), transparent);
+  box-shadow: 0 0 12px rgba(0, 91, 148, 0.4);
+  animation: telemetrySweep 8s ease-in-out infinite;
 }
 
 .valve-ring-rot {
-  transform-origin: 720px 250px;
-  animation: bgSpinSlow 42s linear infinite;
+  transform-origin: 760px 300px;
+  animation: bgSpinSlow 36s linear infinite;
+}
+
+.valve-leaflet-top {
+  animation: leafletPulseTop 4.2s ease-in-out infinite;
+  transform-origin: 760px 300px;
+}
+
+.valve-leaflet-bottom {
+  animation: leafletPulseBottom 4.2s ease-in-out infinite;
+  transform-origin: 760px 300px;
 }
 
 .vessel-flow {
-  stroke-dasharray: 10 6;
-  animation: vesselDash 18s linear infinite;
+  stroke-dasharray: 12 8;
+  animation: vesselDash 14s linear infinite;
 }
 
 .ecg-wave-trace {
   stroke-dasharray: 1400;
   stroke-dashoffset: 1400;
-  animation: ecgTraceRun 6s ease-in-out infinite;
+  animation: ecgTraceRun 5.5s ease-in-out infinite;
+}
+
+.ecg-wave-echo {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: ecgTraceRun 5.5s 0.25s ease-in-out infinite;
+}
+
+.telemetry-beacon {
+  animation: beaconPulse 2.8s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.spin-slow {
+  transform-origin: center;
+  animation: bgSpinSlow 40s linear infinite;
+}
+
+.spin-reverse {
+  transform-origin: center;
+  animation: bgSpinSlowRev 45s linear infinite;
+}
+
+.radar-sweep-beam {
+  transform-origin: 800px 260px;
+  animation: bgSpinSlow 12s linear infinite;
+}
+
+.wave-drift-fast {
+  animation: waveDrift 10s ease-in-out infinite alternate;
+}
+
+.wave-drift-slow {
+  animation: waveDrift 16s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes telemetrySweep {
-  0% { top: 8%; opacity: 0; }
-  15% { opacity: 0.7; }
-  85% { opacity: 0.7; }
-  100% { top: 92%; opacity: 0; }
+  0% { top: 4%; opacity: 0; }
+  15% { opacity: 0.9; }
+  85% { opacity: 0.9; }
+  100% { top: 96%; opacity: 0; }
 }
 
 @keyframes bgSpinSlow {
@@ -59,13 +104,38 @@
   to { transform: rotate(360deg); }
 }
 
+@keyframes bgSpinSlowRev {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
 @keyframes vesselDash {
   from { stroke-dashoffset: 0; }
-  to { stroke-dashoffset: -160; }
+  to { stroke-dashoffset: -200; }
 }
 
 @keyframes ecgTraceRun {
   0% { stroke-dashoffset: 1400; opacity: 0.4; }
-  65% { stroke-dashoffset: 0; opacity: 1; }
-  100% { stroke-dashoffset: 0; opacity: 0.3; }
+  60% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0.5; }
+}
+
+@keyframes beaconPulse {
+  0%, 100% { transform: scale(1); opacity: 0.45; }
+  50% { transform: scale(1.35); opacity: 1; }
+}
+
+@keyframes leafletPulseTop {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.85); }
+}
+
+@keyframes leafletPulseBottom {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.85); }
+}
+
+@keyframes waveDrift {
+  0% { transform: translateY(0px) scaleY(1); }
+  100% { transform: translateY(-14px) scaleY(1.08); }
 }

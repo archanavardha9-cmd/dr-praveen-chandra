@@ -24,21 +24,21 @@ const TRANSIT_ROUTES = [
     mode: 'Air Arrival',
     name: 'Indira Gandhi International Airport (T3)',
     distance: '~19 km · 30–35 min via NH-48',
-    detail: 'Direct cab access down NH-48 to Sector 38 Gurugram. International Desk concierge assists with transfers and visa letters.',
+    detail: 'Direct cab via NH-48 (~30 min). Dedicated International Desk concierge assists with airport pickup, transfers, and medical visa facilitation.',
   },
   {
     id: 'metro',
     mode: 'Delhi Metro',
-    name: 'Millennium City Centre (HUDA City Centre)',
+    name: 'Millennium City Centre (Yellow Line)',
     distance: '~5.2 km · 12 min auto/cab',
-    detail: 'Yellow Line terminal station connects Central & South Delhi directly to Subhash Chowk / Medanta Road.',
+    detail: 'Yellow Line terminal connects Central Delhi & New Delhi Railway Station directly to Subhash Chowk and the Medanta Road approach.',
   },
   {
     id: 'highway',
     mode: 'Expressway',
     name: 'NH-48 / Bakhtawar Chowk Approach',
     distance: 'Gate 1 & Cardiology OPD Wing',
-    detail: 'Multi-level hospital parking available for patient families entering via CH Baktawar Singh Road, Sector 38.',
+    detail: 'Multi-level hospital parking available for patient families entering via CH Baktawar Singh Road, Sector 38, Gurugram.',
   },
 ];
 
@@ -188,7 +188,7 @@ export default function Contact() {
       {/* ── 1. CONSULTATION HERO SPLIT ── */}
       <section className="cnt-hero-stage" aria-label="Medanta OPD Contact">
         <div className="cnt-hero-wedge" aria-hidden="true" />
-        <SectionBackground variant="contact-radar" opacity={0.5} />
+        <SectionBackground variant="contact-radar" opacity={0.65} />
 
         <div className="container cnt-z1">
           <div className="cnt-hero-grid">
@@ -265,7 +265,7 @@ export default function Contact() {
           <div className="cnt-hub-grid">
             {/* Left Address + Auto-Cycling Transit Switcher */}
             <div className="cnt-hub-left">
-              <div className="section-kicker">01 · Campus Location &amp; Directions</div>
+              <div className="section-kicker">Campus Location &amp; Directions</div>
               <h2 className="section-heading">Medanta – The Medicity, Gurugram</h2>
 
               <div className="cnt-address-block">
@@ -355,7 +355,7 @@ export default function Contact() {
           <div className="cnt-prep-grid cnt-prep-reveal">
             {/* Left Interactive Pre-Visit Records Checklist */}
             <div className="cnt-checklist-col">
-              <div className="section-kicker">02 · Patient Preparation</div>
+              <div className="section-kicker">Patient Preparation</div>
               <h2 className="section-heading">Diagnostic Records Checklist</h2>
               <p className="section-lead" style={{ marginBottom: '1.25rem' }}>
                 Verify the cardiac reports to carry for your outpatient evaluation ({completedCount} / {PRE_VISIT_DOCS.length} ready).
@@ -382,12 +382,12 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Right Uncropped Hospital Concept + International Desk Info */}
+            {/* Right Verified Medanta Exterior Photo + International Desk Info */}
             <div className="cnt-intl-col">
               <div className="cnt-intl-visual">
                 <img
-                  src={DOCTOR.illustrations.hospitalConcept}
-                  alt="Modern bright cardiology patient atrium"
+                  src="/images/medical/medanta-hospital-gurugram.webp"
+                  alt="Medanta – The Medicity Hospital Campus, Gurugram"
                   loading="lazy"
                 />
               </div>

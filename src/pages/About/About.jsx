@@ -18,18 +18,43 @@ import './About.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const MILESTONE_FILTERS = ['All', 'National Honor', 'Structural Heart', 'Academic & Leadership'];
-
-const MILESTONE_VISUALS = {
-  1: DOCTOR.images.awardPodium,
-  2: '/images/treatments/valve-replacement-tavi.webp',
-  3: DOCTOR.illustrations.mitraclip,
-  4: DOCTOR.illustrations.stentIvl,
-  5: DOCTOR.illustrations.stentIvl,
-  6: DOCTOR.images.speaking,
-  7: DOCTOR.images.consultation,
-  8: '/images/publications/tavi-multidisciplinary-planning.webp',
-};
+const MILESTONE_CATEGORIES = [
+  {
+    id: 'National Honors',
+    label: 'National Honors',
+    kicker: 'National Investiture & Presidential Honor',
+    title: 'Padma Shri (2016) Conferred by the President of India',
+    image: DOCTOR.images.awardPodium,
+    caption: 'Rashtrapati Bhavan Investiture Ceremony · New Delhi',
+    description: 'Conferred by the President of India in recognition of pioneering contributions and distinguished service in interventional cardiology and structural heart innovation.',
+    items: ACHIEVEMENTS.filter((item) => item.category === 'National Honor' || item.category === 'Clinical Honor'),
+  },
+  {
+    id: 'Structural Heart',
+    label: 'Structural Heart',
+    kicker: 'First Transcatheter Therapies in India',
+    title: 'Pioneered India’s First TAVI & MitraClip Procedures',
+    image: '/images/treatments/valve-replacement-tavi.webp',
+    caption: 'Transcatheter Aortic & Mitral Valve Innovations',
+    description: 'Spearheaded non-surgical valve replacement (TAVI) and catheter repair (MitraClip) across India, providing life-saving options for high-risk elderly patients.',
+    items: ACHIEVEMENTS.filter(
+      (item) =>
+        item.category === 'Structural Heart' ||
+        item.category === 'Coronary Innovation' ||
+        item.category === 'Device Pioneer'
+    ),
+  },
+  {
+    id: 'Academic & Leadership',
+    label: 'Academic & Leadership',
+    kicker: 'Global Education & Research Governance',
+    title: 'Course Director India Live & Global Research Faculty',
+    image: DOCTOR.images.speaking,
+    caption: 'Keynote Faculty Address · Global Interventional Symposia',
+    description: 'Founding Course Director of India Live, training thousands of cardiologists globally, with over 100 scientific publications in indexed cardiovascular journals.',
+    items: ACHIEVEMENTS.filter((item) => item.category === 'Leadership' || item.category === 'Research'),
+  },
+];
 
 const FELLOWSHIP_DETAILS = {
   FACC: 'Recognized by the American College of Cardiology for sustained excellence in cardiovascular medicine.',
@@ -42,33 +67,27 @@ const FELLOWSHIP_DETAILS = {
 export default function About() {
   const careerCycle = useAutoCycle(CAREER_TIMELINE.length, 5500);
   const fellowshipCycle = useAutoCycle(FELLOWSHIPS.length, 4800);
-  const [milestoneFilter, setMilestoneFilter] = useState('All');
+  const categoryCycle = useAutoCycle(MILESTONE_CATEGORIES.length, 6200);
+
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const pageRef = useRef(null);
 
-  const filteredMilestones = ACHIEVEMENTS.filter((item) => {
-    if (milestoneFilter === 'All') return true;
-    if (milestoneFilter === 'National Honor') {
-      return item.category === 'National Honor' || item.category === 'Clinical Honor';
-    }
-    if (milestoneFilter === 'Structural Heart') {
-      return (
-        item.category === 'Structural Heart' ||
-        item.category === 'Coronary Innovation' ||
-        item.category === 'Device Pioneer'
-      );
-    }
-    return item.category === 'Leadership' || item.category === 'Research';
-  });
-
-  const milestoneCycle = useAutoCycle(filteredMilestones.length, 5500);
-
+  const activeCategory = MILESTONE_CATEGORIES[categoryCycle.activeIndex];
   const activeEra = CAREER_TIMELINE[careerCycle.activeIndex];
   const activeFellowship = FELLOWSHIPS[fellowshipCycle.activeIndex];
-  const activeMilestone = filteredMilestones[milestoneCycle.activeIndex] || filteredMilestones[0];
 
-  const handleFilterChange = (tab) => {
-    setMilestoneFilter(tab);
-    milestoneCycle.selectIndex(0);
+  // Reset selected item when category changes
+  useEffect(() => {
+    setSelectedItemId(null);
+  }, [categoryCycle.activeIndex]);
+
+  const activeItem = selectedItemId
+    ? activeCategory.items.find((i) => i.id === selectedItemId) || activeCategory.items[0]
+    : activeCategory.items[0];
+
+  const handleCategoryClick = (idx) => {
+    categoryCycle.selectIndex(idx);
+    setSelectedItemId(null);
   };
 
   useEffect(() => {
@@ -139,7 +158,7 @@ export default function About() {
         // 2. Career Trajectory — entrance + continuous photo scrub
         gsap.fromTo(
           '.abt-career-left',
-          { opacity: 0, x: -48 },
+          { opacity: 0, x: -45 },
           {
             opacity: 1,
             x: 0,
@@ -155,12 +174,11 @@ export default function About() {
         );
         gsap.fromTo(
           '.abt-career-right',
-          { opacity: 0, x: 48, scale: 0.94 },
+          { opacity: 0, x: 45 },
           {
             opacity: 1,
             x: 0,
-            scale: 1,
-            duration: 0.9,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.about-career-stage',
@@ -172,7 +190,7 @@ export default function About() {
         );
         gsap.fromTo(
           '.career-visual-inner img',
-          { scale: 1.18, yPercent: -10 },
+          { scale: 1.15, yPercent: -10 },
           {
             scale: 1.0,
             yPercent: 8,
@@ -186,7 +204,7 @@ export default function About() {
           }
         );
 
-        // 3. Academic & Fellowships — entrance + continuous subtle rotation
+        // 3. Academic Stage Entrance
         gsap.fromTo(
           '.abt-acad-left',
           { opacity: 0, x: -45 },
@@ -216,21 +234,6 @@ export default function About() {
               start: 'top 85%',
               end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.fellow-active-display',
-          { scale: 0.94, y: 30 },
-          {
-            scale: 1.02,
-            y: -15,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.about-academic-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
             },
           }
         );
@@ -268,21 +271,6 @@ export default function About() {
             },
           }
         );
-        gsap.fromTo(
-          '.ledger-visual-inner img',
-          { scale: 1.15, rotate: -2 },
-          {
-            scale: 1.02,
-            rotate: 2,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.about-ledger-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.2,
-            },
-          }
-        );
       }, pageRef);
 
       return () => ctx.revert();
@@ -296,7 +284,7 @@ export default function About() {
       {/* ── 1. MONOGRAPH SPLIT HERO ── */}
       <section className="about-hero-stage" aria-label="Biography Overview">
         <div className="about-hero-wedge" aria-hidden="true" />
-        <SectionBackground variant="awards-constellation" opacity={0.45} />
+        <SectionBackground variant="awards-constellation" opacity={0.65} />
 
         <div className="container abt-z1">
           <div className="about-hero-grid">
@@ -351,10 +339,10 @@ export default function About() {
                 </div>
               </dl>
 
-              <div className="about-hero-cta abt-hero-right">
-                <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
+              <div className="about-hero-actions abt-hero-right">
+                <AppointmentButton variant="primary" size="lg" label="Book Consultation" />
                 <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
-                  View Procedures →
+                  Clinical Specialties →
                 </Link>
               </div>
             </div>
@@ -362,12 +350,15 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── 2. AUTO-CYCLING CAREER TRAJECTORY (1992 – PRESENT) ── */}
-      <section className="section about-career-stage" aria-label="Career Trajectory">
+      {/* ── 2. AUTO-CYCLING CAREER TRAJECTORY (OPEN EDITORIAL STAGE) ── */}
+      <section className="section about-career-stage" aria-label="Career Milestones">
+        <div className="career-bg-shape" aria-hidden="true" />
+        <SectionBackground variant="coronary-tree" opacity={0.45} />
+
         <div className="container abt-z1">
-          <div className="about-stage-header">
+          <div className="stage-header-row">
             <div>
-              <div className="section-kicker">01 · Career Trajectory</div>
+              <div className="section-kicker">Career Trajectory</div>
               <h2 className="section-heading">Three Decades of Institutional Leadership</h2>
             </div>
             <p className="section-lead">
@@ -454,12 +445,12 @@ export default function About() {
 
       {/* ── 3. KGMC QUALIFICATIONS & AUTO-CYCLING FELLOWSHIPS (SAPPHIRE STAGE) ── */}
       <section className="section about-academic-stage" aria-label="Academic Qualifications and Fellowships">
-        <SectionBackground variant="telemetry-grid" opacity={0.2} />
+        <SectionBackground variant="telemetry-grid" opacity={0.3} />
         <div className="container abt-z1">
           <div className="acad-split-grid">
-            {/* Left Hairline Academic Degrees */}
+            {/* Left Academic Degrees */}
             <div className="acad-degrees-col abt-acad-left">
-              <div className="section-kicker section-kicker--light">02 · Academic Heritage</div>
+              <div className="section-kicker section-kicker--light">Academic Heritage</div>
               <h2 className="section-heading section-heading--light">
                 King George’s Medical College, Lucknow
               </h2>
@@ -472,10 +463,8 @@ export default function About() {
                   <div className="acad-degree-row" key={q.degree}>
                     <span className="acad-year-mono tabular-nums">{q.year}</span>
                     <div>
-                      <h4>
-                        {q.degree} — {q.field}
-                      </h4>
-                      <p>{q.institution}</p>
+                      <h4>{q.degree}</h4>
+                      <p>{q.field} · {q.institution}</p>
                     </div>
                   </div>
                 ))}
@@ -535,48 +524,30 @@ export default function About() {
         <div className="container abt-z1">
           <div className="about-stage-header">
             <div>
-              <div className="section-kicker">03 · Honors &amp; Clinical Firsts</div>
+              <div className="section-kicker">Honors &amp; Clinical Firsts</div>
               <h2 className="section-heading">Padma Shri &amp; Pioneer Milestones</h2>
             </div>
 
-            <div className="ledger-filter-bar" role="tablist" aria-label="Filter milestones">
-              {MILESTONE_FILTERS.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  role="tab"
-                  aria-selected={milestoneFilter === tab}
-                  className={`ledger-filter-tab ${milestoneFilter === tab ? 'is-active' : ''}`}
-                  onClick={() => handleFilterChange(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="ledger-interactive-grid">
-            {/* Left Clickable / Auto-Cycling Milestone List */}
-            <div className="ledger-list-col abt-ledger-left">
-              {filteredMilestones.map((item, idx) => {
-                const isActive = milestoneCycle.activeIndex === idx;
+            {/* Automatic Tab Switcher without 'All' */}
+            <div className="ledger-filter-bar" role="tablist" aria-label="Filter milestones by category">
+              {MILESTONE_CATEGORIES.map((cat, idx) => {
+                const isActive = categoryCycle.activeIndex === idx;
                 return (
                   <button
-                    key={item.id}
+                    key={cat.id}
                     type="button"
-                    className={`ledger-select-row ${isActive ? 'is-active' : ''}`}
-                    onClick={() => milestoneCycle.selectIndex(idx)}
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`ledger-filter-tab ${isActive ? 'is-active' : ''}`}
+                    onClick={() => handleCategoryClick(idx)}
                   >
-                    <div className="ledger-row-top">
-                      <span className="ledger-row-year tabular-nums">{item.year}</span>
-                      <span className="ledger-row-cat">{item.category}</span>
-                    </div>
-                    <h4>{item.title}</h4>
+                    <span>{cat.label}</span>
                     {isActive && (
-                      <div className="cycle-progress-track" style={{ marginTop: '0.55rem' }}>
+                      <div className="cycle-progress-track" style={{ marginTop: '0.35rem' }}>
                         <div
-                          key={`ms-prog-${milestoneCycle.cycleKey}`}
+                          key={`cat-prog-${categoryCycle.cycleKey}`}
                           className="cycle-progress-bar"
+                          style={{ animationDuration: '6.2s' }}
                         />
                       </div>
                     )}
@@ -584,36 +555,58 @@ export default function About() {
                 );
               })}
             </div>
+          </div>
 
-            {/* Right Synchronized Uncropped Visual + Detail */}
-            <div className="ledger-visual-col abt-ledger-right">
-              {activeMilestone && (
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeMilestone.id}
-                    className="ledger-spotlight-stage"
-                    initial={{ opacity: 0, x: 28 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -24 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          <div className="ledger-interactive-grid">
+            {/* Left Category Milestone Cards */}
+            <div className="ledger-list-col abt-ledger-left">
+              {activeCategory.items.map((item) => {
+                const isSelected = activeItem.id === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`ledger-select-row ${isSelected ? 'is-active' : ''}`}
+                    onClick={() => setSelectedItemId(item.id)}
                   >
-                    <div className="ledger-stage-visual">
-                      <img
-                        src={activeMilestone.photo || MILESTONE_VISUALS[activeMilestone.id] || DOCTOR.images.awardPodium}
-                        alt={activeMilestone.title}
-                        loading="lazy"
-                      />
+                    <div className="ledger-row-top">
+                      <span className="ledger-row-year tabular-nums">{item.year}</span>
+                      <span className="ledger-row-cat">{item.category}</span>
                     </div>
-                    <div className="ledger-stage-copy">
-                      <span className="ledger-stage-meta tabular-nums">
-                        {activeMilestone.year} · {activeMilestone.category}
-                      </span>
-                      <h3>{activeMilestone.title}</h3>
-                      <p>{activeMilestone.description}</p>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              )}
+                    <h4>{item.title}</h4>
+                    <p className="ledger-item-summary">{item.description}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right Synchronized Uncropped Visual + Prominent Detail */}
+            <div className="ledger-visual-col abt-ledger-right">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${activeCategory.id}-${activeItem.id}`}
+                  className="ledger-spotlight-stage"
+                  initial={{ opacity: 0, x: 28 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="ledger-stage-visual">
+                    <img
+                      src={activeItem.photo || activeCategory.image}
+                      alt={activeItem.title}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="ledger-stage-copy">
+                    <span className="ledger-stage-meta tabular-nums">
+                      {activeItem.year} · {activeItem.category}
+                    </span>
+                    <h3>{activeItem.title}</h3>
+                    <p>{activeItem.description}</p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>

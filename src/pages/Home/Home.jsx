@@ -498,8 +498,8 @@ export default function Home() {
                 <span>Padma Shri Awardee · 2016</span>
               </div>
               <div className="floating-orbital-badge floating-orbital-badge--teal hero-orbital-2" style={{ bottom: '72px', right: '-18px' }}>
-                <span>🫀</span>
-                <span>50,000+ Interventions</span>
+                <span>🏥</span>
+                <span>Medanta – The Medicity</span>
               </div>
 
               <div className="hero-stage-frame">
@@ -576,7 +576,7 @@ export default function Home() {
         <div className="container home-z1">
           <div className="stage-header-row">
             <div>
-              <div className="section-kicker section-kicker--light">01 · Interactive Cardiac Atlas</div>
+              <div className="section-kicker section-kicker--light">Interactive Cardiac Atlas</div>
               <h2 className="section-heading section-heading--light">
                 Target Zone &amp; Catheter Therapy
               </h2>
@@ -718,7 +718,7 @@ export default function Home() {
           <div className="devices-split-layout">
             {/* Left Vertical Selector + Active Mechanism */}
             <div className="devices-selector-col dev-from-left">
-              <div className="section-kicker">02 · Pioneering Technologies</div>
+              <div className="section-kicker">Pioneering Technologies</div>
               <h2 className="section-heading">Devices &amp; Breakthroughs</h2>
 
               <div className="devices-vertical-list" role="tablist" aria-label="Medical devices">
@@ -842,7 +842,7 @@ export default function Home() {
 
             {/* Right Interactive Milestone Selector */}
             <div className="legacy-copy-col">
-              <div className="section-kicker leg-from-right">03 · National Honor &amp; Heritage</div>
+              <div className="section-kicker leg-from-right">National Honor &amp; Heritage</div>
               <h2 className="section-heading leg-from-right">
                 Three Decades of Pioneering Firsts
               </h2>
@@ -893,7 +893,7 @@ export default function Home() {
         <div className="container home-z1">
           <div className="stage-header-row">
             <div>
-              <div className="section-kicker">04 · Watch &amp; Learn</div>
+              <div className="section-kicker">Watch &amp; Learn</div>
               <h2 className="section-heading">Clinical Explainers &amp; Patient Stories</h2>
             </div>
             <Link to="/media" className="btn-clinical btn-clinical--secondary">
