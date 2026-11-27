@@ -1,4 +1,5 @@
-// Media.jsx – Balanced Video Directory, Dynamic Opposing Directional Newspaper Archive, and Shared Image Photo Sequence
+// Media.jsx – Complete GSAP scroll animation for every section and element
+// Video Directory uses category-specific images; Photo Archive has refined display
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
@@ -23,44 +24,46 @@ const VIDEO_TABS = [
   { id: 'media', label: 'Ceremony & Telemedicine' },
 ];
 
+// Left-side main graphic image per video category
+const MAIN_GRAPHIC_IMAGE_MAP = {
+  procedure: '/images/treatments/valve-replacement-tavi.webp',
+  'patient-story': '/images/doctor/dr-praveen-consultation.webp',
+  informational: '/images/doctor/dr-praveen-speaking.webp',
+  media: '/images/doctor/dr-praveen-award-podium.webp',
+};
+
 export default function Media() {
   const [modalVideo, setModalVideo] = useState(null);
   const [activeTab, setActiveTab] = useState('procedure');
   const [activeInlineVideo, setActiveInlineVideo] = useState(null);
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
 
-  // Opposing Directional Newspaper State
   const [newsIndex, setNewsIndex] = useState(0);
-  const [newsDirection, setNewsDirection] = useState(1); // 1 = right, -1 = left
+  const [newsDirection, setNewsDirection] = useState(1);
   const [isNewsPaused, setIsNewsPaused] = useState(false);
 
-  // Shared Display Area Photo Sequence State
   const [photoIndex, setPhotoIndex] = useState(0);
 
   const pageRef = useRef(null);
 
-  // Auto-cycle for featured hero spotlight
   const heroCycle = useAutoCycle(MEDIA_VIDEOS.slice(0, 4).length, 6000);
   const currentHeroVideo = MEDIA_VIDEOS.slice(0, 4)[heroCycle.activeIndex];
 
   const filteredVideos = MEDIA_VIDEOS.filter((v) => v.type === activeTab);
 
-  // Keep inline player synchronized or null (shows placeholder graphic before selection)
   useEffect(() => {
-    setActiveInlineVideo(null); // Shows the graphic placeholder first
+    setActiveInlineVideo(null);
   }, [activeTab]);
 
-  // Opposing Directional Newspaper Auto-rotation
   useEffect(() => {
     if (isNewsPaused) return;
     const timer = setInterval(() => {
-      setNewsDirection((d) => -d); // Alternate opposing directions
+      setNewsDirection((d) => -d);
       setNewsIndex((prev) => (prev + 1) % NEWS_ARTICLES.length);
     }, 5500);
     return () => clearInterval(timer);
   }, [isNewsPaused]);
 
-  // Shared Display Photo Sequence Auto-cycle
   useEffect(() => {
     const timer = setInterval(() => {
       setPhotoIndex((prev) => (prev + 1) % PHOTO_GALLERY.length);
@@ -83,86 +86,41 @@ export default function Media() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Cinema Hero Entrance
-        gsap.fromTo(
-          '.med-hero-content',
-          { opacity: 0, x: -45 },
-          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
-        );
-        gsap.fromTo(
-          '.med-hero-theater',
-          { opacity: 0, scale: 0.93, x: 45 },
-          { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
-        );
+        // ── 1. CINEMA HERO ──
+        gsap.fromTo('.med-hero-content', { opacity: 0, x: -45 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-hero-theater', { opacity: 0, scale: 0.93, x: 45 }, { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.1, scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual hero elements
+        gsap.fromTo('.section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-hero-title', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-hero-lead', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-hero-metrics', { opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)', duration: 0.9, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-hero-actions', { opacity: 0, scale: 0.9, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, delay: 0.45, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        gsap.fromTo('.med-hero-theater img', { opacity: 0, scale: 0.8, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.theater-play-badge', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.4, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.theater-caption-bar', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
         // Continuous Hero Parallax
-        gsap.to('.med-hero-theater', {
-          yPercent: 10,
-          scale: 1.04,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.media-cinema-hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
+        gsap.to('.med-hero-theater', { yPercent: 10, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top top', end: 'bottom top', scrub: 1 } });
 
-        // 2. Video Directory Reveal (Reversible)
-        gsap.fromTo(
-          '.med-video-directory-layout',
-          { opacity: 0, y: 35 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.media-archive-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // ── 2. VIDEO DIRECTORY ──
+        gsap.fromTo('.med-video-directory-layout', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // 3. Opposing Newspaper Section Reveal
-        gsap.fromTo(
-          '.news-opposing-wrapper',
-          { opacity: 0, scale: 0.94, y: 30 },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.media-news-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // Individual video directory elements
+        gsap.fromTo('.media-stage-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.media-filter-tab', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-graphic-placeholder-frame', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-placeholder-graphic', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.7, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-uniform-video-card', { opacity: 0, y: 35, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // 4. Photo Archive Shared Stage Reveal
-        gsap.fromTo(
-          '.photo-shared-container',
-          { opacity: 0, y: 32, scale: 0.95 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.media-zigzag-gallery',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // Individual video card internal elements
+        gsap.fromTo('.med-card-thumb-wrap img', { opacity: 0, scale: 0.85, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-card-play-pill', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.1, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-card-dur', { opacity: 0, scale: 0.8, y: 10 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-card-cat-label', { opacity: 0, x: -25 }, { opacity: 1, x: 0, duration: 0.6, delay: 0.18, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-card-body-wrap h4', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.22, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-card-body-wrap p', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.75, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
       }, pageRef);
 
       return () => ctx.revert();
@@ -171,8 +129,61 @@ export default function Media() {
     return () => mm.revert();
   }, [activeTab]);
 
+  useEffect(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ctx = gsap.context(() => {
+        // ── 3. OPPOSING NEWSPAPER ──
+        gsap.fromTo('.news-opposing-wrapper', { opacity: 0, scale: 0.94, y: 30 }, {
+          opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: '.media-news-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' },
+        });
+
+        // Individual newspaper elements
+        gsap.fromTo('.news-large-image-frame', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.media-news-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.news-zoom-badge', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.2, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.media-news-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.news-meta-pills', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.media-news-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.news-condensed-info h3', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.media-news-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.news-condensed-info p', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.media-news-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+      }, pageRef);
+
+      return () => ctx.revert();
+    });
+
+    return () => mm.revert();
+  }, []);
+
+  useEffect(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ctx = gsap.context(() => {
+        // ── 4. PHOTO ARCHIVE ──
+        gsap.fromTo('.photo-shared-container', { opacity: 0, y: 32, scale: 0.95 }, {
+          opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: '.media-zigzag-gallery', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' },
+        });
+
+        // Individual photo archive elements
+        gsap.fromTo('.photo-shared-slide img', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.media-zigzag-gallery', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.photo-shared-overlay', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.media-zigzag-gallery', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.photo-seq-btn', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.media-zigzag-gallery', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+      }, pageRef);
+
+      return () => ctx.revert();
+    });
+
+    return () => mm.revert();
+  }, []);
+
   const activeArticle = NEWS_ARTICLES[newsIndex];
   const activePhoto = PHOTO_GALLERY[photoIndex];
+
+  // Get the actual video thumbnail for each video card preview
+  const getVideoImage = (vid) => {
+    return vid.thumbnail;
+  };
 
   return (
     <div ref={pageRef} className="media-root">
@@ -272,7 +283,7 @@ export default function Media() {
         </div>
       </section>
 
-      {/* ── 2. BALANCED VIDEO DIRECTORY WITH GRAPHIC PLACEHOLDER & ACTIVE INLINE PLAYER ── */}
+      {/* ── 2. BALANCED VIDEO DIRECTORY ── */}
       <section className="section media-archive-stage" id="videos" aria-label="Complete Video Archive">
         <div className="container med-z1">
           <div className="media-stage-header">
@@ -297,9 +308,7 @@ export default function Media() {
             </div>
           </div>
 
-          {/* Balanced Layout: Left Main Display Area (Graphic placeholder replaced with video on click), Right Compact Uniform Cards */}
           <div className="med-video-directory-layout">
-            {/* Main Interactive Stage */}
             <div className="med-main-display-stage">
               {activeInlineVideo ? (
                 <div className="med-active-video-player">
@@ -329,8 +338,8 @@ export default function Media() {
               ) : (
                 <div className="med-graphic-placeholder-frame">
                   <img
-                    src="/images/illustrations/cardiac-anatomy-bright.webp"
-                    alt="Precision Cardiac Interventions & Anatomy"
+                    src={MAIN_GRAPHIC_IMAGE_MAP[activeTab] || '/images/illustrations/cardiac-anatomy-bright.webp'}
+                    alt={activeTab === 'procedure' ? 'Transcatheter Valve Procedure Illustration' : activeTab === 'patient-story' ? 'Patient Consultation Scene' : activeTab === 'informational' ? 'Doctor Speaking at Symposium' : 'Medical Awards and Media Coverage'}
                     className="med-placeholder-graphic"
                   />
                   <div className="med-placeholder-overlay">
@@ -342,10 +351,10 @@ export default function Media() {
               )}
             </div>
 
-            {/* Compact Neatly Arranged Video Cards (All equal, compact size) */}
             <div className="med-cards-rail-grid" role="list" aria-label="Video Cards">
               {filteredVideos.map((vid) => {
                 const isCurrent = activeInlineVideo?.id === vid.id;
+                const cardImage = getVideoImage(vid);
                 return (
                   <article
                     key={vid.id}
@@ -362,7 +371,7 @@ export default function Media() {
                     aria-label={`Play: ${vid.title}`}
                   >
                     <div className="med-card-thumb-wrap">
-                      <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
+                      <img src={cardImage} alt={vid.title} loading="lazy" />
                       <span className="med-card-play-pill">
                         {isCurrent ? 'Playing ■' : 'Play ▶'}
                       </span>
@@ -422,7 +431,6 @@ export default function Media() {
                     })
                   }
                 >
-                  {/* Large Prominent Newspaper Image */}
                   <div className="news-large-image-frame">
                     <img src={activeArticle.image} alt={activeArticle.headline} />
                     <div className="news-zoom-badge">
@@ -430,7 +438,6 @@ export default function Media() {
                     </div>
                   </div>
 
-                  {/* Concise English-Only Meta & Information */}
                   <div className="news-condensed-info">
                     <div className="news-meta-pills">
                       <span className="clip-source-badge">{activeArticle.source}</span>
@@ -451,7 +458,6 @@ export default function Media() {
               </AnimatePresence>
             </div>
 
-            {/* Opposing Navigation Arrow Controls */}
             <div className="news-opposing-nav">
               <button
                 type="button"
@@ -501,7 +507,6 @@ export default function Media() {
             </div>
           </div>
 
-          {/* Single Shared Display Stage with Continuous Sequential Transition */}
           <div className="photo-shared-container">
             <div className="photo-shared-viewport">
               <AnimatePresence mode="wait">
@@ -525,7 +530,6 @@ export default function Media() {
               </AnimatePresence>
             </div>
 
-            {/* Photo Sequence Selector Dots */}
             <div className="photo-sequence-selector">
               {PHOTO_GALLERY.map((p, idx) => (
                 <button

@@ -1,4 +1,4 @@
-// About.jsx – Dynamic auto-cycling stages, open editorial biography & multi-directional GSAP scroll motion
+// About.jsx – Complete multi-directional GSAP scroll animation for every section and element
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -76,7 +76,6 @@ export default function About() {
   const activeEra = CAREER_TIMELINE[careerCycle.activeIndex];
   const activeFellowship = FELLOWSHIPS[fellowshipCycle.activeIndex];
 
-  // Reset selected item when category changes
   useEffect(() => {
     setSelectedItemId(null);
   }, [categoryCycle.activeIndex]);
@@ -95,182 +94,74 @@ export default function About() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Hero Entrance & Continuous Scrubbed 3D Parallax
-        gsap.fromTo(
-          '.abt-hero-left',
-          { opacity: 0, x: -48, scale: 0.94 },
-          { opacity: 1, x: 0, scale: 1, duration: 0.65, ease: 'power3.out' }
-        );
-        gsap.fromTo(
-          '.abt-hero-right',
-          { opacity: 0, x: 48 },
-          { opacity: 1, x: 0, duration: 0.85, stagger: 0.08, ease: 'power3.out', delay: 0.1 }
-        );
+        // ── 1. HERO STAGE — Individual element reveals ──
+        gsap.fromTo('.abt-hero-left', { opacity: 0, x: -48, scale: 0.94 }, { opacity: 1, x: 0, scale: 1, duration: 0.65, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-hero-right', { opacity: 0, x: 48 }, { opacity: 1, x: 0, duration: 0.85, stagger: 0.08, ease: 'power3.out', delay: 0.1, scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual hero elements
+        gsap.fromTo('.abt-hero-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-hero-title', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-hero-sub', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-hero-bio', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-hero-facts', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.45, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-hero-actions', { opacity: 0, scale: 0.9, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, delay: 0.55, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        gsap.fromTo('.about-portrait-frame', { opacity: 0, scale: 0.85, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-orbital-1', { opacity: 0, x: -50, rotate: -15 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-orbital-2', { opacity: 0, x: 50, rotate: 15 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.about-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
         // Continuous Hero Portrait 3D Float on Scroll
-        gsap.to('.about-portrait-frame', {
-          yPercent: 12,
-          scale: 1.05,
-          rotationY: -4,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.about-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
-        gsap.to('.abt-orbital-1', {
-          yPercent: -40,
-          xPercent: 10,
-          rotation: -3,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.about-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
-        gsap.to('.abt-orbital-2', {
-          yPercent: 32,
-          xPercent: -8,
-          rotation: 3,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.about-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
-        gsap.to('.about-hero-copy', {
-          yPercent: -8,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.about-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
+        gsap.to('.about-portrait-frame', { yPercent: 12, scale: 1.05, rotationY: -4, ease: 'none', scrollTrigger: { trigger: '.about-hero-stage', start: 'top top', end: 'bottom top', scrub: 1 } });
+        gsap.to('.abt-orbital-1', { yPercent: -40, xPercent: 10, rotation: -3, ease: 'none', scrollTrigger: { trigger: '.about-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        gsap.to('.abt-orbital-2', { yPercent: 32, xPercent: -8, rotation: 3, ease: 'none', scrollTrigger: { trigger: '.about-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        gsap.to('.about-hero-copy', { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.about-hero-stage', start: 'top top', end: 'bottom top', scrub: 1 } });
 
-        // 2. Career Trajectory — entrance + continuous photo scrub
-        gsap.fromTo(
-          '.abt-career-left',
-          { opacity: 0, x: -45 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.about-career-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.abt-career-right',
-          { opacity: 0, x: 45 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.about-career-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.career-visual-inner img',
-          { scale: 1.15, yPercent: -10 },
-          {
-            scale: 1.0,
-            yPercent: 8,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.about-career-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          }
-        );
+        // ── 2. CAREER TRAJECTORY ──
+        gsap.fromTo('.abt-career-stage-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-career-left', { opacity: 0, x: -45 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-career-right', { opacity: 0, x: 45 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // 3. Academic Stage Entrance
-        gsap.fromTo(
-          '.abt-acad-left',
-          { opacity: 0, x: -45 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.about-academic-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.abt-acad-right',
-          { opacity: 0, x: 45 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.about-academic-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // Individual career elements
+        gsap.fromTo('.career-era-tabs', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.career-era-tab', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.career-copy-period', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.career-era-copy h3', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.career-copy-org', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.career-copy-desc', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.5, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // 4. Milestone Ledger — entrance + continuous zoom scrub
-        gsap.fromTo(
-          '.abt-ledger-left',
-          { opacity: 0, x: -42 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.about-ledger-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.abt-ledger-right',
-          { opacity: 0, x: 46 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.85,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.about-ledger-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        gsap.fromTo('.career-visual-inner img', { opacity: 0, scale: 0.8, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.95, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.career-visual-caption', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.about-career-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Continuous photo scrub
+        gsap.fromTo('.career-visual-inner img', { scale: 1.15, yPercent: -10 }, { scale: 1.0, yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.about-career-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+
+        // ── 3. ACADEMIC STAGE ──
+        gsap.fromTo('.abt-academic-stage-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-academic-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-acad-left', { opacity: 0, x: -45 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-academic-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-acad-right', { opacity: 0, x: 45 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-academic-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual academic elements
+        gsap.fromTo('.acad-degree-row', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.about-academic-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.fellow-selector-bar', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.about-academic-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.fellow-tab-btn', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.about-academic-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.fellow-spotlight-body', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-academic-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // ── 4. MILESTONE LEDGER ──
+        gsap.fromTo('.abt-ledger-stage-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-ledger-left', { opacity: 0, x: -42 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.abt-ledger-right', { opacity: 0, x: 46 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual ledger elements
+        gsap.fromTo('.ledger-filter-tab', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.ledger-select-row', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.ledger-stage-visual img', { opacity: 0, scale: 0.8, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.ledger-stage-copy', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // ── 5. CTA RIBBON ──
+        gsap.fromTo('.about-cta-ribbon', { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.about-cta-ribbon h2', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.about-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.about-cta-ribbon p', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.about-cta-actions', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.about-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
       }, pageRef);
 
       return () => ctx.revert();
@@ -313,18 +204,18 @@ export default function About() {
 
             {/* Right Clean Typographic Monograph */}
             <div className="about-hero-copy">
-              <p className="hero-kicker abt-hero-right">
+              <p className="hero-kicker abt-hero-right abt-hero-kicker">
                 Clinical Monograph · King George’s Medical College Alumnus
               </p>
-              <h1 className="about-display-title abt-hero-right">Dr. Praveen Chandra</h1>
-              <p className="about-role-sub abt-hero-right">
+              <h1 className="about-display-title abt-hero-right abt-hero-title">Dr. Praveen Chandra</h1>
+              <p className="about-role-sub abt-hero-right abt-hero-sub">
                 {DOCTOR.title} · {DOCTOR.hospital}
               </p>
-              <p className="about-short-bio abt-hero-right">
+              <p className="about-short-bio abt-hero-right abt-hero-bio">
                 Padma Shri Dr. Praveen Chandra is Chairman of Interventional Cardiology at Medanta – The Medicity, Gurugram, and India's pioneer of TAVI, MitraClip, and laser myocardial revascularization across three decades of clinical leadership.
               </p>
 
-              <dl className="about-anchor-facts abt-hero-right">
+              <dl className="about-anchor-facts abt-hero-right abt-hero-facts">
                 <div>
                   <dt>Training</dt>
                   <dd className="tabular-nums">MBBS 1985 · MD 1989 · DM Cardiology 1991</dd>
@@ -339,7 +230,7 @@ export default function About() {
                 </div>
               </dl>
 
-              <div className="about-hero-actions abt-hero-right">
+              <div className="about-hero-actions abt-hero-right abt-hero-actions">
                 <AppointmentButton variant="primary" size="lg" label="Book Consultation" />
                 <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
                   Clinical Specialties →
@@ -350,13 +241,13 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── 2. AUTO-CYCLING CAREER TRAJECTORY (OPEN EDITORIAL STAGE) ── */}
+      {/* ── 2. AUTO-CYCLING CAREER TRAJECTORY ── */}
       <section className="section about-career-stage" aria-label="Career Milestones">
         <div className="career-bg-shape" aria-hidden="true" />
         <SectionBackground variant="coronary-tree" opacity={0.45} />
 
         <div className="container abt-z1">
-          <div className="stage-header-row">
+          <div className="stage-header-row abt-career-stage-header">
             <div>
               <div className="section-kicker">Career Trajectory</div>
               <h2 className="section-heading">Three Decades of Institutional Leadership</h2>
@@ -443,17 +334,22 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── 3. KGMC QUALIFICATIONS & AUTO-CYCLING FELLOWSHIPS (SAPPHIRE STAGE) ── */}
+      {/* ── 3. KGMC QUALIFICATIONS & AUTO-CYCLING FELLOWSHIPS ── */}
       <section className="section about-academic-stage" aria-label="Academic Qualifications and Fellowships">
         <SectionBackground variant="telemetry-grid" opacity={0.3} />
         <div className="container abt-z1">
-          <div className="acad-split-grid">
-            {/* Left Academic Degrees */}
-            <div className="acad-degrees-col abt-acad-left">
+          <div className="stage-header-row abt-academic-stage-header">
+            <div>
               <div className="section-kicker section-kicker--light">Academic Heritage</div>
               <h2 className="section-heading section-heading--light">
                 King George’s Medical College, Lucknow
               </h2>
+            </div>
+          </div>
+
+          <div className="acad-split-grid">
+            {/* Left Academic Degrees */}
+            <div className="acad-degrees-col abt-acad-left">
               <p className="section-lead section-lead--light" style={{ marginBottom: '1.5rem' }}>
                 Foundational internal medicine and cardiology super-specialization from India’s historic medical institution.
               </p>
@@ -522,7 +418,7 @@ export default function About() {
       {/* ── 4. AUTO-CYCLING HONORS & HISTORIC FIRSTS STAGE ── */}
       <section className="section about-ledger-stage" aria-label="Honors and Milestones">
         <div className="container abt-z1">
-          <div className="about-stage-header">
+          <div className="about-stage-header abt-ledger-stage-header">
             <div>
               <div className="section-kicker">Honors &amp; Clinical Firsts</div>
               <h2 className="section-heading">Padma Shri &amp; Pioneer Milestones</h2>

@@ -23,13 +23,24 @@ export default function BlogDetail() {
         gsap.fromTo(
           '.blog-detail-header-inner',
           { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-header', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } }
         );
         gsap.fromTo(
           '.blog-article-body',
           { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power3.out' }
+          { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } }
         );
+
+        // Sidebar cards
+        gsap.fromTo('.blog-sidebar-card', { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-sidebar-card h3', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-recent-item', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+
+        // Bottom CTA ribbon
+        gsap.fromTo('.blog-cta-ribbon', { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-cta-ribbon h2', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-cta-ribbon p', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-cta-ribbon .btn-clinical', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
       }, pageRef);
 
       return () => ctx.revert();

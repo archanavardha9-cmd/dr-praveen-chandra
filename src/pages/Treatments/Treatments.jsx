@@ -1,4 +1,4 @@
-// Treatments.jsx – Redesigned Hero, Auto-Cycling Procedure Showcase, Alternating Catalog & Premium Appointment Banner
+// Treatments.jsx – Complete GSAP scroll animation for every section and element
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -57,42 +57,10 @@ const COMPARISON_PARAMS = [
   },
 ];
 
-const SPECIALTY_TILES = [
-  {
-    code: 'TAVI / TAVR',
-    name: 'Transcatheter Aortic Valve',
-    tag: '1st in India',
-    desc: 'Catheter bioprosthesis deployed inside native aortic valve without open surgery.',
-    icon: '🫀',
-  },
-  {
-    code: 'MitraClip / TEER',
-    name: 'Percutaneous Mitral Repair',
-    tag: '1st in India',
-    desc: 'Beating-heart edge-to-edge clip therapy for severe mitral and tricuspid leakage.',
-    icon: '🩺',
-  },
-  {
-    code: 'CTO & Left Main',
-    name: 'Complex Coronary PCI',
-    tag: 'High Precision',
-    desc: 'Multi-vessel revascularization for 100% chronically occluded arteries.',
-    icon: '🔬',
-  },
-  {
-    code: 'Shockwave IVL & FFR',
-    name: 'Sonic Lithotripsy & Physiology',
-    tag: 'Dense Calcium',
-    desc: 'Intravascular acoustic waves fracture severe calcium for safe stent expansion.',
-    icon: '⚡',
-  },
-];
-
 export default function Treatments() {
   const location = useLocation();
   const pageRef = useRef(null);
 
-  // Auto-cycling 7 procedures in the directory showcase
   const procedureCycle = useAutoCycle(TREATMENTS.length, 6200);
   const compCycle = useAutoCycle(COMPARISON_PARAMS.length, 4800);
 
@@ -101,7 +69,6 @@ export default function Treatments() {
   const activeProcedure = TREATMENTS[procedureCycle.activeIndex];
   const activeComp = COMPARISON_PARAMS[compCycle.activeIndex];
 
-  // Handle deep link hashes to auto-select matching procedure
   useEffect(() => {
     if (!location.hash) return;
     const id = location.hash.replace('#', '');
@@ -115,7 +82,6 @@ export default function Treatments() {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 150);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.hash]);
 
   useEffect(() => {
@@ -123,83 +89,53 @@ export default function Treatments() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Treatments Hero — Progressive Staged Reveal
-        gsap.fromTo(
-          '.trt-hero-status-strip',
-          { opacity: 0, y: -24 },
-          { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }
-        );
-        gsap.fromTo(
-          '.trt-hero-directive-col',
-          { opacity: 0, x: -50 },
-          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay: 0.1 }
-        );
-        gsap.fromTo(
-          '.trt-hero-centerpiece',
-          { opacity: 0, scale: 0.92, x: 40 },
-          { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.2 }
-        );
+        // ── 1. TREATMENTS HERO — Progressive staged reveal ──
+        gsap.fromTo('.trt-hero-status-strip', { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-hero-directive-col', { opacity: 0, x: -55 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-hero-centerpiece', { opacity: 0, scale: 0.85, x: 50 }, { opacity: 1, scale: 1, x: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual hero elements
+        gsap.fromTo('.trt-hero-chip', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.6, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-hero-headline', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-hero-lead', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-hero-actions', { opacity: 0, scale: 0.9, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-hero-metrics-row', { opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)', duration: 0.9, delay: 0.45, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        gsap.fromTo('.trt-centerpiece-visual img', { opacity: 0, scale: 0.8, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-scanline-beam', { opacity: 0, width: 0 }, { opacity: 1, width: '100%', duration: 1, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-centerpiece-readout', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
         // Continuous Hero Parallax on Scroll
-        gsap.to('.trt-hero-centerpiece img', {
-          yPercent: -12,
-          scale: 1.05,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.treatments-hero-monument',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
+        gsap.to('.trt-hero-centerpiece img', { yPercent: -12, scale: 1.05, ease: 'none', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top top', end: 'bottom top', scrub: 1 } });
 
-        // 2. Full Procedure Directory Showcase — Reversible Split Animation
-        gsap.fromTo(
-          '.dir-showcase-rail',
-          { opacity: 0, x: -45 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.trt-directory-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.dir-showcase-display',
-          { opacity: 0, x: 45, scale: 0.96 },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 0.85,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.trt-directory-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // ── 2. FULL PROCEDURE DIRECTORY SHOWCASE ──
+        gsap.fromTo('.dir-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-showcase-rail', { opacity: 0, x: -55 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-showcase-display', { opacity: 0, x: 55, scale: 0.92 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // 3. Alternating Catalog Rows — Alternating Directional Reveals
+        // Individual directory elements
+        gsap.fromTo('.dir-rail-item', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-card-media img', { opacity: 0, scale: 0.8, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.95, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-card-body', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-card-meta', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-card-body h3', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-card-desc', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-card-bullets', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dir-card-actions', { opacity: 0, scale: 0.9, y: 35 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.5, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // ── 3. ALTERNATING CATALOG ROWS ──
         const rows = gsap.utils.toArray('.trt-zigzag-row');
         rows.forEach((row, i) => {
           const fromLeft = i % 2 === 0;
           gsap.fromTo(
             row,
-            { opacity: 0, x: fromLeft ? -45 : 45, y: 25 },
+            { opacity: 0, x: fromLeft ? -55 : 55, y: 35 },
             {
               opacity: 1,
               x: 0,
               y: 0,
-              duration: 0.8,
+              duration: 0.85,
               ease: 'power3.out',
               scrollTrigger: {
                 trigger: row,
@@ -211,42 +147,29 @@ export default function Treatments() {
           );
         });
 
-        // 4. Comparison Stage Reveal
-        gsap.fromTo(
-          '.trt-comp-reveal',
-          { opacity: 0, y: 35 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.trt-compare-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // Individual zigzag elements
+        gsap.fromTo('.trt-zigzag-media img', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.trt-zigzag-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-zigzag-text', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.trt-zigzag-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // 5. Final Appointment Banner Reveal
-        gsap.fromTo(
-          '.trt-appointment-content',
-          { opacity: 0, scale: 0.94, y: 30 },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.85,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.trt-appointment-banner',
-              start: 'top 85%',
-              end: 'bottom 15%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // ── 4. COMPARISON STAGE ──
+        gsap.fromTo('.trt-comp-stage-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-comp-reveal', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual comparison elements
+        gsap.fromTo('.comp-param-btn', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.comp-duel-stage', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.comp-duel-col', { opacity: 0, x: from => from === 0 ? -40 : 40 }, { opacity: 1, x: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.comp-duel-divider', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.2, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // ── 5. FINAL APPOINTMENT BANNER ──
+        gsap.fromTo('.trt-appointment-content', { opacity: 0, scale: 0.9, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual banner elements
+        gsap.fromTo('.trt-appt-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-appt-heading', { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-appt-desc', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-appt-actions', { opacity: 0, scale: 0.9, y: 35 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-appt-footnote', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.45, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
       }, pageRef);
 
       return () => ctx.revert();
@@ -257,12 +180,11 @@ export default function Treatments() {
 
   return (
     <div ref={pageRef} className="treatments-root">
-      {/* ── 1. BRAND-NEW PREMIUM TREATMENTS HERO (ARCHITECTURAL COMMAND CENTER) ── */}
+      {/* ── 1. PREMIUM TREATMENTS HERO ── */}
       <section className="treatments-hero-monument" aria-label="Cardiology Treatments Overview">
         <SectionBackground variant="valve-motion" opacity={0.65} />
 
         <div className="container trt-z1">
-          {/* Top Clinical Accreditation Strip */}
           <div className="trt-hero-status-strip">
             <div className="trt-hero-chip">
               <span className="trt-chip-pulse" />
@@ -274,9 +196,7 @@ export default function Treatments() {
             </div>
           </div>
 
-          {/* Premium 2-Column Hero: Left Directives & Verifications, Right Prominent Clinical Centerpiece */}
           <div className="trt-hero-command-grid">
-            {/* Col 1: Directive & Typography */}
             <div className="trt-hero-directive-col">
               <div className="section-kicker">Catheter Interventions</div>
               <h1 className="trt-hero-headline">
@@ -293,7 +213,6 @@ export default function Treatments() {
                 </a>
               </div>
 
-              {/* Verified Clinical Credentials */}
               <div className="trt-hero-metrics-row">
                 <div className="trt-metric-pill">
                   <span className="trt-metric-val">1st in India</span>
@@ -310,7 +229,6 @@ export default function Treatments() {
               </div>
             </div>
 
-            {/* Col 2: Prominent Medical Centerpiece Showcase (Full Width & Clean) */}
             <div className="trt-hero-centerpiece">
               <div className="trt-centerpiece-visual">
                 <img
@@ -329,10 +247,10 @@ export default function Treatments() {
         </div>
       </section>
 
-      {/* ── 2. FULL PROCEDURE DIRECTORY — AUTO-CYCLING SHOWCASE ── */}
+      {/* ── 2. FULL PROCEDURE DIRECTORY ── */}
       <section className="section trt-directory-stage" id="directory" aria-label="Full Procedure Directory">
         <div className="container trt-z1">
-          <div className="stage-header-row">
+          <div className="stage-header-row dir-section-header">
             <div>
               <div className="section-kicker">Full Procedure Directory</div>
               <h2 className="section-heading">Auto-Cycling Clinical Protocols</h2>
@@ -343,7 +261,6 @@ export default function Treatments() {
           </div>
 
           <div className="dir-showcase-grid">
-            {/* Left 7-Procedure Rail with Synchronized Auto-Cycle Progress */}
             <div className="dir-showcase-rail" role="tablist" aria-label="Procedures list">
               {TREATMENTS.map((proc, idx) => {
                 const isActive = procedureCycle.activeIndex === idx;
@@ -376,7 +293,6 @@ export default function Treatments() {
               })}
             </div>
 
-            {/* Right Synchronized Uncropped Visual Showcase */}
             <div className="dir-showcase-display">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -447,7 +363,7 @@ export default function Treatments() {
         </div>
       </section>
 
-      {/* ── 3. FULL CATALOG ZIGZAG EDITORIAL BREAKDOWN ── */}
+      {/* ── 3. FULL CATALOG ZIGZAG ── */}
       <section className="section trt-zigzag-stage" aria-label="All Treatment Details">
         <div className="container trt-z1">
           <div className="stage-header-row" style={{ marginBottom: '2.5rem' }}>
@@ -469,12 +385,10 @@ export default function Treatments() {
                   key={trt.id}
                   className={`trt-zigzag-row ${isEven ? 'is-normal' : 'is-reversed'}`}
                 >
-                  {/* Uncropped High-Fidelity Medical Visual */}
                   <div className="trt-zigzag-media">
                     <img src={trt.image} alt={trt.fullName} loading="lazy" />
                   </div>
 
-                  {/* Concise Clinical Text */}
                   <div className="trt-zigzag-text">
                     <div className="trt-zigzag-meta">
                       <span className="tabular-nums">0{idx + 1}</span>
@@ -506,10 +420,10 @@ export default function Treatments() {
         </div>
       </section>
 
-      {/* ── 4. SURGERY VS CATHETER CLINICAL COMPARISON ── */}
+      {/* ── 4. SURGERY VS CATHETER COMPARISON ── */}
       <section className="section trt-compare-stage" aria-label="Catheter vs Open Surgery">
         <div className="container trt-z1">
-          <div className="trt-catalog-header trt-comp-reveal">
+          <div className="trt-catalog-header trt-comp-reveal trt-comp-stage-header">
             <div>
               <div className="section-kicker">Clinical Comparison</div>
               <h2 className="section-heading">Open-Heart Surgery vs. Catheter Therapy</h2>
@@ -614,7 +528,7 @@ export default function Treatments() {
         </div>
       </section>
 
-      {/* ── 5. COMPLETELY REDESIGNED PREMIUM APPOINTMENT BANNER ── */}
+      {/* ── 5. PREMIUM APPOINTMENT BANNER ── */}
       <section className="trt-appointment-banner" aria-label="Book Procedure Consultation">
         <SectionBackground variant="ecg-monitor" opacity={0.35} />
         <div className="container trt-z1">

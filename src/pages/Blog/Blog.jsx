@@ -1,4 +1,4 @@
-// Blog.jsx – Expansive Hero, Compact Cards (Title + Read Full Article only), Pagination & GSAP reveals
+// Blog.jsx – Complete GSAP scroll animation for every section and element
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
@@ -17,7 +17,6 @@ export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const pageRef = useRef(null);
 
-  // Derive unique categories from genuine scraped articles
   const categories = ['All', ...new Set(BLOG_POSTS.map((p) => p.category).filter(Boolean))];
 
   const filteredPosts =
@@ -41,30 +40,33 @@ export default function Blog() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // Hero entrance
-        gsap.fromTo(
-          '.blog-hero-content > *',
-          { opacity: 0, y: 35 },
-          { opacity: 1, y: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out' }
-        );
-        gsap.fromTo(
-          '.blog-hero-graphic-col',
-          { opacity: 0, scale: 0.92, x: 40 },
-          { opacity: 1, scale: 1, x: 0, duration: 0.9, delay: 0.15, ease: 'power3.out' }
-        );
+        // ── 1. BLOG HERO ──
+        gsap.fromTo('.blog-hero-content > *', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-hero-graphic-col', { opacity: 0, scale: 0.92, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.9, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // Cards entrance (reversible)
+        // Individual hero elements
+        gsap.fromTo('.section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-hero-title', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-hero-lead', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-hero-stats', { opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)', duration: 0.9, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        gsap.fromTo('.blog-hero-graphic-frame img', { opacity: 0, scale: 0.8, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-hero-graphic-caption', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // ── 2. BLOG LISTING CARDS ──
+        gsap.fromTo('.blog-filter-bar', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.blog-listing-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
         const cards = gsap.utils.toArray('.blog-compact-card');
         cards.forEach((card, i) => {
           gsap.fromTo(
             card,
-            { opacity: 0, y: 35, scale: 0.96 },
+            { opacity: 0, y: 45, scale: 0.92 },
             {
               opacity: 1,
               y: 0,
               scale: 1,
-              duration: 0.65,
-              delay: (i % 3) * 0.08,
+              duration: 0.75,
+              delay: (i % 4) * 0.06,
               ease: 'power3.out',
               scrollTrigger: {
                 trigger: card,
@@ -75,6 +77,15 @@ export default function Blog() {
             }
           );
         });
+
+        // Individual card elements
+        gsap.fromTo('.blog-compact-thumb img', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.blog-listing-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-compact-cat', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.blog-listing-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-compact-title', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.75, delay: 0.18, ease: 'power3.out', scrollTrigger: { trigger: '.blog-listing-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-compact-action', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.8, delay: 0.28, ease: 'power3.out', scrollTrigger: { trigger: '.blog-listing-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // ── 3. CTA RIBBON ──
+        gsap.fromTo('.blog-cta-ribbon', { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
       }, pageRef);
 
       return () => ctx.revert();
@@ -114,7 +125,6 @@ export default function Blog() {
               </div>
             </div>
 
-            {/* Right Rich Medical Graphic Centerpiece */}
             <div className="blog-hero-graphic-col">
               <div className="blog-hero-graphic-frame">
                 <img
@@ -132,11 +142,10 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* ── 2. COMPACT BLOG LISTING (TITLE + READ BUTTON ONLY) ── */}
+      {/* ── 2. COMPACT BLOG LISTING ── */}
       <section className="section blog-listing-stage" aria-label="All Blog Articles">
         <SectionBackground variant="ecg-monitor" opacity={0.3} />
         <div className="container blog-z1">
-          {/* Category Filter Bar */}
           <div className="blog-filter-bar" role="tablist" aria-label="Filter articles by category">
             {categories.slice(0, 8).map((cat) => (
               <button
@@ -152,7 +161,6 @@ export default function Blog() {
             ))}
           </div>
 
-          {/* Compact Articles Grid: Title + Button Only */}
           <div className="blog-compact-grid">
             {currentPosts.map((post) => (
               <article key={post.id} className="blog-compact-card">
@@ -176,7 +184,6 @@ export default function Blog() {
             ))}
           </div>
 
-          {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="blog-pagination" aria-label="Blog Pagination">
               <button

@@ -1,4 +1,4 @@
-// Home.jsx – Dynamic auto-cycling stages, multi-directional GSAP scroll choreography & zero-card open layouts
+// Home.jsx – Complete multi-directional GSAP scroll choreography for every section and element
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -95,352 +95,109 @@ export default function Home() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Hero multi-directional entrance & continuous scrubbed 3D parallax
-        gsap.fromTo(
-          '.hero-enter-left',
-          { opacity: 0, x: -48 },
-          { opacity: 1, x: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out' }
-        );
-        gsap.fromTo(
-          '.hero-enter-right',
-          { opacity: 0, x: 50, scale: 0.94 },
-          { opacity: 1, x: 0, scale: 1, duration: 1, ease: 'power3.out', delay: 0.12 }
-        );
-        gsap.fromTo(
-          '.hero-enter-bottom',
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out', delay: 0.22 }
-        );
+        // ── 1. HERO STAGE — Every element animates individually ──
+        // Left column staggered reveals
+        // Hero — every element reveals repeatedly on scroll (no one-time entrances)
+        gsap.fromTo('.hero-kicker', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-display-title', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-short-lead', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-cta-group', { opacity: 0, y: 25, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-inline-metrics', { opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)', duration: 0.9, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+
+        // Right column directional reveals
+        gsap.fromTo('.hero-visual-col', { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-stage-frame', { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-orbital-1', { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-orbital-2', { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.hero-switcher-bar', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+
+        // Hero copy scrubbed layer — reveal opacity only (transform is scrubbed)
+        gsap.fromTo('.hero-copy-col', { opacity: 0 }, { opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
 
         // Continuous Hero Scroll Scrub (Layered 3D Motion)
-        gsap.to('.hero-stage-frame', {
-          yPercent: 14,
-          scale: 1.05,
-          rotationY: -4,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.home-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
-        gsap.to('.hero-orbital-1', {
-          yPercent: -45,
-          xPercent: 12,
-          rotation: -4,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.home-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
-        gsap.to('.hero-orbital-2', {
-          yPercent: 35,
-          xPercent: -10,
-          rotation: 4,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.home-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
-        gsap.to('.hero-copy-col', {
-          yPercent: -10,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.home-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
+        gsap.to('.hero-stage-frame', { yPercent: 14, scale: 1.05, rotationY: -4, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 1 } });
+        gsap.to('.hero-orbital-1', { yPercent: -45, xPercent: 12, rotation: -4, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        gsap.to('.hero-orbital-2', { yPercent: 35, xPercent: -10, rotation: 4, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        gsap.to('.hero-copy-col', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 1 } });
 
-        // 2. Anatomy Section — reversible directional split + continuous scrubbed anatomy rotation
-        gsap.fromTo(
-          '.anat-from-left',
-          { opacity: 0, x: -60 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.85,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-anatomy-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.anat-from-right',
-          { opacity: 0, x: 60 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.85,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-anatomy-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.anat-from-bottom',
-          { opacity: 0, y: 32 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.75,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-anatomy-stage',
-              start: 'top 80%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // ── 2. ANATOMY STAGE — Split directional reveals ──
+        gsap.fromTo('.anat-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-from-left', { opacity: 0, x: -70 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-from-right', { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-from-bottom', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual anatomy elements
+        gsap.fromTo('.anat-section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-section-heading', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-section-lead', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.75, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        gsap.fromTo('.anatomy-diagram-stage img', { opacity: 0, scale: 0.8, rotate: -8 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-pin-btn', { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        gsap.fromTo('.anat-zone-kicker', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-proc-title', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-proc-summary', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.75, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-matched-visual', { opacity: 0, scale: 0.85, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.9, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.anat-action-row', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
         // Continuous Anatomy Heart Diagram Scrub & Breathing Scale
-        gsap.fromTo(
-          '.anatomy-diagram-stage img',
-          { scale: 0.9, rotate: -6 },
-          {
-            scale: 1.08,
-            rotate: 5,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-anatomy-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.2,
-            },
-          }
-        );
-        gsap.fromTo(
-          '.anatomy-circle-backdrop',
-          { scale: 0.75, opacity: 0.25 },
-          {
-            scale: 1.3,
-            opacity: 0.85,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-anatomy-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          }
-        );
-        gsap.fromTo(
-          '.anatomy-dynamic-stage',
-          { yPercent: 10 },
-          {
-            yPercent: -8,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-anatomy-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          }
-        );
+        gsap.fromTo('.anatomy-diagram-stage img', { scale: 0.9, rotate: -6 }, { scale: 1.08, rotate: 5, ease: 'none', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
+        gsap.fromTo('.anatomy-circle-backdrop', { scale: 0.75, opacity: 0.25 }, { scale: 1.3, opacity: 0.85, ease: 'none', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+        gsap.fromTo('.anatomy-dynamic-stage', { yPercent: 10 }, { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
 
-        // 3. Devices Section — scrubbed backdrop diagonal parallax + continuous 3D tilt
-        gsap.fromTo(
-          '.devices-bg-shape',
-          { xPercent: 12, yPercent: -8 },
-          {
-            xPercent: -8,
-            yPercent: 8,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-devices-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.6,
-            },
-          }
-        );
-        gsap.fromTo(
-          '.dev-from-left',
-          { opacity: 0, x: -50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-devices-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.dev-from-right',
-          { opacity: 0, x: 50, scale: 0.93 },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 0.9,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-devices-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // ── 3. DEVICES STAGE — Alternating directional reveals ──
+        gsap.fromTo('.dev-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dev-from-left', { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.dev-from-right', { opacity: 0, x: 60, scale: 0.92 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual device elements
+        gsap.fromTo('.devices-bg-shape', { opacity: 0, xPercent: 15, yPercent: -10 }, { opacity: 1, xPercent: 0, yPercent: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.devices-showcase-col h2', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        gsap.fromTo('.dev-list-row', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.device-big-visual img', { opacity: 0, scale: 0.8, rotateX: 12 }, { opacity: 1, scale: 1, rotateX: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.device-overlay-strip', { opacity: 0, x: -30, y: 20 }, { opacity: 1, x: 0, y: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.device-strip-actions', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
         // Continuous Device Visual 3D Float on Scroll
-        gsap.fromTo(
-          '.device-big-visual img',
-          { y: 55, scale: 0.9, rotateX: 10 },
-          {
-            y: -40,
-            scale: 1.05,
-            rotateX: -4,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-devices-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.2,
-            },
-          }
-        );
+        gsap.fromTo('.device-big-visual img', { y: 55, scale: 0.9, rotateX: 10 }, { y: -40, scale: 1.05, rotateX: -4, ease: 'none', scrollTrigger: { trigger: '.home-devices-stage', start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
+        gsap.fromTo('.devices-bg-shape', { xPercent: 12, yPercent: -8 }, { xPercent: -8, yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.home-devices-stage', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
 
-        // 4. Legacy Section — mask clip reveal + orthogonal text reveal + photo parallax
-        gsap.fromTo(
-          '.leg-from-bottom',
-          { opacity: 0, clipPath: 'inset(14% 0 0 0)', y: 35 },
-          {
-            opacity: 1,
-            clipPath: 'inset(0% 0 0 0)',
-            y: 0,
-            duration: 0.9,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-legacy-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.leg-from-right',
-          { opacity: 0, x: 42 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-legacy-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // ── 4. LEGACY STAGE — Mask clip reveal + orthogonal text ──
+        gsap.fromTo('.leg-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.leg-from-bottom', { opacity: 0, clipPath: 'inset(15% 0 0 0)', y: 40 }, { opacity: 1, clipPath: 'inset(0% 0 0 0)', y: 0, duration: 0.95, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.leg-from-right', { opacity: 0, x: 55 }, { opacity: 1, x: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual legacy elements
+        gsap.fromTo('.legacy-photo-inner img', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.legacy-photo-bar', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.legacy-selector-stack', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.legacy-row-btn', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
         // Continuous Legacy Photo Parallax Zoom
-        gsap.fromTo(
-          '.legacy-photo-inner img',
-          { scale: 1.2, yPercent: -12 },
-          {
-            scale: 1.0,
-            yPercent: 8,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-legacy-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          }
-        );
+        gsap.fromTo('.legacy-photo-inner img', { scale: 1.2, yPercent: -12 }, { scale: 1.0, yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
 
-        // 5. Video Cinema & Continuous Elevation Scrub
-        gsap.fromTo(
-          '.vid-from-left',
-          { opacity: 0, x: -45 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-cinema-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-        gsap.fromTo(
-          '.vid-from-right',
-          { opacity: 0, x: 45 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '.home-cinema-stage',
-              start: 'top 85%',
-              end: 'bottom 12%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
+        // ── 5. VIDEO CINEMA — Left/right split reveals ──
+        gsap.fromTo('.cin-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.vid-from-left', { opacity: 0, x: -55 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.vid-from-right', { opacity: 0, x: 55 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Individual cinema elements
+        gsap.fromTo('.cinema-thumb-hero', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.cinema-play-circle', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.3, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.cinema-caption-strip', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.cinema-pl-thumb img', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.cinema-pl-info', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
         // Cinema Screen Elevation on Scroll
-        gsap.fromTo(
-          '.cinema-player-stage',
-          { scale: 0.93, y: 45 },
-          {
-            scale: 1.02,
-            y: -20,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-cinema-stage',
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          }
-        );
-        gsap.fromTo(
-          '.consult-ecg-path',
-          { strokeDashoffset: 900 },
-          {
-            strokeDashoffset: 0,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: '.home-consult-ribbon',
-              start: 'top 95%',
-              end: 'bottom 60%',
-              scrub: 0.5,
-            },
-          }
-        );
+        gsap.fromTo('.cinema-player-stage', { scale: 0.93, y: 45 }, { scale: 1.02, y: -20, ease: 'none', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+        gsap.fromTo('.consult-ecg-path', { strokeDashoffset: 900 }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 95%', end: 'bottom 60%', scrub: 0.5 } });
+
+        // ── 6. CONSULTATION RIBBON ──
+        gsap.fromTo('.consult-ribbon-copy h2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.consult-ribbon-copy p', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.consult-ribbon-actions', { opacity: 0, scale: 0.9, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
       }, homeRef);
 
       return () => ctx.revert();
@@ -480,7 +237,7 @@ export default function Home() {
                 </Link>
               </div>
 
-              <div className="hero-inline-metrics">
+              <div className="hero-inline-metrics hero-enter-bottom">
                 {VERIFIED_METRICS.slice(0, 3).map((m) => (
                   <div className="hero-inline-stat hero-enter-bottom" key={m.label}>
                     <span className="hero-stat-value tabular-nums">{m.value}</span>
@@ -570,18 +327,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 2. INTERACTIVE CARDIAC ANATOMY STAGE (RICH SAPPHIRE-TEAL) ── */}
+      {/* ── 2. INTERACTIVE CARDIAC ANATOMY STAGE ── */}
       <section className="section home-anatomy-stage" id="anatomy" aria-label="Interactive Cardiac Anatomy">
         <SectionBackground variant="telemetry-grid" opacity={0.22} />
         <div className="container home-z1">
-          <div className="stage-header-row">
+          <div className="stage-header-row anat-section-header">
             <div>
-              <div className="section-kicker section-kicker--light">Interactive Cardiac Atlas</div>
-              <h2 className="section-heading section-heading--light">
+              <div className="section-kicker section-kicker--light anat-section-kicker">Interactive Cardiac Atlas</div>
+              <h2 className="section-heading section-heading--light anat-section-heading">
                 Target Zone &amp; Catheter Therapy
               </h2>
             </div>
-            <p className="section-lead section-lead--light">
+            <p className="section-lead section-lead--light anat-section-lead">
               Cycles automatically or click any cardiac zone to inspect its matched catheter device.
             </p>
           </div>
@@ -616,7 +373,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Dynamic Matching Content + Matched Visual (Open Stage, Zero Box) */}
+            {/* Right Dynamic Matching Content + Matched Visual */}
             <div className="anatomy-dynamic-stage anat-from-right">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -645,7 +402,7 @@ export default function Home() {
                     <p className="anat-proc-summary">{currentHotspot.summary}</p>
                   </motion.div>
 
-                  {/* Large Matched Procedure Visual (contain so 100% uncropped) */}
+                  {/* Large Matched Procedure Visual */}
                   <motion.div
                     className="anat-matched-visual"
                     initial={{ opacity: 0, x: 32, scale: 0.94 }}
@@ -709,7 +466,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 3. PIONEERING DEVICES & CLINICAL FIRSTS (OPEN ASYMMETRIC STAGE) ── */}
+      {/* ── 3. PIONEERING DEVICES & CLINICAL FIRSTS ── */}
       <section className="section home-devices-stage" aria-label="Medical Devices Showcase">
         <div className="devices-bg-shape" aria-hidden="true" />
         <SectionBackground variant="valve-motion" opacity={0.5} />
@@ -718,8 +475,12 @@ export default function Home() {
           <div className="devices-split-layout">
             {/* Left Vertical Selector + Active Mechanism */}
             <div className="devices-selector-col dev-from-left">
-              <div className="section-kicker">Pioneering Technologies</div>
-              <h2 className="section-heading">Devices &amp; Breakthroughs</h2>
+              <div className="stage-header-row dev-section-header">
+                <div>
+                  <div className="section-kicker">Pioneering Technologies</div>
+                  <h2 className="section-heading">Devices &amp; Breakthroughs</h2>
+                </div>
+              </div>
 
               <div className="devices-vertical-list" role="tablist" aria-label="Medical devices">
                 {DEVICES_SHOWCASE.map((dev, idx) => {
@@ -810,7 +571,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 4. PADMA SHRI & CLINICAL LEADERSHIP (LUMINOUS AZURE GALLERY) ── */}
+      {/* ── 4. PADMA SHRI & CLINICAL LEADERSHIP ── */}
       <section className="section home-legacy-stage" aria-label="National Honors and Heritage">
         <SectionBackground variant="awards-constellation" opacity={0.65} />
         <div className="container home-z1">
@@ -842,10 +603,14 @@ export default function Home() {
 
             {/* Right Interactive Milestone Selector */}
             <div className="legacy-copy-col">
-              <div className="section-kicker leg-from-right">National Honor &amp; Heritage</div>
-              <h2 className="section-heading leg-from-right">
-                Three Decades of Pioneering Firsts
-              </h2>
+              <div className="stage-header-row leg-section-header">
+                <div>
+                  <div className="section-kicker leg-from-right">National Honor &amp; Heritage</div>
+                  <h2 className="section-heading leg-from-right">
+                    Three Decades of Pioneering Firsts
+                  </h2>
+                </div>
+              </div>
 
               <div className="legacy-selector-stack leg-from-right" role="tablist" aria-label="Career milestones">
                 {LEGACY_SCENES.map((scene, idx) => {
@@ -891,7 +656,7 @@ export default function Home() {
       <section className="section home-cinema-stage" aria-label="Featured Videos">
         <SectionBackground variant="multimedia-waves" opacity={0.45} />
         <div className="container home-z1">
-          <div className="stage-header-row">
+          <div className="stage-header-row cin-section-header">
             <div>
               <div className="section-kicker">Watch &amp; Learn</div>
               <h2 className="section-heading">Clinical Explainers &amp; Patient Stories</h2>

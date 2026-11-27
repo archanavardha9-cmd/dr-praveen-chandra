@@ -1,5 +1,10 @@
 // SectionBackground.jsx – High-visibility bright clinical SVG backdrops with floating medical particle motes
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './SectionBackground.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function MedicalParticles() {
   return (
@@ -15,9 +20,41 @@ function MedicalParticles() {
 }
 
 export default function SectionBackground({ variant = 'telemetry-grid', opacity = 0.85, className = '', showParticles = true }) {
+  const layerRef = useRef(null);
+
+  useEffect(() => {
+    const el = layerRef.current;
+    if (!el) return;
+
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ctx = gsap.context(() => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 30 },
+          {
+            opacity,
+            y: 0,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 90%',
+              end: 'bottom 20%',
+              toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+      });
+      return () => ctx.revert();
+    });
+
+    return () => mm.revert();
+  }, [opacity]);
+
   if (variant === 'telemetry-grid') {
     return (
-      <div className={`sec-bg-layer ${className}`} style={{ opacity }} aria-hidden="true">
+      <div ref={layerRef} className={`sec-bg-layer ${className}`} style={{ opacity: 0 }} aria-hidden="true">
         <div className="clinical-grid-pattern" />
         <div className="clinical-sweep-line" />
         {showParticles && <MedicalParticles />}
@@ -34,7 +71,7 @@ export default function SectionBackground({ variant = 'telemetry-grid', opacity 
 
   if (variant === 'valve-motion') {
     return (
-      <div className={`sec-bg-layer ${className}`} style={{ opacity }} aria-hidden="true">
+      <div ref={layerRef} className={`sec-bg-layer ${className}`} style={{ opacity: 0 }} aria-hidden="true">
         {showParticles && <MedicalParticles />}
         <svg viewBox="0 0 1000 600" className="sec-bg-svg" preserveAspectRatio="xMidYMid slice">
           <defs>
@@ -69,7 +106,7 @@ export default function SectionBackground({ variant = 'telemetry-grid', opacity 
 
   if (variant === 'coronary-tree') {
     return (
-      <div className={`sec-bg-layer ${className}`} style={{ opacity }} aria-hidden="true">
+      <div ref={layerRef} className={`sec-bg-layer ${className}`} style={{ opacity: 0 }} aria-hidden="true">
         {showParticles && <MedicalParticles />}
         <svg viewBox="0 0 1000 700" className="sec-bg-svg" preserveAspectRatio="xMidYMid slice">
           <path
@@ -107,7 +144,7 @@ export default function SectionBackground({ variant = 'telemetry-grid', opacity 
 
   if (variant === 'ecg-monitor') {
     return (
-      <div className={`sec-bg-layer ${className}`} style={{ opacity }} aria-hidden="true">
+      <div ref={layerRef} className={`sec-bg-layer ${className}`} style={{ opacity: 0 }} aria-hidden="true">
         {showParticles && <MedicalParticles />}
         <svg viewBox="0 0 1200 360" className="sec-bg-svg" preserveAspectRatio="none">
           <path
@@ -135,7 +172,7 @@ export default function SectionBackground({ variant = 'telemetry-grid', opacity 
 
   if (variant === 'awards-constellation') {
     return (
-      <div className={`sec-bg-layer ${className}`} style={{ opacity }} aria-hidden="true">
+      <div ref={layerRef} className={`sec-bg-layer ${className}`} style={{ opacity: 0 }} aria-hidden="true">
         {showParticles && <MedicalParticles />}
         <svg viewBox="0 0 1000 500" className="sec-bg-svg" preserveAspectRatio="xMidYMid slice">
           <path
@@ -172,7 +209,7 @@ export default function SectionBackground({ variant = 'telemetry-grid', opacity 
 
   if (variant === 'multimedia-waves') {
     return (
-      <div className={`sec-bg-layer ${className}`} style={{ opacity }} aria-hidden="true">
+      <div ref={layerRef} className={`sec-bg-layer ${className}`} style={{ opacity: 0 }} aria-hidden="true">
         {showParticles && <MedicalParticles />}
         <svg viewBox="0 0 1000 420" className="sec-bg-svg" preserveAspectRatio="none">
           <path
@@ -203,7 +240,7 @@ export default function SectionBackground({ variant = 'telemetry-grid', opacity 
 
   if (variant === 'contact-radar') {
     return (
-      <div className={`sec-bg-layer ${className}`} style={{ opacity }} aria-hidden="true">
+      <div ref={layerRef} className={`sec-bg-layer ${className}`} style={{ opacity: 0 }} aria-hidden="true">
         {showParticles && <MedicalParticles />}
         <svg viewBox="0 0 1000 520" className="sec-bg-svg" preserveAspectRatio="xMidYMid slice">
           <circle cx="800" cy="260" r="240" fill="none" stroke="rgba(0, 91, 148, 0.25)" strokeWidth="1.5" strokeDasharray="8 8" className="spin-slow" />

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect, Suspense, lazy } from 'react';
 import Navbar from './components/navigation/Navbar';
 import Footer from './components/layout/Footer';
+import { refreshScrollTriggers } from './hooks/useScrollAnimation';
 
 const Home = lazy(() => import('./pages/Home/Home'));
 const About = lazy(() => import('./pages/About/About'));
@@ -16,6 +17,9 @@ function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
+    // Reposition ScrollTriggers after route change + lazy content mount
+    const timer = setTimeout(() => refreshScrollTriggers(), 80);
+    return () => clearTimeout(timer);
   }, [pathname]);
   return null;
 }
