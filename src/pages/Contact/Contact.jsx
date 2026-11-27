@@ -59,24 +59,64 @@ export default function Contact() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
+        // 1. Hero Entrance & Continuous 3D Scrub
         gsap.fromTo(
           '.cnt-hero-left',
-          { opacity: 0, x: -40 },
-          { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, x: -48 },
+          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
         );
         gsap.fromTo(
           '.cnt-hero-right',
-          { opacity: 0, x: 42 },
-          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay: 0.1 }
+          { opacity: 0, x: 48, scale: 0.94 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.1 }
         );
 
+        // Continuous Hero Photo Elevation on Scroll
+        gsap.to('.cnt-photo-frame', {
+          yPercent: 12,
+          scale: 1.05,
+          rotationY: -4,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.cnt-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+        gsap.to('.cnt-orbital-1', {
+          yPercent: -42,
+          xPercent: 12,
+          rotation: -3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.cnt-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+        gsap.to('.cnt-orbital-2', {
+          yPercent: 32,
+          xPercent: -10,
+          rotation: 3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.cnt-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+
+        // 2. Hospital Hub & Maps with Continuous Parallax
         gsap.fromTo(
           '.cnt-hub-left',
-          { opacity: 0, x: -38 },
+          { opacity: 0, x: -45 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.cnt-hub-stage',
@@ -88,11 +128,11 @@ export default function Contact() {
         );
         gsap.fromTo(
           '.cnt-hub-right',
-          { opacity: 0, x: 38 },
+          { opacity: 0, x: 45 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.cnt-hub-stage',
@@ -102,10 +142,26 @@ export default function Contact() {
             },
           }
         );
+        gsap.fromTo(
+          '.cnt-map-frame',
+          { scale: 0.95, y: 30 },
+          {
+            scale: 1.02,
+            y: -15,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.cnt-hub-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
 
+        // 3. Pre-Visit Preparation
         gsap.fromTo(
           '.cnt-prep-reveal',
-          { opacity: 0, y: 28 },
+          { opacity: 0, y: 32 },
           {
             opacity: 1,
             y: 0,
@@ -177,8 +233,17 @@ export default function Contact() {
               </dl>
             </div>
 
-            {/* Right Large Uncropped Consultation Photo */}
-            <div className="cnt-hero-visual cnt-hero-right">
+            {/* Right Large Uncropped Consultation Photo with 3D Depth */}
+            <div className="cnt-hero-visual cnt-hero-right perspective-stage" style={{ position: 'relative' }}>
+              <div className="floating-orbital-badge floating-orbital-badge--gold cnt-orbital-1" style={{ top: '-14px', right: '-12px' }}>
+                <span>🟢</span>
+                <span>OPD Clinic Active · Sector 38</span>
+              </div>
+              <div className="floating-orbital-badge floating-orbital-badge--teal cnt-orbital-2" style={{ bottom: '26px', left: '-12px' }}>
+                <span>🚑</span>
+                <span>24/7 Acute Heart Trauma 1068</span>
+              </div>
+
               <div className="cnt-photo-frame">
                 <img
                   src={DOCTOR.images.consultation}

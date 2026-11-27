@@ -76,24 +76,74 @@ export default function About() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
+        // 1. Hero Entrance & Continuous Scrubbed 3D Parallax
         gsap.fromTo(
           '.abt-hero-left',
-          { opacity: 0, x: -42 },
-          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
+          { opacity: 0, x: -48, scale: 0.94 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out' }
         );
         gsap.fromTo(
           '.abt-hero-right',
-          { opacity: 0, x: 40 },
-          { opacity: 1, x: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out', delay: 0.08 }
+          { opacity: 0, x: 48 },
+          { opacity: 1, x: 0, duration: 0.85, stagger: 0.08, ease: 'power3.out', delay: 0.1 }
         );
 
+        // Continuous Hero Portrait 3D Float on Scroll
+        gsap.to('.about-portrait-frame', {
+          yPercent: 12,
+          scale: 1.05,
+          rotationY: -4,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.about-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+        gsap.to('.abt-orbital-1', {
+          yPercent: -40,
+          xPercent: 10,
+          rotation: -3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.about-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+        gsap.to('.abt-orbital-2', {
+          yPercent: 32,
+          xPercent: -8,
+          rotation: 3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.about-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+        gsap.to('.about-hero-copy', {
+          yPercent: -8,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.about-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+
+        // 2. Career Trajectory — entrance + continuous photo scrub
         gsap.fromTo(
           '.abt-career-left',
-          { opacity: 0, x: -44 },
+          { opacity: 0, x: -48 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.78,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.about-career-stage',
@@ -105,12 +155,12 @@ export default function About() {
         );
         gsap.fromTo(
           '.abt-career-right',
-          { opacity: 0, x: 46, scale: 0.96 },
+          { opacity: 0, x: 48, scale: 0.94 },
           {
             opacity: 1,
             x: 0,
             scale: 1,
-            duration: 0.85,
+            duration: 0.9,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.about-career-stage',
@@ -120,14 +170,30 @@ export default function About() {
             },
           }
         );
+        gsap.fromTo(
+          '.career-visual-inner img',
+          { scale: 1.18, yPercent: -10 },
+          {
+            scale: 1.0,
+            yPercent: 8,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.about-career-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
 
+        // 3. Academic & Fellowships — entrance + continuous subtle rotation
         gsap.fromTo(
           '.abt-acad-left',
-          { opacity: 0, x: -40 },
+          { opacity: 0, x: -45 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.about-academic-stage',
@@ -139,11 +205,11 @@ export default function About() {
         );
         gsap.fromTo(
           '.abt-acad-right',
-          { opacity: 0, x: 40 },
+          { opacity: 0, x: 45 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.about-academic-stage',
@@ -153,14 +219,30 @@ export default function About() {
             },
           }
         );
+        gsap.fromTo(
+          '.fellow-active-display',
+          { scale: 0.94, y: 30 },
+          {
+            scale: 1.02,
+            y: -15,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.about-academic-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
 
+        // 4. Milestone Ledger — entrance + continuous zoom scrub
         gsap.fromTo(
           '.abt-ledger-left',
-          { opacity: 0, x: -38 },
+          { opacity: 0, x: -42 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.about-ledger-stage',
@@ -172,17 +254,32 @@ export default function About() {
         );
         gsap.fromTo(
           '.abt-ledger-right',
-          { opacity: 0, x: 42 },
+          { opacity: 0, x: 46 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.8,
+            duration: 0.85,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.about-ledger-stage',
               start: 'top 85%',
               end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.ledger-visual-inner img',
+          { scale: 1.15, rotate: -2 },
+          {
+            scale: 1.02,
+            rotate: 2,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.about-ledger-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
             },
           }
         );
@@ -203,8 +300,17 @@ export default function About() {
 
         <div className="container abt-z1">
           <div className="about-hero-grid">
-            {/* Left Large Uncropped Portrait Frame */}
-            <div className="about-hero-visual abt-hero-left">
+            {/* Left Large Uncropped Portrait Frame with 3D Depth */}
+            <div className="about-hero-visual abt-hero-left perspective-stage" style={{ position: 'relative' }}>
+              <div className="floating-orbital-badge floating-orbital-badge--gold abt-orbital-1" style={{ top: '-12px', right: '-12px' }}>
+                <span>🏅</span>
+                <span>Padma Shri · 2016</span>
+              </div>
+              <div className="floating-orbital-badge floating-orbital-badge--teal abt-orbital-2" style={{ bottom: '28px', left: '-12px' }}>
+                <span>🎓</span>
+                <span>KGMC Lucknow · DM Cardiology</span>
+              </div>
+
               <div className="about-portrait-frame">
                 <img
                   src={DOCTOR.images.profile}

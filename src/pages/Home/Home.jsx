@@ -95,31 +95,79 @@ export default function Home() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // 1. Hero multi-directional entrance
+        // 1. Hero multi-directional entrance & continuous scrubbed 3D parallax
         gsap.fromTo(
           '.hero-enter-left',
-          { opacity: 0, x: -42 },
-          { opacity: 1, x: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out' }
+          { opacity: 0, x: -48 },
+          { opacity: 1, x: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out' }
         );
         gsap.fromTo(
           '.hero-enter-right',
-          { opacity: 0, x: 46, scale: 0.95 },
-          { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.1 }
+          { opacity: 0, x: 50, scale: 0.94 },
+          { opacity: 1, x: 0, scale: 1, duration: 1, ease: 'power3.out', delay: 0.12 }
         );
         gsap.fromTo(
           '.hero-enter-bottom',
-          { opacity: 0, y: 26 },
-          { opacity: 1, y: 0, duration: 0.75, stagger: 0.07, ease: 'power3.out', delay: 0.2 }
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out', delay: 0.22 }
         );
 
-        // 2. Anatomy Section — reversible directional split + background scale
+        // Continuous Hero Scroll Scrub (Layered 3D Motion)
+        gsap.to('.hero-stage-frame', {
+          yPercent: 14,
+          scale: 1.05,
+          rotationY: -4,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.home-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+        gsap.to('.hero-orbital-1', {
+          yPercent: -45,
+          xPercent: 12,
+          rotation: -4,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.home-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+        gsap.to('.hero-orbital-2', {
+          yPercent: 35,
+          xPercent: -10,
+          rotation: 4,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.home-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+        gsap.to('.hero-copy-col', {
+          yPercent: -10,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.home-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+
+        // 2. Anatomy Section — reversible directional split + continuous scrubbed anatomy rotation
         gsap.fromTo(
           '.anat-from-left',
-          { opacity: 0, x: -50 },
+          { opacity: 0, x: -60 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.8,
+            duration: 0.85,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-anatomy-stage',
@@ -131,11 +179,11 @@ export default function Home() {
         );
         gsap.fromTo(
           '.anat-from-right',
-          { opacity: 0, x: 50 },
+          { opacity: 0, x: 60 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.8,
+            duration: 0.85,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-anatomy-stage',
@@ -147,11 +195,11 @@ export default function Home() {
         );
         gsap.fromTo(
           '.anat-from-bottom',
-          { opacity: 0, y: 28 },
+          { opacity: 0, y: 32 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
+            duration: 0.75,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-anatomy-stage',
@@ -162,13 +210,59 @@ export default function Home() {
           }
         );
 
-        // 3. Devices Section — scrubbed backdrop diagonal parallax + split reveal
+        // Continuous Anatomy Heart Diagram Scrub & Breathing Scale
+        gsap.fromTo(
+          '.anatomy-diagram-stage img',
+          { scale: 0.9, rotate: -6 },
+          {
+            scale: 1.08,
+            rotate: 5,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-anatomy-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          }
+        );
+        gsap.fromTo(
+          '.anatomy-circle-backdrop',
+          { scale: 0.75, opacity: 0.25 },
+          {
+            scale: 1.3,
+            opacity: 0.85,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-anatomy-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+        gsap.fromTo(
+          '.anatomy-dynamic-stage',
+          { yPercent: 10 },
+          {
+            yPercent: -8,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-anatomy-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+
+        // 3. Devices Section — scrubbed backdrop diagonal parallax + continuous 3D tilt
         gsap.fromTo(
           '.devices-bg-shape',
-          { xPercent: 8, yPercent: -6 },
+          { xPercent: 12, yPercent: -8 },
           {
-            xPercent: -4,
-            yPercent: 6,
+            xPercent: -8,
+            yPercent: 8,
             ease: 'none',
             scrollTrigger: {
               trigger: '.home-devices-stage',
@@ -180,11 +274,11 @@ export default function Home() {
         );
         gsap.fromTo(
           '.dev-from-left',
-          { opacity: 0, x: -42 },
+          { opacity: 0, x: -50 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-devices-stage',
@@ -196,12 +290,12 @@ export default function Home() {
         );
         gsap.fromTo(
           '.dev-from-right',
-          { opacity: 0, x: 46, scale: 0.94 },
+          { opacity: 0, x: 50, scale: 0.93 },
           {
             opacity: 1,
             x: 0,
             scale: 1,
-            duration: 0.85,
+            duration: 0.9,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-devices-stage',
@@ -212,15 +306,33 @@ export default function Home() {
           }
         );
 
-        // 4. Legacy Section — mask clip reveal + orthogonal text reveal
+        // Continuous Device Visual 3D Float on Scroll
+        gsap.fromTo(
+          '.device-big-visual img',
+          { y: 55, scale: 0.9, rotateX: 10 },
+          {
+            y: -40,
+            scale: 1.05,
+            rotateX: -4,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-devices-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          }
+        );
+
+        // 4. Legacy Section — mask clip reveal + orthogonal text reveal + photo parallax
         gsap.fromTo(
           '.leg-from-bottom',
-          { opacity: 0, clipPath: 'inset(12% 0 0 0)', y: 30 },
+          { opacity: 0, clipPath: 'inset(14% 0 0 0)', y: 35 },
           {
             opacity: 1,
             clipPath: 'inset(0% 0 0 0)',
             y: 0,
-            duration: 0.85,
+            duration: 0.9,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-legacy-stage',
@@ -232,12 +344,12 @@ export default function Home() {
         );
         gsap.fromTo(
           '.leg-from-right',
-          { opacity: 0, x: 38 },
+          { opacity: 0, x: 42 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
-            stagger: 0.09,
+            duration: 0.8,
+            stagger: 0.1,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-legacy-stage',
@@ -248,14 +360,31 @@ export default function Home() {
           }
         );
 
-        // 5. Video Cinema & Scrubbed ECG
+        // Continuous Legacy Photo Parallax Zoom
+        gsap.fromTo(
+          '.legacy-photo-inner img',
+          { scale: 1.2, yPercent: -12 },
+          {
+            scale: 1.0,
+            yPercent: 8,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-legacy-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+
+        // 5. Video Cinema & Continuous Elevation Scrub
         gsap.fromTo(
           '.vid-from-left',
-          { opacity: 0, x: -40 },
+          { opacity: 0, x: -45 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-cinema-stage',
@@ -267,17 +396,34 @@ export default function Home() {
         );
         gsap.fromTo(
           '.vid-from-right',
-          { opacity: 0, x: 40 },
+          { opacity: 0, x: 45 },
           {
             opacity: 1,
             x: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.home-cinema-stage',
               start: 'top 85%',
               end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+
+        // Cinema Screen Elevation on Scroll
+        gsap.fromTo(
+          '.cinema-player-stage',
+          { scale: 0.93, y: 45 },
+          {
+            scale: 1.02,
+            y: -20,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-cinema-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
             },
           }
         );
@@ -344,8 +490,18 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Dynamic Auto-Cycling Visual Stage (Large & Uncropped) */}
-            <div className="hero-visual-col hero-enter-right">
+            {/* Right Dynamic Auto-Cycling Visual Stage (Large & Uncropped with 3D Depth) */}
+            <div className="hero-visual-col hero-enter-right perspective-stage" style={{ position: 'relative' }}>
+              {/* Floating 3D Orbital Badges with differential parallax */}
+              <div className="floating-orbital-badge floating-orbital-badge--gold hero-orbital-1" style={{ top: '-14px', left: '-18px' }}>
+                <span>🏅</span>
+                <span>Padma Shri Awardee · 2016</span>
+              </div>
+              <div className="floating-orbital-badge floating-orbital-badge--teal hero-orbital-2" style={{ bottom: '72px', right: '-18px' }}>
+                <span>🫀</span>
+                <span>50,000+ Interventions</span>
+              </div>
+
               <div className="hero-stage-frame">
                 <AnimatePresence mode="wait">
                   <motion.div

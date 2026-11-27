@@ -113,6 +113,8 @@
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-lift);
   overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .hero-slide-inner {

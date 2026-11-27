@@ -103,6 +103,8 @@
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-lift);
   overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .trt-display-visual {
@@ -113,12 +115,14 @@
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid var(--border-hairline);
+  overflow: hidden;
 }
 
 .trt-display-visual img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  will-change: transform;
 }
 
 .trt-display-body {

@@ -104,25 +104,65 @@ export default function Treatments() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
+        // 1. Hero entrance & Continuous 3D scrub
         gsap.fromTo(
           '.trt-hero-left',
-          { opacity: 0, x: -42 },
-          { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, x: -48 },
+          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
         );
         gsap.fromTo(
           '.trt-hero-right',
-          { opacity: 0, x: 46, scale: 0.96 },
-          { opacity: 1, x: 0, scale: 1, duration: 0.85, ease: 'power3.out', delay: 0.1 }
+          { opacity: 0, x: 48, scale: 0.94 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.1 }
         );
 
+        // Continuous Hero Scrubbed 3D Tilt
+        gsap.to('.trt-display-visual img', {
+          yPercent: -14,
+          scale: 1.08,
+          rotateX: 6,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.trt-stage-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+        gsap.to('.trt-orbital-1', {
+          yPercent: -42,
+          xPercent: 12,
+          rotation: -3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.trt-stage-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+        gsap.to('.trt-orbital-2', {
+          yPercent: 34,
+          xPercent: -10,
+          rotation: 3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.trt-stage-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+
+        // 2. Catalog Rows with Continuous Parallax Zoom
         gsap.fromTo(
           '.trt-alt-row',
-          { opacity: 0, y: 34 },
+          { opacity: 0, y: 40 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
-            stagger: 0.08,
+            duration: 0.8,
+            stagger: 0.1,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.trt-catalog-stage',
@@ -132,14 +172,30 @@ export default function Treatments() {
             },
           }
         );
+        gsap.fromTo(
+          '.trt-row-visual img',
+          { scale: 0.9, rotate: -3 },
+          {
+            scale: 1.06,
+            rotate: 2,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.trt-catalog-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          }
+        );
 
+        // 3. Comparison Stage Reveal
         gsap.fromTo(
           '.trt-comp-reveal',
-          { opacity: 0, y: 28 },
+          { opacity: 0, y: 32 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.trt-compare-stage',
@@ -208,8 +264,17 @@ export default function Treatments() {
               </div>
             </div>
 
-            {/* Right Synchronized Uncropped Visual + Details Stage */}
-            <div className="trt-stage-display trt-hero-right">
+            {/* Right Synchronized Uncropped Visual + Details Stage with 3D Depth */}
+            <div className="trt-stage-display trt-hero-right perspective-stage" style={{ position: 'relative' }}>
+              <div className="floating-orbital-badge floating-orbital-badge--gold trt-orbital-1" style={{ top: '-14px', right: '-12px' }}>
+                <span>⚡</span>
+                <span>0 Sternotomy · Beating Heart</span>
+              </div>
+              <div className="floating-orbital-badge floating-orbital-badge--teal trt-orbital-2" style={{ bottom: '16px', left: '-12px' }}>
+                <span>⏱️</span>
+                <span>48-Hour Rapid Recovery</span>
+              </div>
+
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeProcedure.id}

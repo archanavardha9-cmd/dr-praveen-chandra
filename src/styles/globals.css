@@ -278,6 +278,61 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--canvas-ice);
 }
 
+/* ── 3D & Advanced Creative Motion Classes ── */
+.perspective-stage {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.floating-orbital-badge {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 91, 148, 0.18);
+  border-radius: var(--radius-full);
+  box-shadow: 0 12px 32px rgba(9, 34, 58, 0.12);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-primary);
+  pointer-events: none;
+  animation: floatBreathing 4.5s ease-in-out infinite alternate;
+}
+
+.floating-orbital-badge--gold {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(184, 130, 28, 0.35);
+  box-shadow: 0 12px 32px rgba(184, 130, 28, 0.16);
+  color: #784805;
+}
+
+.floating-orbital-badge--teal {
+  border-color: rgba(9, 124, 124, 0.35);
+  box-shadow: 0 12px 32px rgba(9, 124, 124, 0.16);
+  color: #055050;
+}
+
+@keyframes floatBreathing {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.8deg); }
+  100% { transform: translateY(6px) rotate(-0.8deg); }
+}
+
+.reveal-overflow-hidden {
+  overflow: hidden;
+  display: block;
+}
+
+.scrub-target {
+  will-change: transform, opacity;
+}
+
 ::selection {
   background: rgba(0, 91, 148, 0.18);
   color: var(--ink-primary);

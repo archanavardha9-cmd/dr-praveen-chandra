@@ -49,25 +49,64 @@ export default function Media() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
+        // 1. Cinema Hero Entrance & Continuous Scrub
         gsap.fromTo(
           '.med-hero-left',
-          { opacity: 0, x: -40 },
-          { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }
+          { opacity: 0, x: -48 },
+          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out' }
         );
         gsap.fromTo(
           '.med-hero-right',
-          { opacity: 0, x: 42 },
-          { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay: 0.08 }
+          { opacity: 0, x: 48 },
+          { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
         );
 
+        // Continuous Cinema Elevation on Scroll
+        gsap.to('.media-stage-box', {
+          yPercent: 12,
+          scale: 1.05,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.media-cinema-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+        gsap.to('.med-orbital-1', {
+          yPercent: -42,
+          xPercent: 12,
+          rotation: -3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.media-cinema-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+        gsap.to('.med-orbital-2', {
+          yPercent: 32,
+          xPercent: -10,
+          rotation: 3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.media-cinema-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+          },
+        });
+
+        // 2. Video Archive — entrance + continuous thumbnail zoom
         gsap.fromTo(
           '.med-archive-row',
-          { opacity: 0, y: 26 },
+          { opacity: 0, y: 32 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.6,
-            stagger: 0.06,
+            duration: 0.7,
+            stagger: 0.08,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.media-archive-stage',
@@ -77,14 +116,29 @@ export default function Media() {
             },
           }
         );
+        gsap.fromTo(
+          '.archive-thumb-wrap img',
+          { scale: 0.94 },
+          {
+            scale: 1.06,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.media-archive-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          }
+        );
 
+        // 3. Publications & Articles — entrance + continuous scrub
         gsap.fromTo(
           '.med-pubs-reveal',
-          { opacity: 0, y: 30 },
+          { opacity: 0, y: 34 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.media-pubs-stage',
@@ -94,20 +148,51 @@ export default function Media() {
             },
           }
         );
+        gsap.fromTo(
+          '.pub-cover-image img',
+          { scale: 1.15, yPercent: -8 },
+          {
+            scale: 1.0,
+            yPercent: 8,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.media-pubs-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
 
+        // 4. Photo Gallery Mosaic
         gsap.fromTo(
           '.med-gal-reveal',
-          { opacity: 0, y: 30 },
+          { opacity: 0, y: 32 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.75,
+            duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '.media-gallery-stage',
               start: 'top 85%',
               end: 'bottom 12%',
               toggleActions: 'play reverse play reverse',
+            },
+          }
+        );
+        gsap.fromTo(
+          '.gallery-hero-photo img',
+          { scale: 1.18, rotate: -2 },
+          {
+            scale: 1.02,
+            rotate: 2,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.media-gallery-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
             },
           }
         );
@@ -140,8 +225,17 @@ export default function Media() {
           </div>
 
           <div className="media-spotlight-grid">
-            {/* Left Large 16:9 Cinema Stage */}
-            <div className="media-player-col med-hero-left">
+            {/* Left Large 16:9 Cinema Stage with 3D Depth */}
+            <div className="media-player-col med-hero-left perspective-stage" style={{ position: 'relative' }}>
+              <div className="floating-orbital-badge floating-orbital-badge--gold med-orbital-1" style={{ top: '-14px', right: '-10px' }}>
+                <span>🎬</span>
+                <span>11+ Verified Films</span>
+              </div>
+              <div className="floating-orbital-badge floating-orbital-badge--teal med-orbital-2" style={{ bottom: '16px', left: '-10px' }}>
+                <span>📺</span>
+                <span>Live YouTube Demonstrations</span>
+              </div>
+
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeSpotlight.id}

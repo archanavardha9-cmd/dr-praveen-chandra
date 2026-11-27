@@ -96,6 +96,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .cnt-photo-frame img {
