@@ -47,42 +47,19 @@ export default function Blog() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. EDITORIAL PUBLICATION COLLAGE HERO — Multi-visual layered entrance + float + scroll separation ──
+        // ── 1. EDITORIAL CENTERED TYPOGRAPHY HERO — Background image scale + centered typography reveal ──
         const heroMount = gsap.timeline();
         heroMount
-          .fromTo('.blog-hero-content', { x: -110, opacity: 0 }, { x: 0, opacity: 1, duration: 0.92, ease: 'power3.out' })
-          .fromTo(
-            '.blog-hero-primary-panel',
-            { x: 110, scale: 0.78, rotate: 2, opacity: 0 },
-            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-            0.06
-          )
-          .fromTo(
-            '.blog-pub-spread-top',
-            { x: -65, y: -50, scale: 0.72, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
-            0.26
-          )
-          .fromTo(
-            '.blog-pub-spread-left',
-            { x: -75, y: 55, scale: 0.72, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
-            0.34
-          )
-          .fromTo(
-            '.blog-pub-spread-bottom',
-            { x: 65, y: 55, scale: 0.72, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
-            0.4
-          )
-          .fromTo('.blog-hero-content .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5 }, 0.16)
+          .fromTo('.blog-hero-bg img', { scale: 1.05, opacity: 0.5 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out' })
+          .fromTo('.blog-hero-overlay', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.1)
+          .fromTo('.blog-hero-center .section-kicker', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.2)
           .fromTo(
             '.blog-hero-title .split-word-inner',
-            { yPercent: 125, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.055, ease: 'power3.out' },
-            0.22
+            { yPercent: 120, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.85, stagger: 0.055, ease: 'power3.out' },
+            0.28
           )
-          .fromTo('.blog-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55 }, 0.44)
+          .fromTo('.blog-hero-lead', { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
           .fromTo('.blog-stat-item', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48, stagger: 0.08 }, 0.54);
 
         animateNumericCounters('.blog-stat-num', {
@@ -90,29 +67,12 @@ export default function Blog() {
           start: 'top 95%',
         });
 
-        gsap.to('.blog-stage-float', {
-          y: -8,
-          duration: 3.8,
+        gsap.to('.blog-hero-bg img', {
+          scale: 1.02,
+          duration: 5,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
-          delay: 1.15,
-        });
-        gsap.to('.blog-pub-spread-top', {
-          y: 6,
-          duration: 3.2,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.2,
-        });
-        gsap.to('.blog-pub-spread-bottom', {
-          y: -7,
-          duration: 3.4,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.3,
         });
 
         const heroExit = gsap.timeline({
@@ -124,8 +84,8 @@ export default function Blog() {
           },
         });
         heroExit
-          .to('.blog-hero-copy-inner', { x: -70, y: -24, opacity: 0.22, ease: 'none' }, 0)
-          .to('.blog-hero-visual-scrub', { x: 70, y: -30, scale: 0.85, opacity: 0.22, ease: 'none' }, 0);
+          .to('.blog-hero-bg img', { scale: 1.1, opacity: 0.4, ease: 'none' }, 0)
+          .to('.blog-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         gsap.fromTo(
           '.blog-filter-bar',
@@ -222,93 +182,37 @@ export default function Blog() {
 
   return (
     <div ref={pageRef} className="blog-page-root">
-      {/* ── 1. MULTI-LAYER PUBLICATION COLLAGE HERO ── */}
+      {/* ── 1. EDITORIAL CENTERED TYPOGRAPHY HERO WITH FEATURED IMAGE ── */}
       <section className="blog-hero-monument" aria-label="Cardiology Insights & Articles">
+        <div className="blog-hero-bg" aria-hidden="true">
+          <ResponsiveImage
+            src="/images/illustrations/coronary-stent-ivl.webp"
+            alt="Precision Coronary Interventions"
+            priority
+            objectFit="cover"
+            sizes="100vw"
+          />
+        </div>
+        <div className="blog-hero-overlay"></div>
         <div className="container blog-z1">
-          <div className="blog-hero-split-grid">
-            <div className="blog-hero-content">
-              <div className="blog-hero-copy-inner">
-                <span className="section-kicker">Clinical Monograph &amp; Editorial Archive</span>
-                <SplitHeading
-                  as="h1"
-                  className="blog-hero-title"
-                  text="Comprehensive Cardiology Knowledge Base"
-                />
-                <p className="blog-hero-lead">
-                  Over 50 clinical articles and procedure guides authored by Padma Shri Dr. Praveen Chandra — covering TAVI aortic valves, MitraClip repair, Intravascular Lithotripsy (IVL), and acute cardiac care at Medanta – The Medicity.
-                </p>
-                <div className="blog-hero-stats">
-                  <div className="blog-stat-item">
-                    <span className="blog-stat-num">{BLOG_POSTS.length}+</span>
-                    <span className="blog-stat-lbl">Full Articles</span>
-                  </div>
-                  <div className="blog-stat-item">
-                    <span className="blog-stat-num">30+ Yrs</span>
-                    <span className="blog-stat-lbl">Clinical Insight</span>
-                  </div>
-                  <div className="blog-stat-item">
-                    <span className="blog-stat-num">100%</span>
-                    <span className="blog-stat-lbl">Original Text</span>
-                  </div>
-                </div>
+          <div className="blog-hero-center">
+            <span className="section-kicker">Clinical Monograph & Editorial Archive</span>
+            <SplitHeading as="h1" className="blog-hero-title" text="Comprehensive Cardiology Knowledge Base" />
+            <p className="blog-hero-lead">
+              Over 50 clinical articles and procedure guides authored by Padma Shri Dr. Praveen Chandra — covering TAVI aortic valves, MitraClip repair, Intravascular Lithotripsy (IVL), and acute cardiac care at Medanta – The Medicity.
+            </p>
+            <div className="blog-hero-stats">
+              <div className="blog-stat-item">
+                <span className="blog-stat-num">{BLOG_POSTS.length}+</span>
+                <span className="blog-stat-lbl">Full Articles</span>
               </div>
-            </div>
-
-            {/* Layered Editorial Collage replacing lonely right square */}
-            <div className="blog-hero-graphic-col">
-              <div className="blog-hero-visual-scrub">
-                <div className="blog-collage-stage">
-                  {/* Top Editorial Spread */}
-                  <div className="blog-pub-spread blog-pub-spread-top" aria-hidden="true">
-                    <ResponsiveImage
-                      src="/images/publications/tavi-multidisciplinary-planning.webp"
-                      alt=""
-                      objectFit="cover"
-                      sizes="180px"
-                    />
-                    <span>TAVI Planning</span>
-                  </div>
-
-                  {/* Left Clinical Spread */}
-                  <div className="blog-pub-spread blog-pub-spread-left" aria-hidden="true">
-                    <ResponsiveImage
-                      src="/images/publications/complex-coronary-disease.webp"
-                      alt=""
-                      objectFit="cover"
-                      sizes="170px"
-                    />
-                    <span>Complex PCI</span>
-                  </div>
-
-                  {/* Centerpiece Graphic */}
-                  <div className="blog-stage-float blog-hero-primary-panel">
-                    <div className="blog-hero-graphic-frame">
-                      <div className="blog-hero-mask media-reveal-mask">
-                        <ResponsiveImage
-                          src="/images/illustrations/coronary-stent-ivl.webp"
-                          alt="Precision Coronary Interventions and Catheter Therapeutics"
-                          priority
-                          objectFit="contain"
-                          sizes="(max-width: 960px) 92vw, 440px"
-                        />
-                      </div>
-                      <div className="blog-hero-graphic-caption">
-                        <span>Evidence-Based Structural &amp; Coronary Literature</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bottom Editorial Spread */}
-                  <div className="blog-pub-spread blog-pub-spread-bottom" aria-hidden="true">
-                    <ResponsiveImage
-                      src="/images/publications/cardiovascular-risk-management.webp"
-                      alt=""
-                      objectFit="cover"
-                      sizes="190px"
-                    />
-                    <span>Preventive Cardiology</span>
-                  </div>
-                </div>
+              <div className="blog-stat-item">
+                <span className="blog-stat-num">30+ Yrs</span>
+                <span className="blog-stat-lbl">Clinical Insight</span>
+              </div>
+              <div className="blog-stat-item">
+                <span className="blog-stat-num">100%</span>
+                <span className="blog-stat-lbl">Original Text</span>
               </div>
             </div>
           </div>

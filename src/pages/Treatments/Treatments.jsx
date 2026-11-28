@@ -93,65 +93,29 @@ export default function Treatments() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. TREATMENTS HERO — Left copy + 3-Layer Procedural Triad convergence & inverse exit ──
+        // ── 1. TREATMENTS HERO — Centered typography + procedure chips reveal ──
         const heroMount = gsap.timeline();
         heroMount
           .fromTo(
-            '.trt-hero-status-strip',
-            { y: -22, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }
-          )
-          .fromTo(
-            '.trt-hero-directive-col',
-            { x: -110, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.9, ease: 'power3.out' },
+            '.trt-hero-kicker-chip',
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
             0.05
-          )
-          .fromTo(
-            '.trt-triad-main',
-            { x: 110, scale: 0.78, opacity: 0 },
-            { x: 0, scale: 1, opacity: 1, duration: 1.0, ease: 'power3.out' },
-            0.08
-          )
-          .fromTo(
-            '.trt-triad-wing--top',
-            { x: -55, y: -45, scale: 0.72, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out' },
-            0.22
-          )
-          .fromTo(
-            '.trt-triad-wing--bottom',
-            { x: 65, y: 55, scale: 0.72, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out' },
-            0.28
           )
           .fromTo(
             '.trt-hero-headline .split-word-inner',
             { yPercent: 120, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
-            0.22
+            { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.055, ease: 'power3.out' },
+            0.15
           )
-          .fromTo('.trt-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
-          .fromTo(
-            '.trt-hero-actions > *',
-            { scale: 0.86, y: 16, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.5)' },
-            0.55
-          )
-          .fromTo('.trt-metric-item', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }, 0.65);
+          .fromTo('.trt-hero-lead', { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.35)
+          .fromTo('.trt-procedure-chip', { y: 30, scale: 0.85, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'back.out(1.4)' }, 0.45)
+          .fromTo('.trt-hero-center-actions > *', { scale: 0.86, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.5)' }, 0.6)
+          .fromTo('.trt-hero-metric-mini', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }, 0.7);
 
         animateNumericCounters('.trt-counter-val', {
           trigger: '.treatments-hero-monument',
           start: 'top 95%',
-        });
-
-        gsap.to('.trt-stage-float', {
-          y: -8,
-          duration: 3.8,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.15,
         });
 
         const heroExit = gsap.timeline({
@@ -163,10 +127,7 @@ export default function Treatments() {
           },
         });
         heroExit
-          .to('.trt-hero-copy-inner', { x: -75, y: -24, opacity: 0.22, ease: 'none' }, 0)
-          .to('.trt-triad-main', { scale: 0.86, y: -28, opacity: 0.28, ease: 'none' }, 0)
-          .to('.trt-triad-wing--top', { x: -55, y: -40, scale: 1.08, opacity: 0.35, ease: 'none' }, 0)
-          .to('.trt-triad-wing--bottom', { x: 55, y: 35, scale: 1.08, opacity: 0.35, ease: 'none' }, 0);
+          .to('.trt-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. PROCEDURE DIRECTORY — Scrubbed rail + display growth ──
         const dirTl = gsap.timeline({
@@ -375,99 +336,48 @@ export default function Treatments() {
 
   return (
     <div ref={pageRef} className="treatments-root">
-      {/* ── 1. TREATMENTS HERO WITH 3-LAYER PROCEDURAL TRIAD ── */}
+      {/* ── 1. CENTERED CATHETER THERAPIES HERO WITH PROCEDURE CHIPS ── */}
       <section className="treatments-hero-monument" aria-label="Cardiology Treatments Overview">
         <div className="container trt-z1">
-          <div className="trt-hero-status-strip">
-            <span className="trt-status-item">
-              Chairman, Interventional Cardiology · Medanta – The Medicity, Gurugram
-            </span>
-            <span className="trt-status-item trt-status-item--gold">
-              Padma Shri Awardee (2016) · Pioneer of TAVI &amp; MitraClip in India
-            </span>
-          </div>
-
-          <div className="trt-hero-command-grid">
-            <div className="trt-hero-directive-col">
-              <div className="trt-hero-copy-inner">
-                <div className="section-kicker">Catheter Interventions</div>
-                <SplitHeading
-                  as="h1"
-                  className="trt-hero-headline"
-                  text="Precision Catheter Therapies & Transcatheter Valve Repair"
-                />
-                <p className="trt-hero-lead">
-                  Non-surgical catheter techniques for severe aortic stenosis, mitral regurgitation, and complex multi-vessel coronary blockages.
-                </p>
-
-                <div className="trt-hero-actions">
-                  <AppointmentButton variant="primary" size="lg" label="Book Procedure Evaluation" />
-                  <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
-                    Call {CONTACT_INFO.phones[0]}
-                  </a>
-                </div>
-
-                <div className="trt-hero-metrics-row">
-                  <div className="trt-metric-item">
-                    <span className="trt-metric-val">1st in India</span>
-                    <span className="trt-metric-lbl">TAVI &amp; MitraClip</span>
-                  </div>
-                  <div className="trt-metric-item">
-                    <span className="trt-metric-val">Beating Heart</span>
-                    <span className="trt-metric-lbl">Zero Bypass Required</span>
-                  </div>
-                  <div className="trt-metric-item">
-                    <span className="trt-metric-val trt-counter-val tabular-nums">100+ Papers</span>
-                    <span className="trt-metric-lbl">Indexed Publications</span>
-                  </div>
-                </div>
-              </div>
+          <div className="trt-hero-center">
+            <div className="trt-hero-kicker-chip">
+              <span className="trt-chip-dot" aria-hidden="true"></span>
+              Catheter Interventions · Non-Surgical Valve &amp; Coronary Care
             </div>
 
-            {/* 3-Layer Procedural Visual Triad */}
-            <div className="trt-hero-triad-col">
-              <div className="trt-stage-float trt-triad-canvas">
-                <div className="trt-triad-main">
-                  <div className="trt-triad-main-media">
-                    <ResponsiveImage
-                      src="/images/treatments/valve-replacement-tavi.webp"
-                      alt="Transcatheter Aortic Valve Implantation bioprosthetic frame"
-                      priority
-                      objectFit="contain"
-                      sizes="(max-width: 900px) 92vw, 440px"
-                    />
-                  </div>
-                  <div className="trt-triad-readout">
-                    <span>TAVI / TAVR · Non-Surgical Femoral Valve</span>
-                  </div>
-                </div>
+            <SplitHeading
+              as="h1"
+              className="trt-hero-headline"
+              text="Precision Catheter Therapies"
+            />
 
-                <div className="trt-triad-wing trt-triad-wing--top">
-                  <div className="trt-triad-wing-media">
-                    <ResponsiveImage
-                      src="/images/illustrations/mitraclip-repair-diagram.webp"
-                      alt="MitraClip percutaneous mitral leaflet clip repair"
-                      priority
-                      objectFit="contain"
-                      sizes="220px"
-                    />
-                  </div>
-                  <span>MitraClip TEER</span>
-                </div>
+            <p className="trt-hero-lead">
+              Minimally invasive procedures for aortic stenosis, mitral regurgitation, and complex coronary disease — without sternotomy or heart-lung bypass.
+            </p>
 
-                <div className="trt-triad-wing trt-triad-wing--bottom">
-                  <div className="trt-triad-wing-media">
-                    <ResponsiveImage
-                      src="/images/illustrations/coronary-stent-ivl.webp"
-                      alt="Intravascular lithotripsy and precision coronary stent"
-                      priority
-                      objectFit="contain"
-                      sizes="220px"
-                    />
-                  </div>
-                  <span>Complex PCI &amp; IVL</span>
-                </div>
-              </div>
+            <div className="trt-procedure-chips">
+              {['TAVI / TAVR', 'MitraClip TEER', 'Complex PCI &amp; IVL', 'Acute MI Primary PCI', 'Leadless Pacemaker'].map((proc, idx) => (
+                <button
+                  key={proc}
+                  type="button"
+                  className={`trt-procedure-chip ${idx === 0 ? 'is-active' : ''}`}
+                  onClick={() => procedureCycle.selectIndex(idx)}
+                >
+                  {proc}
+                </button>
+              ))}
+            </div>
+
+            <div className="trt-hero-center-actions">
+              <AppointmentButton variant="primary" size="lg" label="Book Procedure Evaluation" />
+              <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
+                Call {CONTACT_INFO.phones[0]}
+              </a>
+            </div>
+
+            <div className="trt-hero-metric-mini">
+              <span className="trt-metric-val trt-counter-val tabular-nums">1st in India</span>
+              <span className="trt-metric-lbl">TAVI &amp; MitraClip Pioneer</span>
             </div>
           </div>
         </div>

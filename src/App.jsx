@@ -14,10 +14,14 @@ const BlogDetail = lazy(() => import('./pages/Blog/BlogDetail'));
 const Contact = lazy(() => import('./pages/Contact/Contact'));
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
-    // Reposition ScrollTriggers after route change + lazy content mount
+    if (typeof window !== 'undefined') {
+      history.scrollRestoration = 'manual';
+    }
+    // Ignore in-page anchor navigation
+    if (hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     const timer = setTimeout(() => refreshScrollTriggers(), 80);
     return () => clearTimeout(timer);
   }, [pathname]);

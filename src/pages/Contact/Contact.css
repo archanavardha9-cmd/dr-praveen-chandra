@@ -5,66 +5,119 @@
   z-index: 1;
 }
 
-/* ── 1. CONSULTATION HERO WITH DUAL-IMAGE COLLAGE ── */
+/* ── 1. CENTERED CONSULTATION HERO WITH SUBTLE BACKGROUND ── */
 .cnt-hero-stage {
   position: relative;
-  background: var(--canvas-white);
-  padding: clamp(32px, 4.5vw, 56px) 0 clamp(44px, 5.5vw, 72px);
+  padding: 0;
   overflow: hidden;
   border-bottom: 1px solid var(--border-hairline);
-}
-
-.cnt-hero-wedge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 47%;
-  background: linear-gradient(155deg, var(--canvas-azure) 0%, var(--stage-mint-tint) 100%);
-  clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
-  z-index: 0;
-}
-
-.cnt-hero-grid {
-  display: grid;
-  grid-template-columns: 1.02fr 0.98fr;
-  gap: clamp(2rem, 4vw, 3.5rem);
+  min-height: 60vh;
+  display: flex;
   align-items: center;
 }
 
+.cnt-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cnt-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cnt-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.95) 45%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  backdrop-filter: blur(2px);
+}
+
+.cnt-hero-center {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(40px, 6vw, 70px) 1rem clamp(50px, 7vw, 80px);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.cnt-hero-kicker-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  background: rgba(0, 91, 148, 0.08);
+  border: 1px solid rgba(0, 91, 148, 0.18);
+}
+
+.cnt-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--accent-blue);
+  box-shadow: 0 0 10px var(--accent-blue);
+}
+
 .cnt-main-title {
-  font-size: clamp(2.1rem, 3.7vw, 3.1rem);
+  font-size: clamp(2.4rem, 4.2vw, 3.6rem);
   letter-spacing: -0.025em;
   color: var(--ink-primary);
-  margin-bottom: 0.65rem;
+  line-height: 1.08;
+  margin: 0 0 1rem;
+  max-width: 100%;
 }
 
 .cnt-main-lead {
-  font-size: 0.98rem;
+  font-size: 1.02rem;
   color: var(--ink-body);
-  line-height: 1.58;
-  max-width: 52ch;
-  margin-bottom: 1.35rem;
+  line-height: 1.62;
+  margin-bottom: 1.5rem;
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.cnt-hero-actions {
+.cnt-hero-center-actions {
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.9rem;
   flex-wrap: wrap;
+  justify-content: center;
   margin-bottom: 1.5rem;
 }
 
 .cnt-quick-facts {
+  width: 100%;
   border-top: 1px solid var(--border-hairline);
 }
 
 .cnt-quick-facts > div {
-  display: grid;
-  grid-template-columns: 175px 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 0.85rem;
   padding: 0.7rem 0;
   border-bottom: 1px solid var(--border-hairline);
-  align-items: baseline;
 }
 
 .cnt-quick-facts dt {
@@ -84,39 +137,6 @@
   color: var(--accent-blue);
   text-decoration: underline;
 }
-
-.cnt-stage-float {
-  will-change: transform;
-}
-
-.cnt-collage-canvas {
-  position: relative;
-  padding: 0 0 2.5rem 2rem;
-}
-
-.cnt-photo-frame {
-  height: clamp(300px, 42vh, 390px);
-  border-radius: var(--radius-xl);
-  background: #ffffff;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-lift);
-  overflow: hidden;
-  padding: 0.75rem;
-}
-
-.cnt-photo-caption {
-  margin-top: 0.7rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--ink-muted);
-}
-
-.cnt-collage-campus {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: clamp(190px, 21vw, 240px);
   border-radius: 16px;
   background: #ffffff;
   border: 1px solid var(--border-strong);

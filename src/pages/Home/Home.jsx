@@ -12,7 +12,6 @@ import { useAutoCycle } from '../../hooks/useAutoCycle';
 import { animateNumericCounters } from '../../utils/motionHelpers';
 import {
   DOCTOR,
-  VERIFIED_METRICS,
   ANATOMY_HOTSPOTS,
   DEVICES_SHOWCASE,
   MEDIA_VIDEOS,
@@ -116,7 +115,7 @@ export default function Home() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. HERO SECTION — Strong opposing left/right entrance + multi-frame depth + noticeable ECG trace ──
+        // ── 1. HERO SECTION — Centered circular portrait composition + ECG pulse ──
         const heroMount = gsap.timeline();
         heroMount
           .fromTo(
@@ -125,73 +124,61 @@ export default function Home() {
             { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }
           )
           .fromTo(
-            '.hero-copy-col',
-            { x: -120, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-            0.05
+            '.hero-center-kicker',
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
+            0.1
           )
           .fromTo(
-            '.hero-visual-col',
-            { x: 135, scale: 0.72, rotate: 2.5, opacity: 0 },
-            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.05, ease: 'power3.out' },
-            0.08
+            '.hero-center-title .split-word-inner',
+            { yPercent: 120, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.05, ease: 'power3.out' },
+            0.15
           )
           .fromTo(
-            '.hero-companion-top',
-            { x: 80, y: -40, scale: 0.65, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
+            '.hero-center-lead',
+            { y: 25, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
             0.35
           )
           .fromTo(
-            '.hero-companion-bottom',
-            { x: -60, y: 50, scale: 0.65, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
-            0.42
-          )
-          .fromTo(
-            '.hero-kicker',
-            { x: -30, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
-            0.18
-          )
-          .fromTo(
-            '.hero-display-title .split-word-inner',
-            { yPercent: 125, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.06, ease: 'power3.out' },
+            '.hero-portrait-main',
+            { scale: 0.7, y: 40, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.9, ease: 'back.out(1.4)' },
             0.25
           )
           .fromTo(
-            '.hero-short-lead',
-            { x: -25, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
-            0.5
+            '.hero-portrait-companion--top',
+            { x: -60, y: -40, scale: 0.6, opacity: 0, rotate: -5 },
+            { x: 0, y: 0, scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: 'back.out(1.4)' },
+            0.4
           )
           .fromTo(
-            '.hero-cta-group > *',
+            '.hero-portrait-companion--bottom',
+            { x: 60, y: 50, scale: 0.6, opacity: 0, rotate: 5 },
+            { x: 0, y: 0, scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: 'back.out(1.4)' },
+            0.45
+          )
+          .fromTo(
+            '.hero-center-actions > *',
             { scale: 0.84, y: 18, opacity: 0 },
             { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
-            0.6
+            0.55
           )
           .fromTo(
-            '.hero-inline-stat',
+            '.hero-center-metric',
             { y: 20, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' },
-            0.7
-          )
-          .fromTo(
-            '.hero-switch-item',
-            { y: 22, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.52, stagger: 0.08, ease: 'power3.out' },
-            0.66
+            { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
+            0.65
           );
 
-        animateNumericCounters('.hero-stat-value', {
+        animateNumericCounters('.hero-center-metric-val', {
           trigger: '.home-hero-stage',
           start: 'top 95%',
         });
 
         // Subtle continuous floating motion after hero settles
-        gsap.to('.hero-stage-float', {
+        gsap.to('.hero-portrait-main img', {
           y: -8,
           duration: 3.8,
           repeat: -1,
@@ -199,7 +186,7 @@ export default function Home() {
           ease: 'sine.inOut',
           delay: 1.15,
         });
-        gsap.to('.hero-companion-top', {
+        gsap.to('.hero-portrait-companion--top img', {
           y: 6,
           duration: 3.1,
           repeat: -1,
@@ -207,7 +194,7 @@ export default function Home() {
           ease: 'sine.inOut',
           delay: 1.25,
         });
-        gsap.to('.hero-companion-bottom', {
+        gsap.to('.hero-portrait-companion--bottom img', {
           y: -7,
           duration: 3.4,
           repeat: -1,
@@ -216,7 +203,6 @@ export default function Home() {
           delay: 1.35,
         });
 
-        // Hero Scroll-Out Exit
         const heroExit = gsap.timeline({
           scrollTrigger: {
             trigger: '.home-hero-stage',
@@ -226,8 +212,7 @@ export default function Home() {
           },
         });
         heroExit
-          .to('.hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
-          .to('.hero-visual-inner-scrub', { x: 75, y: -32, scale: 0.85, opacity: 0.22, ease: 'none' }, 0)
+          .to('.hero-center-stage', { y: -40, opacity: 0.3, ease: 'none' }, 0)
           .to('.hero-azure-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. ANATOMY STAGE — 3-Zone Sapphire Contrast Stage + growth + clean recede ──
@@ -411,7 +396,7 @@ export default function Home() {
 
   return (
     <div ref={homeRef} className="home-root">
-      {/* ── 1. SPOTLIGHT HERO WITH NOTICEABLE MEDICAL ECG HEARTBEAT ── */}
+      {/* ── 1. CENTERED CIRCULAR PORTRAIT HERO WITH ECG BACKDROP ── */}
       <section className="home-hero-stage" aria-label="Introduction">
         <div className="hero-azure-wedge" aria-hidden="true" />
 
@@ -439,7 +424,6 @@ export default function Home() {
               </filter>
             </defs>
 
-            {/* Static Faint Clinical Reference Trace */}
             <path
               className="hero-ecg-baseline"
               d="M0,72 L160,72 L178,61 L194,72 L236,72 L250,90 L268,18 L286,98 L302,60 L318,72 L520,72 L538,61 L554,72 L596,72 L610,90 L628,18 L646,98 L662,60 L678,72 L890,72 L908,61 L924,72 L966,72 L980,90 L998,18 L1016,98 L1032,60 L1048,72 L1260,72 L1278,61 L1294,72 L1336,72 L1350,90 L1368,18 L1386,98 L1402,60 L1418,72 L1440,72"
@@ -448,7 +432,6 @@ export default function Home() {
               strokeWidth="1.6"
             />
 
-            {/* Animated Traveling Cardiac Pulse Sweep */}
             <path
               className="hero-ecg-pulse-trace"
               d="M0,72 L160,72 L178,61 L194,72 L236,72 L250,90 L268,18 L286,98 L302,60 L318,72 L520,72 L538,61 L554,72 L596,72 L610,90 L628,18 L646,98 L662,60 L678,72 L890,72 L908,61 L924,72 L966,72 L980,90 L998,18 L1016,98 L1032,60 L1048,72 L1260,72 L1278,61 L1294,72 L1336,72 L1350,90 L1368,18 L1386,98 L1402,60 L1418,72 L1440,72"
@@ -463,139 +446,86 @@ export default function Home() {
         </div>
 
         <div className="container home-z1">
-          <div className="hero-split-layout">
-            {/* Left Copy */}
-            <div className="hero-copy-col">
-              <div className="hero-copy-inner">
-                <p className="hero-kicker">
-                  Padma Shri 2016 · Chairman, Interventional Cardiology
-                </p>
+          <div className="hero-center-stage">
+            {/* Kicker badge */}
+            <div className="hero-center-kicker">
+              <span className="hero-center-kicker-dot" aria-hidden="true"></span>
+              Padma Shri 2016 · Chairman, Interventional Cardiology
+            </div>
 
-                <SplitHeading
-                  as="h1"
-                  className="hero-display-title"
-                  text="Non-Surgical Heart Valve & Coronary Care"
+            {/* Main Headline */}
+            <SplitHeading
+              as="h1"
+              className="hero-center-title"
+              text="Non-Surgical Heart Valve &amp; Coronary Care"
+            />
+
+            {/* Short Lead */}
+            <p className="hero-center-lead">
+              Dr. Praveen Chandra leads structural heart interventions at{' '}
+              <strong>Medanta – The Medicity, Gurugram</strong>.
+            </p>
+
+            {/* Circular Portrait Composition */}
+            <div className="hero-portrait-composition">
+              <div className="hero-portrait-main">
+                <div className="hero-portrait-ring" aria-hidden="true" />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentHero.id}
+                    className="hero-portrait-frame-inner"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <ResponsiveImage
+                      src={currentHero.image}
+                      alt={currentHero.caption}
+                      priority
+                      objectFit="cover"
+                      sizes="(max-width: 600px) 80vw, 420px"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+                <div className="hero-portrait-caption">
+                  {currentHero.caption}
+                </div>
+              </div>
+
+              <div className="hero-portrait-companion hero-portrait-companion--top">
+                <ResponsiveImage
+                  src={currentHero.companionTop}
+                  alt=""
+                  objectFit="cover"
+                  sizes="120px"
                 />
+                <span className="hero-portrait-companion-label">{currentHero.label}</span>
+              </div>
 
-                <p className="hero-short-lead">
-                  Dr. Praveen Chandra leads structural heart interventions at{' '}
-                  <strong>Medanta – The Medicity, Gurugram</strong>.
-                </p>
-
-                <div className="hero-cta-group">
-                  <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
-                  <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
-                    Explore Procedures
-                  </Link>
-                </div>
-
-                <div className="hero-inline-metrics">
-                  {VERIFIED_METRICS.slice(0, 3).map((m) => (
-                    <div className="hero-inline-stat" key={m.label}>
-                      <span className="hero-stat-value tabular-nums">{m.value}</span>
-                      <span className="hero-stat-label">{m.label}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="hero-portrait-companion hero-portrait-companion--bottom">
+                <ResponsiveImage
+                  src={currentHero.companionBottom}
+                  alt=""
+                  objectFit="cover"
+                  sizes="120px"
+                />
+                <span className="hero-portrait-companion-label">{HERO_SLIDES[(heroCycle.activeIndex + 1) % HERO_SLIDES.length].label}</span>
               </div>
             </div>
 
-            {/* Right Multi-Frame Layered Visual Cluster */}
-            <div className="hero-visual-col">
-              <div className="hero-visual-inner-scrub">
-                <div className="hero-collage-cluster">
-                  {/* Subtle Rhythmic Heartbeat Pulse Halo behind Main Portrait */}
-                  <div className="hero-heartbeat-halo" aria-hidden="true" />
+            {/* CTA Group */}
+            <div className="hero-center-actions">
+              <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
+              <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
+                Explore Procedures
+              </Link>
+            </div>
 
-                  <div className="hero-stage-float">
-                    <div className="hero-stage-frame">
-                      <div className="hero-curtain-mask media-reveal-mask">
-                        <AnimatePresence mode="wait">
-                          <motion.div
-                            key={currentHero.id}
-                            className="hero-slide-inner"
-                            initial={{ opacity: 0, x: 30, scale: 0.96 }}
-                            animate={{ opacity: 1, x: 0, scale: 1 }}
-                            exit={{ opacity: 0, x: -24, scale: 1.02 }}
-                            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                          >
-                            <ResponsiveImage
-                              src={currentHero.image}
-                              alt={currentHero.caption}
-                              priority
-                              objectFit="contain"
-                              sizes="(max-width: 900px) 92vw, 44vw"
-                            />
-                          </motion.div>
-                        </AnimatePresence>
-                      </div>
-
-                      <div className="hero-stage-caption">
-                        <AnimatePresence mode="wait">
-                          <motion.span
-                            key={currentHero.id}
-                            initial={{ opacity: 0, y: 6 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -6 }}
-                            transition={{ duration: 0.26 }}
-                          >
-                            {currentHero.caption}
-                          </motion.span>
-                        </AnimatePresence>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Overlapping Companion Stills */}
-                  <div className="hero-companion-frame hero-companion-top" aria-hidden="true">
-                    <ResponsiveImage
-                      src={currentHero.companionTop}
-                      alt=""
-                      objectFit="cover"
-                      sizes="180px"
-                    />
-                  </div>
-                  <div className="hero-companion-frame hero-companion-bottom" aria-hidden="true">
-                    <ResponsiveImage
-                      src={currentHero.companionBottom}
-                      alt=""
-                      objectFit="cover"
-                      sizes="190px"
-                    />
-                  </div>
-                </div>
-
-                {/* Interactive Auto-Synced Hero Slide Switcher */}
-                <div className="hero-switcher-bar" role="tablist" aria-label="Doctor highlights">
-                  {HERO_SLIDES.map((slide, idx) => {
-                    const isActive = heroCycle.activeIndex === idx;
-                    return (
-                      <button
-                        key={slide.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={isActive}
-                        className={`hero-switch-item ${isActive ? 'is-active' : ''}`}
-                        onClick={() => heroCycle.selectIndex(idx)}
-                      >
-                        <div className="hero-switch-top">
-                          <span className="tabular-nums">{slide.index}</span>
-                          <span>{slide.label}</span>
-                        </div>
-                        <div className="cycle-progress-track">
-                          {isActive && (
-                            <div
-                              key={`hero-prog-${heroCycle.cycleKey}`}
-                              className="cycle-progress-bar"
-                              style={{ animationDuration: '5.2s' }}
-                            />
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+            {/* Minimal Metric */}
+            <div className="hero-center-metric">
+              <span className="hero-center-metric-val tabular-nums">30+</span>
+              <span className="hero-center-metric-label">Years of Clinical Leadership</span>
             </div>
           </div>
         </div>

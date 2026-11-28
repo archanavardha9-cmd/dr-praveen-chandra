@@ -74,199 +74,193 @@
   100% { stroke-dashoffset: 0; }
 }
 
-.hero-split-layout {
-  display: grid;
-  grid-template-columns: 0.92fr 1.08fr;
-  gap: clamp(1.75rem, 3.5vw, 3.25rem);
-  align-items: center;
-}
+/* ── HERO — Centered Circular Portrait Composition ── */
 
-.hero-kicker {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--accent-blue);
-  margin-bottom: 0.7rem;
-}
-
-.hero-display-title {
-  font-size: clamp(2.25rem, 4.1vw, 3.55rem);
-  line-height: 1.06;
-  letter-spacing: -0.025em;
-  color: var(--ink-primary);
-  margin-bottom: 0.9rem;
-  max-width: 14ch;
-}
-
-.hero-short-lead {
-  font-size: 1.04rem;
-  color: var(--ink-body);
-  line-height: 1.6;
-  max-width: 46ch;
-  margin-bottom: 1.5rem;
-}
-
-.hero-cta-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-}
-
-.hero-inline-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--border-hairline);
-}
-
-.hero-stat-value {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--accent-blue);
-}
-
-.hero-stat-label {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--ink-muted);
-  margin-top: 0.15rem;
-}
-
-/* Hero Multi-Frame Layered Visual Cluster */
-.hero-visual-col {
+.hero-center-stage {
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  align-items: center;
+  gap: 1rem;
+  padding-top: clamp(2rem, 3vw, 3rem);
+  padding-bottom: clamp(2rem, 3vw, 3rem);
 }
 
-.hero-collage-cluster {
-  position: relative;
-  padding: 0.5rem 0.75rem;
-}
-
-.hero-heartbeat-halo {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 78%;
-  aspect-ratio: 1 / 1;
+.hero-center-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
   border-radius: 9999px;
-  border: 1.5px solid rgba(0, 91, 148, 0.2);
-  background: radial-gradient(circle, rgba(0, 91, 148, 0.1) 0%, transparent 68%);
-  transform: translate(-50%, -50%);
-  animation: cardiacLubDub 2.6s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
+  background: rgba(0, 91, 148, 0.08);
+  border: 1px solid rgba(0, 91, 148, 0.18);
 }
 
-@keyframes cardiacLubDub {
-  0%, 100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.55; }
-  14% { transform: translate(-50%, -50%) scale(1.06); opacity: 0.9; }
-  28% { transform: translate(-50%, -50%) scale(0.98); opacity: 0.65; }
-  42% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.85; }
-  62% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.55; }
+.hero-center-kicker-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--accent-blue);
+  box-shadow: 0 0 10px var(--accent-blue);
 }
 
-.hero-stage-float {
+.hero-center-title {
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--ink-primary);
+  margin: 0;
+  max-width: 100%;
+}
+
+.hero-center-lead {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  color: var(--ink-body);
+  line-height: 1.6;
+  max-width: 52ch;
+  margin: 0 auto 1.5rem;
+}
+
+.hero-portrait-composition {
   position: relative;
-  z-index: 1;
-  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
 }
 
-.hero-stage-frame {
+.hero-portrait-main {
   position: relative;
-  height: clamp(350px, 48vh, 455px);
-  border-radius: var(--radius-xl);
-  background: #ffffff;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-lift);
+  width: clamp(280px, 38vw, 460px);
+  height: clamp(280px, 38vw, 460px);
+  border-radius: 9999px;
   overflow: hidden;
+  border: 3px solid #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 91, 148, 0.16);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
-.hero-slide-inner {
+.hero-portrait-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  border: 2px solid rgba(0, 91, 148, 0.35);
+  background: conic-gradient(from 0deg, #005b94 0%, #097c7c 40%, transparent 80%);
+  animation: heroRingRotate 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes heroRingRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.hero-portrait-frame-inner {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.65rem 0.65rem 2.7rem;
-  background: linear-gradient(180deg, #f8fbfe 0%, #eef5fb 100%);
-}
-
-.hero-stage-caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0.65rem 1.1rem;
-  background: rgba(9, 77, 122, 0.94);
-  color: #ffffff;
-  font-size: 0.84rem;
-  font-weight: 500;
-}
-
-/* Companion Overlapping Stills */
-.hero-companion-frame {
-  position: absolute;
-  z-index: 2;
-  border-radius: var(--radius-md);
-  border: 2px solid #ffffff;
-  box-shadow: 0 12px 28px rgba(9, 34, 58, 0.18);
   overflow: hidden;
+}
+
+.hero-portrait-frame-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-portrait-caption {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.hero-portrait-companion {
+  position: relative;
+  width: clamp(110px, 14vw, 140px);
+  height: clamp(110px, 14vw, 140px);
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 2px solid #ffffff;
+  box-shadow: 0 10px 24px rgba(9, 34, 58, 0.16);
   background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-portrait-companion img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-portrait-companion--top {
+  transform: translateY(-40px);
+}
+
+.hero-portrait-companion--bottom {
+  transform: translateY(40px);
+}
+
+.hero-portrait-companion-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-primary);
+  white-space: nowrap;
   pointer-events: none;
 }
 
-.hero-companion-top {
-  top: -8px;
-  right: -4px;
-  width: 132px;
-  height: 88px;
-}
-
-.hero-companion-bottom {
-  bottom: 24px;
-  left: -10px;
-  width: 138px;
-  height: 92px;
-}
-
-.hero-switcher-bar {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.65rem;
-  margin-top: 0.75rem;
-}
-
-.hero-switch-item {
-  text-align: left;
-  padding: 0.6rem 0.75rem;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--border-hairline);
-  transition: border-color 180ms ease, background-color 180ms ease;
-}
-
-.hero-switch-item.is-active {
-  background: #ffffff;
-  border-color: var(--accent-blue);
-}
-
-.hero-switch-top {
+.hero-center-actions {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.8rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.hero-center-metric {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-hairline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.hero-center-metric-val {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--accent-blue);
+}
+
+.hero-center-metric-label {
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--ink-primary);
+  color: var(--ink-muted);
+}
   margin-bottom: 0.4rem;
   white-space: nowrap;
   overflow: hidden;
@@ -984,7 +978,7 @@
   .hero-azure-wedge {
     display: none;
   }
-  .hero-split-layout,
+  .hero-center-stage,
   .anatomy-stage-grid,
   .cinema-theater-grid,
   .legacy-rail-content {
@@ -1022,15 +1016,14 @@
 }
 
 @media (max-width: 640px) {
-  .hero-companion-top,
-  .hero-companion-bottom {
+  .hero-portrait-companion--top,
+  .hero-portrait-companion--bottom {
     display: none;
   }
-  .hero-stage-frame {
-    height: 310px;
+  .hero-portrait-main {
+    width: 260px;
+    height: 260px;
   }
-  .hero-inline-metrics,
-  .hero-switcher-bar,
   .anatomy-zone-rail,
   .dev-horizontal-tabs,
   .cinema-filmstrip-row,

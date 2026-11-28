@@ -5,7 +5,7 @@
   z-index: 1;
 }
 
-/* ── 1. ARCHITECTURAL HERO COMMAND CENTER WITH 3-LAYER TRIAD ── */
+/* ── 1. CENTERED CATHETER THERAPIES HERO WITH PROCEDURE CHIPS ── */
 .treatments-hero-monument {
   position: relative;
   background: radial-gradient(circle at 82% 24%, rgba(0, 91, 148, 0.1) 0%, transparent 56%),
@@ -15,47 +15,47 @@
   border-bottom: 1px solid var(--border-hairline);
 }
 
-.trt-hero-status-strip {
+.trt-hero-center {
+  text-align: center;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-hairline);
+  padding-top: clamp(2rem, 3vw, 3rem);
+  padding-bottom: clamp(2rem, 3vw, 3rem);
 }
 
-.trt-status-item {
+.trt-hero-kicker-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--ink-muted);
+  color: var(--accent-blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  background: rgba(0, 91, 148, 0.08);
+  border: 1px solid rgba(0, 91, 148, 0.18);
 }
 
-.trt-status-item--gold {
-  color: var(--accent-gold);
-}
-
-.trt-hero-command-grid {
-  display: grid;
-  grid-template-columns: 1.02fr 1.08fr;
-  gap: clamp(2rem, 4vw, 3.75rem);
-  align-items: center;
-}
-
-@media (max-width: 960px) {
-  .trt-hero-command-grid {
-    grid-template-columns: 1fr;
-  }
+.trt-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--accent-blue);
+  box-shadow: 0 0 10px var(--accent-blue);
 }
 
 .trt-hero-headline {
-  font-size: clamp(2rem, 3.4vw, 2.95rem);
+  font-size: clamp(2.2rem, 3.8vw, 3.4rem);
   letter-spacing: -0.025em;
-  line-height: 1.15;
+  line-height: 1.12;
   color: var(--ink-primary);
-  margin-bottom: 0.85rem;
+  margin: 0 0 0.85rem;
+  max-width: 100%;
 }
 
 .trt-hero-lead {
@@ -64,32 +64,62 @@
   line-height: 1.6;
   margin-bottom: 1.5rem;
   max-width: 52ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.trt-hero-actions {
+.trt-procedure-chips {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.trt-procedure-chip {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid var(--border-hairline);
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.trt-procedure-chip:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.trt-procedure-chip.is-active {
+  background: var(--accent-blue);
+  color: #ffffff;
+  border-color: var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(0, 91, 148, 0.25);
+}
+
+.trt-hero-center-actions {
   display: flex;
   align-items: center;
   gap: 0.85rem;
   flex-wrap: wrap;
-  margin-bottom: 1.75rem;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
-.trt-hero-metrics-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--border-hairline);
-}
-
-.trt-metric-item {
+.trt-hero-metric-mini {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
 }
 
 .trt-metric-val {
   font-family: var(--font-heading);
-  font-size: 1.12rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--accent-blue);
 }
@@ -98,10 +128,6 @@
   font-size: 0.76rem;
   font-weight: 600;
   color: var(--ink-muted);
-}
-
-.trt-stage-float {
-  will-change: transform;
 }
 
 /* 3-Layer Procedural Triad Canvas */

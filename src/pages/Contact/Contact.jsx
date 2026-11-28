@@ -60,59 +60,33 @@ export default function Contact() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. CONTACT HERO — Left editorial copy + Dual-Image Medanta Collage convergence ──
+        // ── 1. CONTACT HERO — Background image scale + centered typography reveal ──
         const heroMount = gsap.timeline();
         heroMount
+          .fromTo('.cnt-hero-bg img', { scale: 1.05, opacity: 0.5 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out' })
+          .fromTo('.cnt-hero-overlay', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.1)
           .fromTo(
-            '.cnt-hero-wedge',
-            { xPercent: 40, opacity: 0 },
-            { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }
-          )
-          .fromTo(
-            '.cnt-hero-copy',
-            { x: -115, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.9, ease: 'power3.out' },
-            0.05
-          )
-          .fromTo(
-            '.cnt-collage-primary',
-            { x: 115, scale: 0.78, opacity: 0 },
-            { x: 0, scale: 1, opacity: 1, duration: 1.0, ease: 'power3.out' },
-            0.08
-          )
-          .fromTo(
-            '.cnt-collage-campus',
-            { x: -55, y: 45, scale: 0.74, opacity: 0 },
-            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out' },
-            0.25
+            '.cnt-hero-kicker-chip',
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
+            0.2
           )
           .fromTo(
             '.cnt-main-title .split-word-inner',
             { yPercent: 120, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
-            0.22
+            { yPercent: 0, opacity: 1, duration: 0.85, stagger: 0.055, ease: 'power3.out' },
+            0.28
           )
-          .fromTo('.cnt-main-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
-          .fromTo(
-            '.cnt-hero-actions > *',
-            { scale: 0.86, y: 16, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.5)' },
-            0.55
-          )
-          .fromTo(
-            '.cnt-quick-facts > div',
-            { x: -24, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' },
-            0.65
-          );
+          .fromTo('.cnt-main-lead', { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
+          .fromTo('.cnt-hero-center-actions > *', { scale: 0.86, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.5)' }, 0.55)
+          .fromTo('.cnt-quick-facts > div', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' }, 0.65);
 
-        gsap.to('.cnt-stage-float', {
-          y: -8,
-          duration: 3.7,
+        gsap.to('.cnt-hero-bg img', {
+          scale: 1.02,
+          duration: 5,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
-          delay: 1.15,
         });
 
         const heroExit = gsap.timeline({
@@ -124,10 +98,8 @@ export default function Contact() {
           },
         });
         heroExit
-          .to('.cnt-hero-copy-inner', { x: -75, y: -24, opacity: 0.22, ease: 'none' }, 0)
-          .to('.cnt-collage-primary', { x: 65, y: -28, scale: 0.86, opacity: 0.26, ease: 'none' }, 0)
-          .to('.cnt-collage-campus', { x: -45, y: 24, scale: 1.06, opacity: 0.35, ease: 'none' }, 0)
-          .to('.cnt-hero-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
+          .to('.cnt-hero-bg img', { scale: 1.1, opacity: 0.4, ease: 'none' }, 0)
+          .to('.cnt-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. HOSPITAL HUB & MAP — Opposite corner merge, map growth & split exit ──
         const hubTl = gsap.timeline({
@@ -221,88 +193,55 @@ export default function Contact() {
 
   return (
     <div ref={pageRef} className="contact-root">
-      {/* ── 1. CONSULTATION HERO WITH DUAL-IMAGE CLINICAL COLLAGE ── */}
+      {/* ── 1. CENTERED CONSULTATION HERO WITH SUBTLE BACKGROUND ── */}
       <section className="cnt-hero-stage" aria-label="Medanta OPD Contact">
-        <div className="cnt-hero-wedge" aria-hidden="true" />
-
+        <div className="cnt-hero-bg" aria-hidden="true">
+          <ResponsiveImage
+            src={DOCTOR.images.consultation}
+            alt="Dr. Praveen Chandra consulting patient"
+            priority
+            objectFit="cover"
+            sizes="100vw"
+          />
+        </div>
+        <div className="cnt-hero-overlay"></div>
         <div className="container cnt-z1">
-          <div className="cnt-hero-grid">
-            <div className="cnt-hero-copy">
-              <div className="cnt-hero-copy-inner">
-                <div className="section-kicker">
-                  {CONTACT_INFO.hospital} · Gurugram
-                </div>
-                <SplitHeading
-                  as="h1"
-                  className="cnt-main-title"
-                  text="OPD Consultations & Hospital Access"
-                />
-                <p className="cnt-main-lead">
-                  Schedule outpatient appointments or angiogram second opinions with Dr. Praveen Chandra.
-                </p>
-
-                <div className="cnt-hero-actions">
-                  <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
-                  <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
-                    Call {CONTACT_INFO.phones[0]}
-                  </a>
-                </div>
-
-                <dl className="cnt-quick-facts">
-                  <div>
-                    <dt>Direct OPD Lines</dt>
-                    <dd className="tabular-nums">
-                      <a href={`tel:${CONTACT_INFO.phones[0]}`}>{CONTACT_INFO.phones[0]}</a> ·{' '}
-                      <a href={`tel:${CONTACT_INFO.phones[1]}`}>{CONTACT_INFO.phones[1]}</a>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Clinical Email</dt>
-                    <dd>
-                      <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>24/7 Cardiac Emergency</dt>
-                    <dd className="tabular-nums">
-                      Medanta Helpline {CONTACT_INFO.emergencyLine} · Board {CONTACT_INFO.hospitalBoard}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
+          <div className="cnt-hero-center">
+            <div className="cnt-hero-kicker-chip">
+              <span className="cnt-chip-dot" aria-hidden="true"></span>
+              {CONTACT_INFO.hospital} · Gurugram
             </div>
-
-            <div className="cnt-hero-visual">
-              <div className="cnt-stage-float cnt-collage-canvas">
-                <div className="cnt-collage-primary">
-                  <div className="cnt-photo-frame">
-                    <ResponsiveImage
-                      src={DOCTOR.images.consultation}
-                      alt="Dr. Praveen Chandra reviewing diagnostic records during patient consultation"
-                      priority
-                      objectFit="contain"
-                      sizes="(max-width: 960px) 92vw, 480px"
-                    />
-                  </div>
-                  <div className="cnt-photo-caption">
-                    Outpatient Cardiology Wing · Sector 38, Gurugram
-                  </div>
-                </div>
-
-                <div className="cnt-collage-campus">
-                  <div className="cnt-campus-inset-media">
-                    <ResponsiveImage
-                      src="/images/medical/medanta-hospital-gurugram.webp"
-                      alt="Medanta – The Medicity Campus Entrance, Gurugram"
-                      priority
-                      objectFit="cover"
-                      sizes="240px"
-                    />
-                  </div>
-                  <span>Medanta – The Medicity</span>
-                </div>
-              </div>
+            <SplitHeading as="h1" className="cnt-main-title" text="OPD Consultations & Hospital Access" />
+            <p className="cnt-main-lead">
+              Schedule outpatient appointments or angiogram second opinions with Dr. Praveen Chandra.
+            </p>
+            <div className="cnt-hero-center-actions">
+              <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
+              <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
+                Call {CONTACT_INFO.phones[0]}
+              </a>
             </div>
+            <dl className="cnt-quick-facts">
+              <div>
+                <dt>Direct OPD Lines</dt>
+                <dd className="tabular-nums">
+                  <a href={`tel:${CONTACT_INFO.phones[0]}`}>{CONTACT_INFO.phones[0]}</a> ·{' '}
+                  <a href={`tel:${CONTACT_INFO.phones[1]}`}>{CONTACT_INFO.phones[1]}</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Clinical Email</dt>
+                <dd>
+                  <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>
+                </dd>
+              </div>
+              <div>
+                <dt>24/7 Cardiac Emergency</dt>
+                <dd className="tabular-nums">
+                  Medanta Helpline {CONTACT_INFO.emergencyLine} · Board {CONTACT_INFO.hospitalBoard}
+                </dd>
+              </div>
+            </dl>
           </div>
         </div>
       </section>

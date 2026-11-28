@@ -80,72 +80,33 @@ export default function Media() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. MULTI-FRAME CINEMA HERO — Opposing entrance + staggered inset frames + scroll-exit ──
+        // ── 1. FULL-WIDTH CINEMA HERO — Background image scale + typography overlay reveal ──
         const heroMount = gsap.timeline();
         heroMount
-          .fromTo('.med-hero-content', { x: -115, opacity: 0 }, { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' })
+          .fromTo('.media-hero-bg img', { scale: 1.05, opacity: 0.6 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out' })
+          .fromTo('.media-hero-overlay', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.1)
           .fromTo(
-            '.med-hero-theater-col',
-            { x: 130, scale: 0.74, rotate: 2, opacity: 0 },
-            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.0, ease: 'power3.out' },
-            0.06
+            '.med-hero-kicker-chip',
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
+            0.2
           )
-          .fromTo(
-            '.med-hero-inset-talk',
-            { x: -75, y: -55, scale: 0.65, rotate: -4, opacity: 0 },
-            { x: 0, y: 0, scale: 1, rotate: -2, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
-            0.34
-          )
-          .fromTo(
-            '.med-hero-inset-press',
-            { x: 75, y: 55, scale: 0.65, rotate: 4, opacity: 0 },
-            { x: 0, y: 0, scale: 1, rotate: 2, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
-            0.4
-          )
-          .fromTo('.med-hero-content .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5 }, 0.16)
           .fromTo(
             '.med-hero-title .split-word-inner',
-            { yPercent: 125, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.055, ease: 'power3.out' },
-            0.22
+            { yPercent: 120, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.85, stagger: 0.055, ease: 'power3.out' },
+            0.28
           )
-          .fromTo('.med-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.52 }, 0.44)
-          .fromTo('.med-metric-item', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48, stagger: 0.08 }, 0.54)
-          .fromTo(
-            '.med-hero-actions > *',
-            { scale: 0.84, y: 16, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.52, stagger: 0.1, ease: 'back.out(1.6)' },
-            0.64
-          );
+          .fromTo('.med-hero-lead', { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
+          .fromTo('.med-hero-center-actions > *', { scale: 0.86, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' }, 0.55)
+          .fromTo('.med-hero-video-label', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.65);
 
-        animateNumericCounters('.med-metric-num', {
-          trigger: '.media-cinema-hero',
-          start: 'top 95%',
-        });
-
-        gsap.to('.med-stage-float', {
-          y: -7,
-          duration: 3.7,
+        gsap.to('.media-hero-bg img', {
+          scale: 1.02,
+          duration: 5,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
-          delay: 1.1,
-        });
-        gsap.to('.med-hero-inset-talk', {
-          y: 7,
-          duration: 3.1,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.2,
-        });
-        gsap.to('.med-hero-inset-press', {
-          y: -6,
-          duration: 3.4,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.3,
         });
 
         const heroExit = gsap.timeline({
@@ -157,8 +118,8 @@ export default function Media() {
           },
         });
         heroExit
-          .to('.med-hero-copy-inner', { x: -70, y: -24, opacity: 0.22, ease: 'none' }, 0)
-          .to('.med-hero-visual-scrub', { x: 70, y: -30, scale: 0.85, opacity: 0.22, ease: 'none' }, 0);
+          .to('.media-hero-bg img', { scale: 1.1, opacity: 0.4, ease: 'none' }, 0)
+          .to('.med-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. VIDEO SPOTLIGHT + HORIZONTAL DECK — Full-width growth & exit ──
         const dirTl = gsap.timeline({
@@ -269,129 +230,48 @@ export default function Media() {
 
   return (
     <div ref={pageRef} className="media-root">
-      {/* ── 1. MULTI-FRAME CINEMA & PRESS HERO (DISTINCT FROM BLOG HERO) ── */}
+      {/* ── 1. FULL-WIDTH CINEMA HERO WITH OVERLAY TYPOGRAPHY ── */}
       <section className="media-cinema-hero" aria-label="Clinical Cinema Hero">
+        <div className="media-hero-bg" aria-hidden="true">
+          <ResponsiveImage
+            src={currentHeroVideo.thumbnail}
+            alt={currentHeroVideo.title}
+            priority
+            objectFit="cover"
+            sizes="100vw"
+          />
+        </div>
+        <div className="media-hero-overlay"></div>
         <div className="container med-z1">
-          <div className="med-hero-split">
-            <div className="med-hero-content">
-              <div className="med-hero-copy-inner">
-                <div className="section-kicker">Clinical Media Library</div>
-                <SplitHeading as="h1" className="med-hero-title" text="Cardiology Cinema, Press & Symposia" />
-                <p className="med-hero-lead">
-                  Procedure explainers, patient recovery stories, national press features, and keynote addresses with Dr. Praveen Chandra at Medanta – The Medicity.
-                </p>
-
-                <div className="med-hero-metrics">
-                  <div className="med-metric-item">
-                    <span className="med-metric-num tabular-nums">10+</span>
-                    <span className="med-metric-label">Clinical Films</span>
-                  </div>
-                  <div className="med-metric-item">
-                    <span className="med-metric-num tabular-nums">6</span>
-                    <span className="med-metric-label">Press Clippings</span>
-                  </div>
-                  <div className="med-metric-item">
-                    <span className="med-metric-num tabular-nums">5</span>
-                    <span className="med-metric-label">Gallery Stills</span>
-                  </div>
-                </div>
-
-                <div className="med-hero-actions">
-                  <button
-                    type="button"
-                    className="btn-clinical btn-clinical--primary"
-                    onClick={() => setModalVideo(currentHeroVideo)}
-                  >
-                    Watch Featured Film
-                  </button>
-                  <a
-                    href={DOCTOR.medantaMediaUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-clinical btn-clinical--secondary"
-                  >
-                    Medanta Press Desk ↗
-                  </a>
-                </div>
-              </div>
+          <div className="med-hero-center">
+            <div className="med-hero-kicker-chip">
+              <span className="med-chip-dot" aria-hidden="true"></span>
+              Clinical Media Library
             </div>
-
-            {/* Layered Multi-Frame Visual Cluster: 16:9 Theater + Symposium Still + Press Feature */}
-            <div className="med-hero-theater-col">
-              <div className="med-hero-visual-scrub">
-                <div className="med-hero-cluster">
-                  <div className="med-hero-inset med-hero-inset-talk" aria-hidden="true">
-                    <ResponsiveImage
-                      src={DOCTOR.images.speaking}
-                      alt=""
-                      objectFit="cover"
-                      sizes="170px"
-                    />
-                    <span>Global Faculty</span>
-                  </div>
-
-                  <div className="med-stage-float">
-                    <div className="med-hero-theater">
-                      <div
-                        className="theater-screen-box"
-                        onClick={() => setModalVideo(currentHeroVideo)}
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            setModalVideo(currentHeroVideo);
-                          }
-                        }}
-                        aria-label={`Play featured film: ${currentHeroVideo.title}`}
-                      >
-                        <div className="med-theater-mask media-reveal-mask">
-                          <ResponsiveImage
-                            src={currentHeroVideo.thumbnail}
-                            alt={currentHeroVideo.title}
-                            priority
-                            objectFit="cover"
-                            sizes="(max-width: 960px) 92vw, 520px"
-                          />
-                        </div>
-                        <div className="theater-play-badge" aria-hidden="true">
-                          <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      <div className="theater-caption-bar">
-                        <div>
-                          <span className="theater-cat-mono tabular-nums">
-                            {currentHeroVideo.category} · {currentHeroVideo.duration}
-                          </span>
-                          <h3>{currentHeroVideo.title}</h3>
-                        </div>
-                        <button
-                          type="button"
-                          className="round-nav-btn"
-                          onClick={() => setModalVideo(currentHeroVideo)}
-                          aria-label="Play video"
-                        >
-                          ▶
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="med-hero-inset med-hero-inset-press" aria-hidden="true">
-                    <ResponsiveImage
-                      src="/images/newspaper/dr-1-1024x625.webp"
-                      fallbackSrc="/images/newspaper/dr-1-1024x625.jpg"
-                      alt=""
-                      objectFit="cover"
-                      sizes="180px"
-                    />
-                    <span>Times of India Feature</span>
-                  </div>
-                </div>
-              </div>
+            <SplitHeading as="h1" className="med-hero-title" text="Cardiology Cinema & Press" />
+            <p className="med-hero-lead">
+              Procedure explainers, patient recovery stories, and keynote addresses with Dr. Praveen Chandra at Medanta – The Medicity.
+            </p>
+            <div className="med-hero-center-actions">
+              <button
+                type="button"
+                className="btn-clinical btn-clinical--primary"
+                onClick={() => setModalVideo(currentHeroVideo)}
+              >
+                Watch Featured Film
+              </button>
+              <a
+                href={DOCTOR.medantaMediaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-clinical btn-clinical--secondary"
+              >
+                Medanta Press Desk ↗
+              </a>
+            </div>
+            <div className="med-hero-video-label">
+              <span className="med-video-badge">▶ Featured</span>
+              <span className="med-video-title">{currentHeroVideo.title}</span>
             </div>
           </div>
         </div>

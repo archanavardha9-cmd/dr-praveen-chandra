@@ -82,26 +82,36 @@ export default function About() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. HERO MONOGRAPH — Multi-photo left/right entrance + overlapping inset + scroll exit ──
+        // ── 1. HERO EDITORIAL CENTERED — Circular portrait reveal + typography cascade ──
         const heroMount = gsap.timeline();
         heroMount
           .fromTo('.about-hero-wedge', { xPercent: -45, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' })
-          .fromTo('.about-hero-visual', { x: -130, scale: 0.74, rotate: -2.5, opacity: 0 }, { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }, 0.05)
-          .fromTo('.about-hero-inset', { x: 75, y: 45, scale: 0.65, opacity: 0 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' }, 0.35)
-          .fromTo('.about-hero-copy', { x: 115, opacity: 0 }, { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' }, 0.08)
-          .fromTo('.about-hero-copy .hero-kicker', { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5 }, 0.2)
+          .fromTo(
+            '.about-portrait-center',
+            { scale: 0.6, y: 40, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.95, ease: 'back.out(1.4)' },
+            0.05
+          )
+          .fromTo('.about-portrait-inset', { x: 50, y: 40, scale: 0.6, opacity: 0, rotate: -8 }, { x: 0, y: 0, scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: 'back.out(1.4)' }, 0.3)
+          .fromTo(
+            '.about-hero-kicker',
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
+            0.15
+          )
           .fromTo(
             '.about-display-title .split-word-inner',
             { yPercent: 125, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.06, ease: 'power3.out' },
-            0.26
+            { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.06, ease: 'power3.out' },
+            0.22
           )
-          .fromTo('.about-role-sub', { x: 24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.52 }, 0.44)
-          .fromTo('.about-short-bio', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.52 }, 0.52)
-          .fromTo('.about-anchor-facts > div', { x: 24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.48, stagger: 0.08 }, 0.58)
-          .fromTo('.about-hero-actions > *', { scale: 0.84, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.52, stagger: 0.1, ease: 'back.out(1.6)' }, 0.68);
+          .fromTo('.about-role-sub', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.4)
+          .fromTo('.about-short-bio', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.5)
+          .fromTo('.about-fact-chip', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.07, ease: 'power3.out' }, 0.58)
+          .fromTo('.about-hero-center-actions > *', { scale: 0.84, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' }, 0.7)
+          .fromTo('.about-portrait-caption-center', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.78);
 
-        gsap.to('.about-stage-float', {
+        gsap.to('.about-portrait-frame-center img', {
           y: -8,
           duration: 3.7,
           repeat: -1,
@@ -109,7 +119,7 @@ export default function About() {
           ease: 'sine.inOut',
           delay: 1.15,
         });
-        gsap.to('.about-hero-inset', {
+        gsap.to('.about-portrait-inset img', {
           y: 7,
           duration: 3.1,
           repeat: -1,
@@ -127,8 +137,8 @@ export default function About() {
           },
         });
         heroExit
-          .to('.about-hero-visual-scrub', { x: -70, y: -30, scale: 0.84, opacity: 0.22, ease: 'none' }, 0)
-          .to('.about-hero-copy-inner', { x: 70, y: -24, opacity: 0.22, ease: 'none' }, 0)
+          .to('.about-portrait-center', { scale: 0.8, y: -30, opacity: 0.3, ease: 'none' }, 0)
+          .to('.about-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0)
           .to('.about-hero-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. CAREER TRIPTYCH — Horizontal era switcher + 3-photo expanding spread ──
@@ -209,79 +219,61 @@ export default function About() {
 
   return (
     <div ref={pageRef} className="about-root">
-      {/* ── 1. MONOGRAPH SPLIT HERO WITH LAYERED PORTRAIT & PODIUM INSET ── */}
+      {/* ── 1. EDITORIAL CENTERED HERO WITH CIRCULAR PORTRAIT ── */}
       <section className="about-hero-stage" aria-label="Biography Overview">
         <div className="about-hero-wedge" aria-hidden="true" />
 
         <div className="container abt-z1">
-          <div className="about-hero-grid">
-            <div className="about-hero-visual">
-              <div className="about-hero-visual-scrub">
-                <div className="about-portrait-cluster">
-                  <div className="about-stage-float">
-                    <div className="about-portrait-frame">
-                      <div className="about-portrait-mask media-reveal-mask">
-                        <ResponsiveImage
-                          src={DOCTOR.images.profile}
-                          alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
-                          priority
-                          objectFit="contain"
-                          sizes="(max-width: 960px) 90vw, 420px"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="about-hero-inset" aria-hidden="true">
-                    <ResponsiveImage
-                      src={DOCTOR.images.awardPodium}
-                      alt=""
-                      objectFit="cover"
-                      sizes="170px"
-                    />
-                    <span>Padma Shri 2016</span>
-                  </div>
-                </div>
-                <div className="about-portrait-caption">
-                  Padma Shri 2016 · Medanta – The Medicity, Gurugram
-                </div>
+          <div className="about-hero-center">
+            {/* Circular Portrait */}
+            <div className="about-portrait-center">
+              <div className="about-portrait-ring" aria-hidden="true" />
+              <div className="about-portrait-frame-center">
+                <ResponsiveImage
+                  src={DOCTOR.images.profile}
+                  alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
+                  priority
+                  objectFit="cover"
+                  sizes="(max-width: 600px) 80vw, 400px"
+                />
+              </div>
+              <div className="about-portrait-inset" aria-hidden="true">
+                <ResponsiveImage
+                  src={DOCTOR.images.awardPodium}
+                  alt=""
+                  objectFit="cover"
+                  sizes="110px"
+                />
+                <span className="about-portrait-inset-label">Padma Shri 2016</span>
               </div>
             </div>
 
-            <div className="about-hero-copy">
-              <div className="about-hero-copy-inner">
-                <p className="hero-kicker">
-                  Clinical Monograph · King George’s Medical College Alumnus
-                </p>
-                <SplitHeading as="h1" className="about-display-title" text="Dr. Praveen Chandra" />
-                <p className="about-role-sub">
-                  {DOCTOR.title} · {DOCTOR.hospital}
-                </p>
-                <p className="about-short-bio">
-                  Chairman of Interventional Cardiology at Medanta – The Medicity and pioneer of TAVI, MitraClip, and percutaneous myocardial laser revascularization in India.
-                </p>
+            <p className="about-hero-kicker">
+              Clinical Monograph · King George’s Medical College Alumnus
+            </p>
+            <SplitHeading as="h1" className="about-display-title" text="Dr. Praveen Chandra" />
+            <p className="about-role-sub">
+              {DOCTOR.title} · {DOCTOR.hospital}
+            </p>
+            <p className="about-short-bio">
+              Chairman of Interventional Cardiology at Medanta – The Medicity and pioneer of TAVI, MitraClip, and percutaneous myocardial laser revascularization in India.
+            </p>
 
-                <dl className="about-anchor-facts">
-                  <div>
-                    <dt>Training</dt>
-                    <dd className="tabular-nums">MBBS 1985 · MD 1989 · DM Cardiology 1991</dd>
-                  </div>
-                  <div>
-                    <dt>National Honor</dt>
-                    <dd>Padma Shri Award (2016), President of India</dd>
-                  </div>
-                  <div>
-                    <dt>Fellowships</dt>
-                    <dd>FACC · FESC · FSCAI · FAPSIC · FCSI</dd>
-                  </div>
-                </dl>
+            <div className="about-hero-facts-mini">
+              <span className="about-fact-chip">MBBS 1985 · MD 1989 · DM Cardiology 1991</span>
+              <span className="about-fact-chip">FACC · FESC · FSCAI · FAPSIC · FCSI</span>
+              <span className="about-fact-chip">Padma Shri Award (2016)</span>
+            </div>
 
-                <div className="about-hero-actions">
-                  <AppointmentButton variant="primary" size="lg" label="Book Consultation" />
-                  <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
-                    Clinical Specialties →
-                  </Link>
-                </div>
-              </div>
+            <div className="about-hero-center-actions">
+              <AppointmentButton variant="primary" size="lg" label="Book Consultation" />
+              <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
+                Clinical Specialties →
+              </Link>
+            </div>
+
+            <div className="about-portrait-caption-center">
+              Padma Shri 2016 · Medanta – The Medicity, Gurugram
             </div>
           </div>
         </div>

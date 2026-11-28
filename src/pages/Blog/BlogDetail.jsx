@@ -26,42 +26,37 @@ export default function BlogDetail() {
       const ctx = gsap.context(() => {
         const headerMount = gsap.timeline();
         headerMount
-          .fromTo('.blog-breadcrumbs', { x: -90, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: 'power3.out' })
-          .fromTo('.blog-detail-header .section-kicker', { x: -75, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.08)
+          .fromTo('.blog-detail-hero-bg img', { scale: 1.05, opacity: 0.4 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out' })
+          .fromTo('.blog-detail-hero-overlay', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.1)
+          .fromTo('.blog-breadcrumbs', { x: -90, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }, 0.15)
+          .fromTo('.blog-detail-hero-inner .section-kicker', { x: -75, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.23)
           .fromTo(
             '.blog-detail-title .split-word-inner',
             { yPercent: 120, opacity: 0 },
             { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.048, ease: 'power3.out' },
-            0.16
+            0.3
           )
-          .fromTo('.blog-detail-meta-bar', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.58, ease: 'power3.out' }, 0.42);
+          .fromTo('.blog-detail-meta-bar', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.58, ease: 'power3.out' }, 0.5);
 
-        gsap.to('.blog-detail-header-inner', {
-          y: -24,
-          opacity: 0.25,
-          ease: 'none',
+        gsap.to('.blog-detail-hero-bg img', {
+          scale: 1.03,
+          duration: 6,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+
+        const heroExit = gsap.timeline({
           scrollTrigger: {
-            trigger: '.blog-detail-header',
+            trigger: '.blog-detail-hero',
             start: 'top top',
             end: 'bottom top',
             scrub: 0.7,
           },
         });
-
-        if (document.querySelector('.blog-hero-image-frame')) {
-          const heroImgTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: '.blog-hero-image-frame',
-              start: 'top 95%',
-              end: 'bottom 5%',
-              scrub: 0.8,
-            },
-          });
-          heroImgTl
-            .fromTo('.blog-hero-image-frame', { scale: 0.72, y: 45, opacity: 0.2 }, { scale: 1.02, y: 0, opacity: 1, duration: 0.36 }, 0)
-            .to('.blog-hero-image-frame', { scale: 1, y: 0, opacity: 1, duration: 0.34 }, 0.36)
-            .to('.blog-hero-image-frame', { scale: 0.86, y: -30, opacity: 0.3, duration: 0.3 }, 0.7);
-        }
+        heroExit
+          .to('.blog-detail-hero-bg img', { scale: 1.12, opacity: 0.5, ease: 'none' }, 0)
+          .to('.blog-detail-hero-inner', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         gsap.fromTo(
           '.blog-sidebar',
@@ -107,10 +102,20 @@ export default function BlogDetail() {
 
   return (
     <div ref={pageRef} className="blog-detail-root">
-      {/* ── 1. ARTICLE HEADER ── */}
-      <header className="blog-detail-header" aria-label="Article Details">
+      {/* ── 1. FULL-BLEED FEATURED IMAGE HERO WITH TITLE OVERLAY ── */}
+      <section className="blog-detail-hero" aria-label={post.title}>
+        <div className="blog-detail-hero-bg" aria-hidden="true">
+          <ResponsiveImage
+            src={post.image || '/images/illustrations/coronary-stent-ivl.webp'}
+            alt={post.title}
+            priority
+            objectFit="cover"
+            sizes="100vw"
+          />
+        </div>
+        <div className="blog-detail-hero-overlay"></div>
         <div className="container blog-z1">
-          <div className="blog-detail-header-inner">
+          <div className="blog-detail-hero-inner">
             <nav className="blog-breadcrumbs" aria-label="Breadcrumb">
               <Link to="/">Home</Link>
               <span>/</span>
@@ -143,28 +148,13 @@ export default function BlogDetail() {
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
       {/* ── 2. EXACT ORIGINAL ARTICLE CONTENT + SIDEBAR ── */}
       <section className="section blog-detail-stage">
         <div className="container blog-z1">
           <div className="blog-detail-layout">
             <article className="blog-article-body">
-              {post.image && (
-                <div className="blog-hero-image-frame">
-                  <div className="blog-hero-image-mask media-reveal-mask">
-                    <ResponsiveImage
-                      src={post.image}
-                      fallbackSrc="/images/illustrations/coronary-stent-ivl.webp"
-                      alt={post.title}
-                      priority
-                      objectFit="contain"
-                      sizes="(max-width: 960px) 92vw, 760px"
-                    />
-                  </div>
-                </div>
-              )}
-
               {/* Exact unedited HTML directly as published on drpraveenchandra.com */}
               <div
                 className="blog-exact-content"
