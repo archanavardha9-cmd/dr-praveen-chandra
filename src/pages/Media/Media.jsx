@@ -109,17 +109,25 @@ export default function Media() {
           ease: 'sine.inOut',
         });
 
-        const heroExit = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.media-cinema-hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.75,
-          },
+        // ── HERO — Individual element scroll exit/re-entry (repeatable, not pinned) ──
+        const heroHide = gsap.timeline({ paused: true });
+        heroHide
+          .to('.media-hero-bg img', { opacity: 0.3, scale: 1.05, duration: 0.5 }, 0)
+          .to('.med-hero-kicker-chip', { opacity: 0, y: -30, duration: 0.5 }, 0)
+          .to('.med-hero-title .split-word-inner', { opacity: 0, yPercent: -60, duration: 0.6, stagger: 0.03 }, 0.05)
+          .to('.med-hero-lead', { opacity: 0, y: -30, duration: 0.5 }, 0.1)
+          .to('.med-hero-center-actions > *', { opacity: 0, y: -30, duration: 0.4, stagger: 0.06 }, 0.15)
+          .to('.med-hero-video-label', { opacity: 0, y: -30, duration: 0.5 }, 0.2);
+
+        ScrollTrigger.create({
+          trigger: '.media-cinema-hero',
+          start: 'top 85%',
+          end: 'bottom top',
+          onEnter: () => heroHide.reverse(),
+          onLeave: () => heroHide.play(),
+          onEnterBack: () => heroHide.reverse(),
+          onLeaveBack: () => heroHide.play(),
         });
-        heroExit
-          .to('.media-hero-bg img', { scale: 1.1, opacity: 0.4, ease: 'none' }, 0)
-          .to('.med-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. VIDEO SPOTLIGHT + HORIZONTAL DECK — Full-width growth & exit ──
         const dirTl = gsap.timeline({

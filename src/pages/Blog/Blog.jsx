@@ -75,17 +75,25 @@ export default function Blog() {
           ease: 'sine.inOut',
         });
 
-        const heroExit = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.blog-hero-monument',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.75,
-          },
+        // ── HERO — Individual element scroll exit/re-entry (repeatable, not pinned) ──
+        const heroHide = gsap.timeline({ paused: true });
+        heroHide
+          .to('.blog-hero-bg img', { opacity: 0.3, scale: 1.05, duration: 0.5 }, 0)
+          .to('.blog-hero-overlay', { opacity: 0.1, duration: 0.5 }, 0)
+          .to('.blog-hero-center .section-kicker', { opacity: 0, y: -30, duration: 0.5 }, 0)
+          .to('.blog-hero-title .split-word-inner', { opacity: 0, yPercent: -60, duration: 0.6, stagger: 0.03 }, 0.05)
+          .to('.blog-hero-lead', { opacity: 0, y: -30, duration: 0.5 }, 0.1)
+          .to('.blog-stat-item', { opacity: 0, y: -30, duration: 0.4, stagger: 0.05 }, 0.15);
+
+        ScrollTrigger.create({
+          trigger: '.blog-hero-monument',
+          start: 'top 85%',
+          end: 'bottom top',
+          onEnter: () => heroHide.reverse(),
+          onLeave: () => heroHide.play(),
+          onEnterBack: () => heroHide.reverse(),
+          onLeaveBack: () => heroHide.play(),
         });
-        heroExit
-          .to('.blog-hero-bg img', { scale: 1.1, opacity: 0.4, ease: 'none' }, 0)
-          .to('.blog-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         gsap.fromTo(
           '.blog-filter-bar',

@@ -175,17 +175,26 @@ export default function Home() {
           delay: 1.15,
         });
 
-        const heroExit = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.home-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.75,
-          },
+        // ── HERO — Individual element scroll exit/re-entry (repeatable, not pinned) ──
+        const heroHide = gsap.timeline({ paused: true });
+        heroHide
+          .to('.hero-center-kicker', { opacity: 0, y: -30, duration: 0.5 }, 0)
+          .to('.hero-center-title .split-word-inner', { opacity: 0, yPercent: -60, duration: 0.6, stagger: 0.03 }, 0.05)
+          .to('.hero-center-lead', { opacity: 0, y: -30, duration: 0.5 }, 0.1)
+          .to('.hero-portrait-main', { opacity: 0.3, scale: 0.85, duration: 0.5 }, 0.15)
+          .to('.hero-center-actions > *', { opacity: 0, y: -30, duration: 0.4, stagger: 0.06 }, 0.2)
+          .to('.hero-center-metric-row', { opacity: 0, y: -30, duration: 0.5 }, 0.25)
+          .to('.hero-azure-wedge', { opacity: 0.2, scale: 0.95, duration: 0.5 }, 0);
+
+        ScrollTrigger.create({
+          trigger: '.home-hero-stage',
+          start: 'top 85%',
+          end: 'bottom top',
+          onEnter: () => heroHide.reverse(),
+          onLeave: () => heroHide.play(),
+          onEnterBack: () => heroHide.reverse(),
+          onLeaveBack: () => heroHide.play(),
         });
-        heroExit
-          .to('.hero-center-stage', { y: -40, opacity: 0.3, ease: 'none' }, 0)
-          .to('.hero-azure-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. ANATOMY STAGE — 3-Zone Sapphire Contrast Stage + growth + clean recede ──
         const anatTl = gsap.timeline({
@@ -454,13 +463,11 @@ export default function Home() {
                       alt={currentHero.caption}
                       priority
                       objectFit="cover"
+                      objectPosition="center"
                       sizes="(max-width: 600px) 80vw, 420px"
                     />
                   </motion.div>
                 </AnimatePresence>
-                <div className="hero-portrait-caption">
-                  {currentHero.caption}
-                </div>
               </div>
             </div>
 

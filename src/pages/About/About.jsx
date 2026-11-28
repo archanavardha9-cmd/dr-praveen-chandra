@@ -119,18 +119,28 @@ export default function About() {
           delay: 1.15,
         });
 
-        const heroExit = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.about-hero-stage',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.75,
-          },
+        // ── HERO — Individual element scroll exit/re-entry (repeatable, not pinned) ──
+        const heroHide = gsap.timeline({ paused: true });
+        heroHide
+          .to('.about-hero-kicker', { opacity: 0, y: -30, duration: 0.5 }, 0)
+          .to('.about-display-title .split-word-inner', { opacity: 0, yPercent: -60, duration: 0.6, stagger: 0.03 }, 0.05)
+          .to('.about-role-sub', { opacity: 0, y: -30, duration: 0.5 }, 0.1)
+          .to('.about-short-bio', { opacity: 0, y: -30, duration: 0.5 }, 0.15)
+          .to('.about-portrait-center', { opacity: 0.3, scale: 0.85, duration: 0.5 }, 0.2)
+          .to('.about-portrait-caption-center', { opacity: 0, y: -30, duration: 0.5 }, 0.25)
+          .to('.about-fact-chip', { opacity: 0, y: -30, duration: 0.4, stagger: 0.05 }, 0.3)
+          .to('.about-hero-center-actions > *', { opacity: 0, y: -30, duration: 0.4, stagger: 0.06 }, 0.35)
+          .to('.about-hero-wedge', { opacity: 0.2, scale: 0.95, duration: 0.5 }, 0);
+
+        ScrollTrigger.create({
+          trigger: '.about-hero-stage',
+          start: 'top 85%',
+          end: 'bottom top',
+          onEnter: () => heroHide.reverse(),
+          onLeave: () => heroHide.play(),
+          onEnterBack: () => heroHide.reverse(),
+          onLeaveBack: () => heroHide.play(),
         });
-        heroExit
-          .to('.about-portrait-center', { scale: 0.8, y: -30, opacity: 0.3, ease: 'none' }, 0)
-          .to('.about-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0)
-          .to('.about-hero-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. CAREER TRIPTYCH — Horizontal era switcher + 3-photo expanding spread ──
         const careerTl = gsap.timeline({
@@ -236,7 +246,7 @@ export default function About() {
                   alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
                   priority
                   objectFit="cover"
-                  objectPosition="center"
+                  objectPosition="center 55%"
                   sizes="(max-width: 600px) 80vw, 400px"
                 />
               </div>

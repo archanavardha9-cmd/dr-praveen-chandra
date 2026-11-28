@@ -169,14 +169,6 @@
   display: block;
 }
 
-.hero-portrait-caption {
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  margin-top: 0.5rem;
-}
-
 .hero-center-actions {
   display: flex;
   align-items: center;
@@ -190,7 +182,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: 1rem;
   flex-wrap: wrap;
   margin-top: 1rem;
   padding-top: 0.9rem;

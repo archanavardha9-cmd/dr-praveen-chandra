@@ -118,16 +118,25 @@ export default function Treatments() {
           start: 'top 95%',
         });
 
-        const heroExit = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.treatments-hero-monument',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.75,
-          },
+        // ── HERO — Individual element scroll exit/re-entry (repeatable, not pinned) ──
+        const heroHide = gsap.timeline({ paused: true });
+        heroHide
+          .to('.trt-hero-kicker-chip', { opacity: 0, y: -30, duration: 0.5 }, 0)
+          .to('.trt-hero-headline .split-word-inner', { opacity: 0, yPercent: -60, duration: 0.6, stagger: 0.03 }, 0.05)
+          .to('.trt-hero-lead', { opacity: 0, y: -30, duration: 0.5 }, 0.1)
+          .to('.trt-procedure-chip', { opacity: 0, y: -30, duration: 0.4, stagger: 0.05 }, 0.15)
+          .to('.trt-hero-center-actions > *', { opacity: 0, y: -30, duration: 0.4, stagger: 0.06 }, 0.2)
+          .to('.trt-hero-metric-mini', { opacity: 0, y: -30, duration: 0.5 }, 0.25);
+
+        ScrollTrigger.create({
+          trigger: '.treatments-hero-monument',
+          start: 'top 85%',
+          end: 'bottom top',
+          onEnter: () => heroHide.reverse(),
+          onLeave: () => heroHide.play(),
+          onEnterBack: () => heroHide.reverse(),
+          onLeaveBack: () => heroHide.play(),
         });
-        heroExit
-          .to('.trt-hero-center', { y: -40, opacity: 0.3, ease: 'none' }, 0);
 
         // ── 2. PROCEDURE DIRECTORY — Scrubbed rail + display growth ──
         const dirTl = gsap.timeline({
