@@ -58,6 +58,14 @@ export default function BlogDetail() {
       {/* ── 1. ARTICLE HEADER ── */}
       <header className="blog-detail-header" aria-label="Article Details">
         <SectionBackground variant="telemetry-grid" opacity={0.4} />
+        {/* Floating Medical Decor — BlogDetail Header */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '12%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container blog-z1">
           <div className="blog-detail-header-inner">
             <nav className="blog-breadcrumbs" aria-label="Breadcrumb">
@@ -96,6 +104,14 @@ export default function BlogDetail() {
 
       {/* ── 2. EXACT ORIGINAL ARTICLE CONTENT + SIDEBAR ── */}
       <section className="section blog-detail-stage">
+        {/* Floating Medical Decor — BlogDetail Article */}
+        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container blog-z1">
           <div className="blog-detail-layout">
             {/* Main Longform Article: Exact Raw HTML from Official Source */}
@@ -149,6 +165,14 @@ export default function BlogDetail() {
 
       {/* ── 3. BOTTOM CTA ── */}
       <section className="blog-cta-ribbon" aria-label="Book Consultation">
+        {/* Floating Medical Decor — BlogDetail CTA */}
+        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container">
           <div className="blog-cta-inner">
             <div>

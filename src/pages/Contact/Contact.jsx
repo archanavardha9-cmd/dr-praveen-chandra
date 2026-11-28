@@ -123,6 +123,14 @@ export default function Contact() {
       <section className="cnt-hero-stage" aria-label="Medanta OPD Contact">
         <div className="cnt-hero-wedge" aria-hidden="true" />
         <SectionBackground variant="contact-radar" opacity={0.65} />
+        {/* Floating Medical Decor — Contact Hero */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '12%', left: '8%', fontSize: '2.2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container cnt-z1">
           <div className="cnt-hero-grid">
@@ -198,6 +206,14 @@ export default function Contact() {
 
       {/* ── 2. INTERACTIVE CAMPUS MAP & AUTO-CYCLING TRANSIT STAGE ── */}
       <section className="section cnt-hub-stage" aria-label="Campus Location and Transit">
+        {/* Floating Medical Decor — Hub */}
+        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container cnt-z1">
           <div className="cnt-hub-grid">
             <div className="cnt-hub-left">
@@ -276,6 +292,14 @@ export default function Contact() {
 
       {/* ── 3. PRE-VISIT CHECKLIST & GLOBAL CARE DESK ── */}
       <section className="section cnt-prep-stage" aria-label="Consultation Checklist">
+        {/* Floating Medical Decor — Prep */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '42%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '42%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '30%', right: '42%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container cnt-z1">
           <div className="cnt-prep-grid cnt-prep-reveal">
             <div className="cnt-checklist-col">
@@ -333,6 +357,14 @@ export default function Contact() {
 
       {/* ── 4. 24/7 EMERGENCY BAND ── */}
       <section className="cnt-emergency-band" aria-label="24/7 Emergency Heart Line">
+        {/* Floating Medical Decor — Emergency */}
+        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container">
           <div className="cnt-emergency-flex">
             <div>

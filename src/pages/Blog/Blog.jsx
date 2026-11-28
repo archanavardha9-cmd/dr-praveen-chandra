@@ -107,6 +107,14 @@ export default function Blog() {
       {/* ── 1. TALL, EXPANSIVE PREMIUM BLOG HERO ── */}
       <section className="blog-hero-monument" aria-label="Cardiology Insights & Articles">
         <SectionBackground variant="telemetry-grid" opacity={0.65} />
+        {/* Floating Medical Decor — Blog Hero */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '12%', left: '8%', fontSize: '2.2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container blog-z1">
           <div className="blog-hero-split-grid">
             <div className="blog-hero-content">
@@ -166,6 +174,14 @@ export default function Blog() {
       {/* ── 2. COMPACT BLOG LISTING ── */}
       <section className="section blog-listing-stage" aria-label="All Blog Articles">
         <SectionBackground variant="ecg-monitor" opacity={0.3} />
+        {/* Floating Medical Decor — Blog Listing */}
+        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container blog-z1">
           <div className="blog-filter-bar" role="tablist" aria-label="Filter articles by category">
             {categories.slice(0, 8).map((cat) => (
@@ -253,6 +269,14 @@ export default function Blog() {
 
       {/* ── 3. CONSULTATION CALLOUT ── */}
       <section className="blog-cta-ribbon" aria-label="Schedule Consultation">
+        {/* Floating Medical Decor — Blog CTA */}
+        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container">
           <div className="blog-cta-inner">
             <div>

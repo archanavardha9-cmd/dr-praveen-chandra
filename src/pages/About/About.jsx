@@ -179,6 +179,14 @@ export default function About() {
       <section className="about-hero-stage" aria-label="Biography Overview">
         <div className="about-hero-wedge" aria-hidden="true" />
         <SectionBackground variant="awards-constellation" opacity={0.65} />
+        {/* Floating Medical Decor — About Hero */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '12%', left: '8%', fontSize: '2.2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container abt-z1">
           <div className="about-hero-grid">
@@ -252,6 +260,14 @@ export default function About() {
       <section className="section about-career-stage" aria-label="Career Milestones">
         <div className="career-bg-shape" aria-hidden="true" />
         <SectionBackground variant="coronary-tree" opacity={0.45} />
+        {/* Floating Medical Decor — Career */}
+        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '30%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '42%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '48%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '18%', left: '42%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '30%', right: '42%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container abt-z1">
           <div className="stage-header-row abt-career-stage-header">
@@ -344,6 +360,14 @@ export default function About() {
       {/* ── 3. KGMC QUALIFICATIONS & AUTO-CYCLING FELLOWSHIPS ── */}
       <section className="section about-academic-stage" aria-label="Academic Qualifications and Fellowships">
         <SectionBackground variant="telemetry-grid" opacity={0.3} />
+        {/* Floating Medical Decor — Academic */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '32%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container abt-z1">
           <div className="stage-header-row abt-academic-stage-header">
             <div>
@@ -424,6 +448,14 @@ export default function About() {
 
       {/* ── 4. AUTO-CYCLING HONORS & HISTORIC FIRSTS STAGE ── */}
       <section className="section about-ledger-stage" aria-label="Honors and Milestones">
+        {/* Floating Medical Decor — Ledger */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '8%', left: '8%', fontSize: '2.2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container abt-z1">
           <div className="about-stage-header abt-ledger-stage-header">
             <div>
@@ -517,6 +549,14 @@ export default function About() {
 
       {/* ── 5. COMPACT CTA RIBBON ── */}
       <section className="about-cta-ribbon" aria-label="Schedule Consultation">
+        {/* Floating Medical Decor — CTA */}
+        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container">
           <div className="about-cta-flex">
             <div>

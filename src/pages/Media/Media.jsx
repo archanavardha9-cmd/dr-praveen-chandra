@@ -198,6 +198,14 @@ export default function Media() {
       {/* ── 1. CINEMA HERO ── */}
       <section className="media-cinema-hero" aria-label="Clinical Cinema Hero">
         <SectionBackground variant="multimedia-waves" opacity={0.65} />
+        {/* Floating Medical Decor — Media Hero */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '12%', left: '8%', fontSize: '2.2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container med-z1">
           <div className="med-hero-split">
@@ -306,6 +314,14 @@ export default function Media() {
 
       {/* ── 2. BALANCED VIDEO DIRECTORY ── */}
       <section className="section media-archive-stage" id="videos" aria-label="Complete Video Archive">
+        {/* Floating Medical Decor — Video Directory */}
+        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container med-z1">
           <div className="media-stage-header">
             <div>
@@ -414,6 +430,14 @@ export default function Media() {
       {/* ── 3. DYNAMIC OPPOSING DIRECTIONAL NEWSPAPER ARCHIVE ── */}
       <section className="section media-news-stage" aria-label="Newspaper and News Coverage">
         <SectionBackground variant="telemetry-grid" opacity={0.25} />
+        {/* Floating Medical Decor — News */}
+        <div className="floating-medical-decor floating-heart floating-heart--pink" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '30%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '42%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '42%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '30%', right: '42%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container med-z1">
           <div className="stage-header-row" style={{ marginBottom: '2rem', textAlign: 'center' }}>
@@ -517,6 +541,14 @@ export default function Media() {
 
       {/* ── 4. SINGLE SHARED DISPLAY AREA PHOTO ARCHIVE ── */}
       <section className="section media-zigzag-gallery" aria-label="Clinical Photography Archive">
+        {/* Floating Medical Decor — Gallery */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container med-z1">
           <div className="stage-header-row" style={{ marginBottom: '2rem', textAlign: 'center' }}>
             <div style={{ margin: '0 auto', maxWidth: '640px' }}>

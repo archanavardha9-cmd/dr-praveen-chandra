@@ -10,6 +10,13 @@ import SectionBackground from '../../components/backgrounds/SectionBackground';
 import VideoModal from '../../components/media/VideoModal';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import {
+  usePremiumReveal,
+  usePremiumStagger,
+  usePremiumParallax,
+  usePremiumFloating,
+  usePremiumScrollDraw,
+} from '../../hooks/usePremiumAnimation';
+import {
   DOCTOR,
   VERIFIED_METRICS,
   ANATOMY_HOTSPOTS,
@@ -212,6 +219,14 @@ export default function Home() {
       <section className="home-hero-stage" aria-label="Introduction">
         <div className="hero-azure-wedge" aria-hidden="true" />
         <HeartAnimation variant="hero" />
+        {/* Floating Medical Decor — Hero */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '18%', left: '8%', fontSize: '2.5rem' }} />
+        <div className="floating-medical-decor floating-heart floating-heart--pink" style={{ top: '55%', right: '6%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ bottom: '20%', left: '12%', fontSize: '1.8rem' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '35%', right: '20%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '45%', left: '25%' }} />
+        <div className="floating-pulse-ring" style={{ top: '20%', left: '48%', width: '60px', height: '60px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '15%', right: '30%', width: '40px', height: '40px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container home-z1">
           <div className="hero-split-layout">
@@ -334,6 +349,14 @@ export default function Home() {
       {/* ── 2. INTERACTIVE CARDIAC ANATOMY STAGE ── */}
       <section className="section home-anatomy-stage" id="anatomy" aria-label="Interactive Cardiac Anatomy">
         <SectionBackground variant="telemetry-grid" opacity={0.22} />
+        {/* Floating Medical Decor — Anatomy */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '35%', left: '8%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '25%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '42%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '20%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container home-z1">
           <div className="stage-header-row anat-section-header">
             <div>
@@ -474,6 +497,14 @@ export default function Home() {
       <section className="section home-devices-stage" aria-label="Medical Devices Showcase">
         <div className="devices-bg-shape" aria-hidden="true" />
         <SectionBackground variant="valve-motion" opacity={0.5} />
+        {/* Floating Medical Decor — Devices */}
+        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '12%', left: '10%', fontSize: '2.2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '30%', right: '8%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '48%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '18%', left: '45%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '38%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container home-z1">
           <div className="devices-split-layout">
@@ -578,6 +609,14 @@ export default function Home() {
       {/* ── 4. PADMA SHRI & CLINICAL LEADERSHIP ── */}
       <section className="section home-legacy-stage" aria-label="National Honors and Heritage">
         <SectionBackground variant="awards-constellation" opacity={0.65} />
+        {/* Floating Medical Decor — Legacy */}
+        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '10%', left: '8%', fontSize: '2.5rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '42%', left: '10%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '32%', right: '18%' }} />
+        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '85px', height: '85px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '40%', width: '55px', height: '55px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container home-z1">
           <div className="legacy-split-grid">
             {/* Left Large Uncropped Photo Stage */}
@@ -659,6 +698,14 @@ export default function Home() {
       {/* ── 5. AUTO-CYCLING VIDEO CINEMA & CONSULTATION RIBBON ── */}
       <section className="section home-cinema-stage" aria-label="Featured Videos">
         <SectionBackground variant="multimedia-waves" opacity={0.45} />
+        {/* Floating Medical Decor — Cinema */}
+        <div className="floating-medical-decor floating-heart floating-heart--pink" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '30%', right: '8%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '48%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '18%', left: '45%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '28%', right: '38%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container home-z1">
           <div className="stage-header-row cin-section-header">
             <div>
@@ -776,6 +823,14 @@ export default function Home() {
       {/* ── 6. VIBRANT CONSULTATION RIBBON WITH SCRUBBED ECG ── */}
       <section className="home-consult-ribbon" aria-label="Book Appointment">
         <svg className="consult-ecg-svg" viewBox="0 0 1200 100" preserveAspectRatio="none" aria-hidden="true">
+        {/* Floating Medical Decor — Consult */}
+        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
+        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
+        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
+        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
+        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
           <path
             className="consult-ecg-path"
             d="M0,55 L220,55 L245,42 L262,55 L310,55 L325,76 L345,14 L365,90 L385,46 L402,55 L640,55 L665,42 L682,55 L730,55 L745,76 L765,14 L785,90 L805,46 L822,55 L1200,55"
