@@ -93,7 +93,7 @@ const LEGACY_COLLAGE = [
 const SPOTLIGHT_VIDEOS = MEDIA_VIDEOS.slice(0, 4);
 
 export default function Home() {
-  const heroCycle = useAutoCycle(HERO_SLIDES.length, 5200);
+  const heroCycle = useAutoCycle(HERO_SLIDES.length, 4000);
   const anatomyCycle = useAutoCycle(ANATOMY_HOTSPOTS.length, 5500);
   const deviceCycle = useAutoCycle(DEVICES_SHOWCASE.length, 5500);
   const legacyCycle = useAutoCycle(LEGACY_COLLAGE.length, 5200);
@@ -440,7 +440,6 @@ export default function Home() {
             {/* Circular Portrait Composition - Single Central Image */}
             <div className="hero-portrait-composition">
               <div className="hero-portrait-main">
-                <div className="hero-portrait-ring" aria-hidden="true" />
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentHero.id}
@@ -477,10 +476,14 @@ export default function Home() {
             <div className="hero-center-metric-row">
               <span className="hero-center-metric-val tabular-nums">30+</span>
               <span className="hero-center-metric-sep">·</span>
-              <span className="hero-center-metric-lbl">Years of Clinical Leadership</span>
+              <span className="hero-center-metric-lbl">Years Clinical Leadership</span>
               <span className="hero-center-metric-sep">·</span>
               <span className="hero-center-metric-val tabular-nums">100+</span>
-              <span className="hero-center-metric-lbl">Research Papers Published</span>
+              <span className="hero-center-metric-sep">·</span>
+              <span className="hero-center-metric-lbl">Scientific Papers</span>
+              <span className="hero-center-metric-sep">·</span>
+              <span className="hero-center-metric-val tabular-nums">1st in India</span>
+              <span className="hero-center-metric-lbl">TAVI &amp; MitraClip Pioneer</span>
             </div>
           </div>
         </div>

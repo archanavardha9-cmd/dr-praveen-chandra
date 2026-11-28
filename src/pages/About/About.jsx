@@ -230,7 +230,6 @@ export default function About() {
 
             {/* Main Circular Portrait */}
             <div className="about-portrait-center">
-              <div className="about-portrait-ring" aria-hidden="true" />
               <div className="about-portrait-frame-center">
                 <ResponsiveImage
                   src={DOCTOR.images.profile}
