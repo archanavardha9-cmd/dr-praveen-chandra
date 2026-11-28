@@ -1,21 +1,14 @@
-// Home.jsx – Complete multi-directional GSAP scroll choreography for every section and element
+// Home.jsx – Bold scroll-driven transformations: mount left/right split, image growth/shrink, diagonal merges, color transitions, and layout shifts
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
-import HeartAnimation from '../../components/backgrounds/HeartAnimation';
-import SectionBackground from '../../components/backgrounds/SectionBackground';
 import VideoModal from '../../components/media/VideoModal';
+import SplitHeading from '../../components/motion/SplitHeading';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
-import {
-  usePremiumReveal,
-  usePremiumStagger,
-  usePremiumParallax,
-  usePremiumFloating,
-  usePremiumScrollDraw,
-} from '../../hooks/usePremiumAnimation';
+import { animateNumericCounters } from '../../utils/motionHelpers';
 import {
   DOCTOR,
   VERIFIED_METRICS,
@@ -57,25 +50,25 @@ const LEGACY_SCENES = [
     id: 'padma',
     year: '2016',
     title: 'Padma Shri National Honor',
-    subtitle: 'Conferred by the President of India for pioneering cardiovascular medicine.',
+    subtitle: 'Conferred by the President of India for cardiovascular medicine.',
     image: DOCTOR.images.awardPodium,
     caption: 'Padma Shri Investiture Ceremony, Rashtrapati Bhavan',
   },
   {
     id: 'firsts',
     year: 'First in India',
-    title: 'TAVI & MitraClip Valve Pioneer',
-    subtitle: 'First non-surgical aortic valve implantation & mitral clip repair in India.',
+    title: 'TAVI & MitraClip Pioneer',
+    subtitle: 'First non-surgical aortic & mitral valve interventions in India.',
     image: DOCTOR.images.cathLab,
     caption: 'Cardiac Catheterization Suite, Medanta – The Medicity',
   },
   {
     id: 'faculty',
     year: '1992 – Present',
-    title: '30+ Years Global Leadership',
-    subtitle: 'Past Chairman, National Interventional Council & international keynote faculty.',
+    title: '30+ Years Clinical Leadership',
+    subtitle: 'Past Chairman, National Interventional Council & global faculty.',
     image: DOCTOR.images.speaking,
-    caption: 'Addressing global interventional cardiology symposia',
+    caption: 'Addressing international interventional cardiology symposia',
   },
 ];
 
@@ -102,109 +95,315 @@ export default function Home() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. HERO STAGE — Every element animates individually ──
-        // Left column staggered reveals
-        // Hero — every element reveals repeatedly on scroll (no one-time entrances)
-        gsap.fromTo('.hero-kicker', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-display-title', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-short-lead', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-cta-group', { opacity: 0, y: 25, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-inline-metrics', { opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)', duration: 0.9, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        // ── 1. HERO SECTION — Strong opposing left/right mount entrance + subtle post-settle float + scroll-exit ──
+        const heroMount = gsap.timeline();
+        heroMount
+          .fromTo(
+            '.hero-azure-wedge',
+            { xPercent: 45, opacity: 0 },
+            { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }
+          )
+          .fromTo(
+            '.hero-copy-col',
+            { x: -120, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+            0.05
+          )
+          .fromTo(
+            '.hero-visual-col',
+            { x: 135, scale: 0.72, rotate: 2.5, opacity: 0 },
+            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.05, ease: 'power3.out' },
+            0.08
+          )
+          .fromTo(
+            '.hero-kicker',
+            { x: -30, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
+            0.18
+          )
+          .fromTo(
+            '.hero-display-title .split-word-inner',
+            { yPercent: 125, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.06, ease: 'power3.out' },
+            0.25
+          )
+          .fromTo(
+            '.hero-short-lead',
+            { x: -25, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
+            0.52
+          )
+          .fromTo(
+            '.hero-cta-group > *',
+            { scale: 0.82, y: 18, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
+            0.62
+          )
+          .fromTo(
+            '.hero-inline-stat',
+            { y: 20, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' },
+            0.72
+          )
+          .fromTo(
+            '.hero-switch-item',
+            { y: 24, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.55, stagger: 0.08, ease: 'power3.out' },
+            0.68
+          );
 
-        // Right column directional reveals
-        gsap.fromTo('.hero-visual-col', { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-stage-frame', { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-orbital-1', { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-orbital-2', { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.hero-switcher-bar', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        animateNumericCounters('.hero-stat-value', {
+          trigger: '.home-hero-stage',
+          start: 'top 95%',
+        });
 
-        // Hero copy scrubbed layer — reveal opacity only (transform is scrubbed)
-        gsap.fromTo('.hero-copy-col', { opacity: 0 }, { opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.home-hero-stage', start: 'top 78%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
+        // Subtle continuous floating motion after hero visual settles
+        gsap.to('.hero-stage-float', {
+          y: -9,
+          duration: 3.6,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 1.15,
+        });
 
-        // Continuous Hero Scroll Scrub (Layered 3D Motion)
-        gsap.to('.hero-stage-frame', { yPercent: 14, scale: 1.05, rotationY: -4, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 1 } });
-        gsap.to('.hero-orbital-1', { yPercent: -45, xPercent: 12, rotation: -4, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
-        gsap.to('.hero-orbital-2', { yPercent: 35, xPercent: -10, rotation: 4, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
-        gsap.to('.hero-copy-col', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '.home-hero-stage', start: 'top top', end: 'bottom top', scrub: 1 } });
+        // Restrained hero ECG draw & ambient particle drift
+        gsap.fromTo(
+          '.hero-ambient-ecg-path',
+          { strokeDashoffset: 1200 },
+          { strokeDashoffset: 0, duration: 2.2, ease: 'power2.out', delay: 0.35 }
+        );
+        gsap.to('.hero-ambient-particle', {
+          y: -18,
+          x: 10,
+          duration: 4.5,
+          stagger: { each: 0.7, from: 'random' },
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
 
-        // ── 2. ANATOMY STAGE — Split directional reveals ──
-        gsap.fromTo('.anat-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-from-left', { opacity: 0, x: -70 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-from-right', { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-from-bottom', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // Hero Scroll-Out Transformation (separate inner targets to avoid mount conflict)
+        const heroExit = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.home-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.75,
+          },
+        });
+        heroExit
+          .to('.hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
+          .to('.hero-visual-inner-scrub', { x: 75, y: -32, scale: 0.84, opacity: 0.2, ease: 'none' }, 0)
+          .to('.hero-azure-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
-        // Individual anatomy elements
-        gsap.fromTo('.anat-section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-section-heading', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-section-lead', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.75, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 2. ANATOMY STAGE — Scroll-scrubbed small-to-dominant growth, radial pin burst, color shift & shrink exit ──
+        const anatTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.home-anatomy-stage',
+            start: 'top 95%',
+            end: 'bottom 5%',
+            scrub: 0.8,
+          },
+        });
 
-        gsap.fromTo('.anatomy-diagram-stage img', { opacity: 0, scale: 0.8, rotate: -8 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-pin-btn', { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        anatTl
+          // Phase 1 (0 -> 0.35): dramatic growth & split entrance
+          .fromTo(
+            '.anat-section-header .section-heading',
+            { x: -70, color: '#8ac2e8', opacity: 0.25 },
+            { x: 0, color: '#ffffff', opacity: 1, duration: 0.32, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.anat-section-header .section-lead',
+            { x: 80, opacity: 0.15 },
+            { x: 0, opacity: 1, duration: 0.32, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.anatomy-circle-backdrop',
+            { scale: 0.25, opacity: 0.1 },
+            { scale: 1.06, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.anatomy-image-holder',
+            { scale: 0.56, y: 80, rotate: -6, opacity: 0.15 },
+            { scale: 1.04, y: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.anat-pin-btn',
+            { scale: 0, xPercent: -50, yPercent: -50, opacity: 0 },
+            { scale: 1, xPercent: -50, yPercent: -50, opacity: 1, duration: 0.22, stagger: 0.03, clearProps: 'transform', ease: 'back.out(1.8)' },
+            0.14
+          )
+          .fromTo(
+            '.anatomy-dynamic-stage',
+            { x: 115, scale: 0.86, opacity: 0.15 },
+            { x: 0, scale: 1, opacity: 1, duration: 0.35, ease: 'power2.out' },
+            0.03
+          )
+          .fromTo(
+            '.anatomy-zone-rail',
+            { y: 65, opacity: 0.15 },
+            { y: 0, opacity: 1, duration: 0.32, ease: 'power2.out' },
+            0.06
+          )
+          // Phase 2 (0.36 -> 0.68): Full crisp readability plateau
+          .to('.anatomy-image-holder', { scale: 1, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.anatomy-dynamic-stage', { x: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
+          // Phase 3 (0.68 -> 1.0): Shrink & recede into next section
+          .to('.anatomy-diagram-stage', { scale: 0.74, y: -60, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.anatomy-dynamic-stage', { x: 85, y: -30, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.anatomy-zone-rail', { y: -25, opacity: 0.18, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        gsap.fromTo('.anat-zone-kicker', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-proc-title', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-proc-summary', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.75, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-matched-visual', { opacity: 0, scale: 0.85, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.9, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.anat-action-row', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 3. DEVICES STAGE — Background shape sweep, layout shift, image compact-to-large growth & heading color ──
+        const devTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.home-devices-stage',
+            start: 'top 95%',
+            end: 'bottom 5%',
+            scrub: 0.8,
+          },
+        });
 
-        // Continuous Anatomy Heart Diagram Scrub & Breathing Scale
-        gsap.fromTo('.anatomy-diagram-stage img', { scale: 0.9, rotate: -6 }, { scale: 1.08, rotate: 5, ease: 'none', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
-        gsap.fromTo('.anatomy-circle-backdrop', { scale: 0.75, opacity: 0.25 }, { scale: 1.3, opacity: 0.85, ease: 'none', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
-        gsap.fromTo('.anatomy-dynamic-stage', { yPercent: 10 }, { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.home-anatomy-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+        devTl
+          .fromTo(
+            '.devices-bg-shape',
+            { xPercent: 32, rotate: -12, scale: 0.85 },
+            { xPercent: 0, rotate: -4, scale: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.dev-section-header .section-heading',
+            { color: '#6c87a1', x: -50 },
+            { color: '#09223a', x: 0, duration: 0.35, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.devices-selector-col',
+            { x: -110, opacity: 0.15 },
+            { x: 0, opacity: 1, duration: 0.35, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.devices-showcase-col',
+            { scale: 0.62, x: 115, y: 55, opacity: 0.15 },
+            { scale: 1.03, x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          // Plateau
+          .to('.devices-showcase-col', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.devices-selector-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
+          // Exit layout transformation: selector pulls left while showcase centers & compresses
+          .to('.devices-selector-col', { x: -90, opacity: 0.15, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.devices-showcase-col', { x: -65, scale: 0.78, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.devices-bg-shape', { xPercent: -14, rotate: 3, opacity: 0.4, duration: 0.32 }, 0.68);
 
-        // ── 3. DEVICES STAGE — Alternating directional reveals ──
-        gsap.fromTo('.dev-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dev-from-left', { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dev-from-right', { opacity: 0, x: 60, scale: 0.92 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 4. LEGACY STAGE — Two diagonal panels entering from opposite corners & merging, then splitting apart ──
+        const legTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.home-legacy-stage',
+            start: 'top 95%',
+            end: 'bottom 5%',
+            scrub: 0.85,
+          },
+        });
 
-        // Individual device elements
-        gsap.fromTo('.devices-bg-shape', { opacity: 0, xPercent: 15, yPercent: -10 }, { opacity: 1, xPercent: 0, yPercent: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.devices-showcase-col h2', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        legTl
+          .fromTo(
+            '.legacy-visual-col',
+            { x: -135, y: -80, rotate: -4, scale: 0.72, opacity: 0.15 },
+            { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.legacy-copy-col',
+            { x: 135, y: 80, rotate: 3, opacity: 0.15 },
+            { x: 0, y: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.leg-section-header .section-heading',
+            { color: '#6c87a1' },
+            { color: '#09223a', duration: 0.35 },
+            0
+          )
+          .fromTo(
+            '.legacy-photo-bar',
+            { y: 45, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.25 },
+            0.12
+          )
+          // Plateau
+          .to('.legacy-visual-col', { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.legacy-copy-col', { x: 0, y: 0, rotate: 0, opacity: 1, duration: 0.32 }, 0.36)
+          // Split exit
+          .to('.legacy-visual-col', { x: -75, y: -55, scale: 0.8, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.legacy-copy-col', { x: 75, y: 45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        gsap.fromTo('.dev-list-row', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.device-big-visual img', { opacity: 0, scale: 0.8, rotateX: 12 }, { opacity: 1, scale: 1, rotateX: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.device-overlay-strip', { opacity: 0, x: -30, y: 20 }, { opacity: 1, x: 0, y: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.device-strip-actions', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.home-devices-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 5. VIDEO CINEMA — Small screen expanding into dominant cinema frame, playlist sliding horizontally ──
+        const cinTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.home-cinema-stage',
+            start: 'top 95%',
+            end: 'bottom 5%',
+            scrub: 0.8,
+          },
+        });
 
-        // Continuous Device Visual 3D Float on Scroll
-        gsap.fromTo('.device-big-visual img', { y: 55, scale: 0.9, rotateX: 10 }, { y: -40, scale: 1.05, rotateX: -4, ease: 'none', scrollTrigger: { trigger: '.home-devices-stage', start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
-        gsap.fromTo('.devices-bg-shape', { xPercent: 12, yPercent: -8 }, { xPercent: -8, yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.home-devices-stage', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+        cinTl
+          .fromTo('.cin-section-header', { y: -35, opacity: 0.2 }, { y: 0, opacity: 1, duration: 0.32 }, 0)
+          .fromTo(
+            '.cinema-main-col',
+            { scale: 0.58, y: 75, opacity: 0.2 },
+            { scale: 1.03, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.cinema-list-col',
+            { x: 115, rotate: 2, opacity: 0.15 },
+            { x: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0.03
+          )
+          // Plateau
+          .to('.cinema-main-col', { scale: 1, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.cinema-list-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
+          // Exit shrink
+          .to('.cinema-main-col', { scale: 0.76, y: -50, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.cinema-list-col', { x: 80, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // ── 4. LEGACY STAGE — Mask clip reveal + orthogonal text ──
-        gsap.fromTo('.leg-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.leg-from-bottom', { opacity: 0, clipPath: 'inset(15% 0 0 0)', y: 40 }, { opacity: 1, clipPath: 'inset(0% 0 0 0)', y: 0, duration: 0.95, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.leg-from-right', { opacity: 0, x: 55 }, { opacity: 1, x: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 6. CONSULTATION RIBBON — Scrubbed ECG draw + opposing split + smooth handoff to Footer ──
+        gsap.fromTo(
+          '.consult-ecg-path',
+          { strokeDashoffset: 900 },
+          {
+            strokeDashoffset: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.home-consult-ribbon',
+              start: 'top 96%',
+              end: 'bottom 55%',
+              scrub: 0.6,
+            },
+          }
+        );
 
-        // Individual legacy elements
-        gsap.fromTo('.legacy-photo-inner img', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.legacy-photo-bar', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.legacy-selector-stack', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.legacy-row-btn', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // Continuous Legacy Photo Parallax Zoom
-        gsap.fromTo('.legacy-photo-inner img', { scale: 1.2, yPercent: -12 }, { scale: 1.0, yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.home-legacy-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
-
-        // ── 5. VIDEO CINEMA — Left/right split reveals ──
-        gsap.fromTo('.cin-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.vid-from-left', { opacity: 0, x: -55 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.vid-from-right', { opacity: 0, x: 55 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // Individual cinema elements
-        gsap.fromTo('.cinema-thumb-hero', { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cinema-play-circle', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.3, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cinema-caption-strip', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cinema-pl-thumb img', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cinema-pl-info', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // Cinema Screen Elevation on Scroll
-        gsap.fromTo('.cinema-player-stage', { scale: 0.93, y: 45 }, { scale: 1.02, y: -20, ease: 'none', scrollTrigger: { trigger: '.home-cinema-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
-        gsap.fromTo('.consult-ecg-path', { strokeDashoffset: 900 }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 95%', end: 'bottom 60%', scrub: 0.5 } });
-
-        // ── 6. CONSULTATION RIBBON ──
-        gsap.fromTo('.consult-ribbon-copy h2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.consult-ribbon-copy p', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.consult-ribbon-actions', { opacity: 0, scale: 0.9, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.home-consult-ribbon', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        const ribbonTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.home-consult-ribbon',
+            start: 'top 95%',
+            end: 'bottom 10%',
+            scrub: 0.75,
+          },
+        });
+        ribbonTl
+          .fromTo('.consult-ribbon-copy', { x: -100, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.consult-ribbon-actions', { x: 100, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .to('.consult-ribbon-flex', { scale: 1, opacity: 1, duration: 0.34 }, 0.38)
+          .to('.consult-ribbon-flex', { scale: 0.9, y: -26, opacity: 0.32, duration: 0.28 }, 0.72);
       }, homeRef);
 
       return () => ctx.revert();
@@ -215,131 +414,137 @@ export default function Home() {
 
   return (
     <div ref={homeRef} className="home-root">
-      {/* ── 1. KINETIC SPOTLIGHT HERO ── */}
+      {/* ── 1. SPOTLIGHT HERO ── */}
       <section className="home-hero-stage" aria-label="Introduction">
         <div className="hero-azure-wedge" aria-hidden="true" />
-        <HeartAnimation variant="hero" />
-        {/* Floating Medical Decor — Hero */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '18%', left: '8%', fontSize: '2.5rem' }} />
-        <div className="floating-medical-decor floating-heart floating-heart--pink" style={{ top: '55%', right: '6%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ bottom: '20%', left: '12%', fontSize: '1.8rem' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '35%', right: '20%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '45%', left: '25%' }} />
-        <div className="floating-pulse-ring" style={{ top: '20%', left: '48%', width: '60px', height: '60px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '15%', right: '30%', width: '40px', height: '40px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
+
+        {/* Subtle Hero-Only Ambient Accents & Heartbeat ECG */}
+        <div className="hero-ambient-layer" aria-hidden="true">
+          <span className="hero-ambient-particle hero-p1" />
+          <span className="hero-ambient-particle hero-p2" />
+          <span className="hero-ambient-particle hero-p3" />
+          <span className="hero-ambient-particle hero-p4" />
+          <svg className="hero-ambient-ecg" viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path
+              className="hero-ambient-ecg-path"
+              d="M0,48 L320,48 L344,36 L360,48 L410,48 L424,68 L442,10 L460,74 L478,40 L494,48 L880,48 L904,36 L920,48 L970,48 L984,68 L1002,10 L1020,74 L1038,40 L1054,48 L1440,48"
+              fill="none"
+              stroke="rgba(0, 91, 148, 0.14)"
+              strokeWidth="1.6"
+              strokeDasharray="1200"
+              strokeDashoffset="1200"
+            />
+          </svg>
+        </div>
 
         <div className="container home-z1">
           <div className="hero-split-layout">
             {/* Left Copy */}
             <div className="hero-copy-col">
-              <p className="hero-kicker hero-enter-left">
-                Padma Shri 2016 · Chairman, Interventional Cardiology
-              </p>
+              <div className="hero-copy-inner">
+                <p className="hero-kicker">
+                  Padma Shri 2016 · Chairman, Interventional Cardiology
+                </p>
 
-              <h1 className="hero-display-title hero-enter-left">
-                Non-Surgical Heart Valve &amp; Coronary Care
-              </h1>
+                <SplitHeading
+                  as="h1"
+                  className="hero-display-title"
+                  text="Non-Surgical Heart Valve & Coronary Care"
+                />
 
-              <p className="hero-short-lead hero-enter-left">
-                Dr. Praveen Chandra leads structural heart interventions at{' '}
-                <strong>Medanta – The Medicity, Gurugram</strong>.
-              </p>
+                <p className="hero-short-lead">
+                  Dr. Praveen Chandra leads structural heart interventions at{' '}
+                  <strong>Medanta – The Medicity, Gurugram</strong>.
+                </p>
 
-              <div className="hero-cta-group hero-enter-left">
-                <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
-                <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
-                  Explore Procedures
-                </Link>
-              </div>
+                <div className="hero-cta-group">
+                  <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
+                  <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
+                    Explore Procedures
+                  </Link>
+                </div>
 
-              <div className="hero-inline-metrics hero-enter-bottom">
-                {VERIFIED_METRICS.slice(0, 3).map((m) => (
-                  <div className="hero-inline-stat hero-enter-bottom" key={m.label}>
-                    <span className="hero-stat-value tabular-nums">{m.value}</span>
-                    <span className="hero-stat-label">{m.label}</span>
-                  </div>
-                ))}
+                <div className="hero-inline-metrics">
+                  {VERIFIED_METRICS.slice(0, 3).map((m) => (
+                    <div className="hero-inline-stat" key={m.label}>
+                      <span className="hero-stat-value tabular-nums">{m.value}</span>
+                      <span className="hero-stat-label">{m.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Right Dynamic Auto-Cycling Visual Stage (Large & Uncropped with 3D Depth) */}
-            <div className="hero-visual-col hero-enter-right perspective-stage" style={{ position: 'relative' }}>
-              {/* Floating 3D Orbital Badges with differential parallax and independent breathing */}
-              <div className="hero-orbital-1" style={{ position: 'absolute', top: '-14px', left: '-18px', zIndex: 4, pointerEvents: 'none' }}>
-                <div className="floating-orbital-badge floating-orbital-badge--gold">
-                  <span>🏅</span>
-                  <span>Padma Shri Awardee · 2016</span>
-                </div>
-              </div>
-              <div className="hero-orbital-2" style={{ position: 'absolute', bottom: '72px', right: '-18px', zIndex: 4, pointerEvents: 'none' }}>
-                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
-                  <span>🏥</span>
-                  <span>Medanta – The Medicity</span>
-                </div>
-              </div>
-
-              <div className="hero-stage-frame">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentHero.id}
-                    className="hero-slide-inner"
-                    initial={{ opacity: 0, scale: 0.96, x: 24 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 1.02, x: -24 }}
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <img
-                      src={currentHero.image}
-                      alt={currentHero.caption}
-                      loading="eager"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-
-                <div className="hero-stage-caption">
-                  <AnimatePresence mode="wait">
-                    <motion.span
-                      key={currentHero.id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.28 }}
-                    >
-                      {currentHero.caption}
-                    </motion.span>
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* Interactive Auto-Synced Hero Slide Switcher */}
-              <div className="hero-switcher-bar" role="tablist" aria-label="Doctor highlights">
-                {HERO_SLIDES.map((slide, idx) => {
-                  const isActive = heroCycle.activeIndex === idx;
-                  return (
-                    <button
-                      key={slide.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`hero-switch-item ${isActive ? 'is-active' : ''}`}
-                      onClick={() => heroCycle.selectIndex(idx)}
-                    >
-                      <div className="hero-switch-top">
-                        <span className="tabular-nums">{slide.index}</span>
-                        <span>{slide.label}</span>
-                      </div>
-                      <div className="cycle-progress-track">
-                        {isActive && (
-                          <div
-                            key={`hero-prog-${heroCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                            style={{ animationDuration: '5.2s' }}
+            {/* Right Auto-Cycling Visual Stage */}
+            <div className="hero-visual-col">
+              <div className="hero-visual-inner-scrub">
+                <div className="hero-stage-float">
+                  <div className="hero-stage-frame">
+                    <div className="hero-curtain-mask media-reveal-mask">
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={currentHero.id}
+                          className="hero-slide-inner"
+                          initial={{ opacity: 0, x: 30, scale: 0.96 }}
+                          animate={{ opacity: 1, x: 0, scale: 1 }}
+                          exit={{ opacity: 0, x: -24, scale: 1.02 }}
+                          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                          <img
+                            src={currentHero.image}
+                            alt={currentHero.caption}
+                            loading="eager"
                           />
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+
+                    <div className="hero-stage-caption">
+                      <AnimatePresence mode="wait">
+                        <motion.span
+                          key={currentHero.id}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.26 }}
+                        >
+                          {currentHero.caption}
+                        </motion.span>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Interactive Auto-Synced Hero Slide Switcher */}
+                <div className="hero-switcher-bar" role="tablist" aria-label="Doctor highlights">
+                  {HERO_SLIDES.map((slide, idx) => {
+                    const isActive = heroCycle.activeIndex === idx;
+                    return (
+                      <button
+                        key={slide.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        className={`hero-switch-item ${isActive ? 'is-active' : ''}`}
+                        onClick={() => heroCycle.selectIndex(idx)}
+                      >
+                        <div className="hero-switch-top">
+                          <span className="tabular-nums">{slide.index}</span>
+                          <span>{slide.label}</span>
+                        </div>
+                        <div className="cycle-progress-track">
+                          {isActive && (
+                            <div
+                              key={`hero-prog-${heroCycle.cycleKey}`}
+                              className="cycle-progress-bar"
+                              style={{ animationDuration: '5.2s' }}
+                            />
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -348,31 +553,24 @@ export default function Home() {
 
       {/* ── 2. INTERACTIVE CARDIAC ANATOMY STAGE ── */}
       <section className="section home-anatomy-stage" id="anatomy" aria-label="Interactive Cardiac Anatomy">
-        <SectionBackground variant="telemetry-grid" opacity={0.22} />
-        {/* Floating Medical Decor — Anatomy */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '35%', left: '8%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '25%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '15%', left: '42%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '20%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container home-z1">
           <div className="stage-header-row anat-section-header">
             <div>
-              <div className="section-kicker section-kicker--light anat-section-kicker">Interactive Cardiac Atlas</div>
-              <h2 className="section-heading section-heading--light anat-section-heading">
-                Target Zone &amp; Catheter Therapy
-              </h2>
+              <div className="section-kicker section-kicker--light">Interactive Cardiac Atlas</div>
+              <SplitHeading
+                as="h2"
+                className="section-heading section-heading--light"
+                text="Target Zone & Catheter Therapy"
+              />
             </div>
-            <p className="section-lead section-lead--light anat-section-lead">
-              Cycles automatically or click any cardiac zone to inspect its matched catheter device.
+            <p className="section-lead section-lead--light">
+              Select any cardiac zone to inspect its matched catheter therapy.
             </p>
           </div>
 
           <div className="anatomy-stage-grid">
             {/* Left Large Uncropped Heart Diagram */}
-            <div className="anatomy-diagram-stage anat-from-left">
+            <div className="anatomy-diagram-stage">
               <div className="anatomy-circle-backdrop" aria-hidden="true" />
               <div className="anatomy-image-holder">
                 <img
@@ -401,23 +599,17 @@ export default function Home() {
             </div>
 
             {/* Right Dynamic Matching Content + Matched Visual */}
-            <div className="anatomy-dynamic-stage anat-from-right">
+            <div className="anatomy-dynamic-stage">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentHotspot.id}
                   className="anatomy-dynamic-inner"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25 }}
+                  initial={{ opacity: 0, x: 24, scale: 0.97 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -20, scale: 0.98 }}
+                  transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <motion.div
-                    className="anat-text-block"
-                    initial={{ opacity: 0, x: -24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 18 }}
-                    transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
-                  >
+                  <div className="anat-text-block">
                     <div className="anat-zone-kicker">
                       <span className="tabular-nums">{currentHotspot.index}</span>
                       <span>·</span>
@@ -427,42 +619,30 @@ export default function Home() {
                     </div>
                     <h3 className="anat-proc-title">{currentHotspot.procedure}</h3>
                     <p className="anat-proc-summary">{currentHotspot.summary}</p>
-                  </motion.div>
+                  </div>
 
                   {/* Large Matched Procedure Visual */}
-                  <motion.div
-                    className="anat-matched-visual"
-                    initial={{ opacity: 0, x: 32, scale: 0.94 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={{ opacity: 0, x: -24, scale: 0.96 }}
-                    transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-                  >
+                  <div className="anat-matched-visual">
                     <img
                       src={currentHotspot.image}
                       alt={`${currentHotspot.procedure} illustration`}
                       loading="lazy"
                     />
-                  </motion.div>
+                  </div>
 
-                  <motion.div
-                    className="anat-action-row"
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.32 }}
-                  >
+                  <div className="anat-action-row">
                     <Link to={`/treatments#${currentHotspot.id}`} className="btn-clinical btn-clinical--light">
                       Inspect {currentHotspot.procedure.split(' ')[0]} →
                     </Link>
                     <span className="anat-device-note">{currentHotspot.device}</span>
-                  </motion.div>
+                  </div>
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
 
           {/* Bottom Interactive Zone Bar */}
-          <div className="anatomy-zone-rail anat-from-bottom" role="tablist" aria-label="Cardiac zones">
+          <div className="anatomy-zone-rail" role="tablist" aria-label="Cardiac zones">
             {ANATOMY_HOTSPOTS.map((spot, idx) => {
               const isActive = anatomyCycle.activeIndex === idx;
               return (
@@ -496,24 +676,15 @@ export default function Home() {
       {/* ── 3. PIONEERING DEVICES & CLINICAL FIRSTS ── */}
       <section className="section home-devices-stage" aria-label="Medical Devices Showcase">
         <div className="devices-bg-shape" aria-hidden="true" />
-        <SectionBackground variant="valve-motion" opacity={0.5} />
-        {/* Floating Medical Decor — Devices */}
-        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '12%', left: '10%', fontSize: '2.2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '30%', right: '8%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '48%', right: '15%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '20%' }} />
-        <div className="floating-pulse-ring" style={{ top: '18%', left: '45%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '38%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container home-z1">
           <div className="devices-split-layout">
-            {/* Left Vertical Selector + Active Mechanism */}
-            <div className="devices-selector-col dev-from-left">
+            {/* Left Vertical Selector */}
+            <div className="devices-selector-col">
               <div className="stage-header-row dev-section-header">
                 <div>
                   <div className="section-kicker">Pioneering Technologies</div>
-                  <h2 className="section-heading">Devices &amp; Breakthroughs</h2>
+                  <SplitHeading as="h2" className="section-heading" text="Devices & Breakthroughs" />
                 </div>
               </div>
 
@@ -547,60 +718,57 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Huge Uncropped Visual & Dynamic Text */}
-            <div className="devices-showcase-col dev-from-right">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentDevice.id}
-                  className="device-hero-display"
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 1.03, y: -20 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <div className="device-big-visual">
-                    <img
-                      src={currentDevice.image}
-                      alt={currentDevice.name}
-                      loading="lazy"
-                    />
-                  </div>
-
+            {/* Right Uncropped Visual & Dynamic Text */}
+            <div className="devices-showcase-col">
+              <div className="device-curtain-mask media-reveal-mask">
+                <AnimatePresence mode="wait">
                   <motion.div
-                    className="device-overlay-strip"
-                    initial={{ opacity: 0, x: -18 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.35, delay: 0.08 }}
+                    key={currentDevice.id}
+                    className="device-hero-display"
+                    initial={{ opacity: 0, scale: 0.95, y: 14 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.97, y: -10 }}
+                    transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <span className="device-tag-mono">{currentDevice.tag}</span>
-                    <h3>{currentDevice.name}</h3>
-                    <p>{currentDevice.benefit}</p>
-                    <div className="device-strip-actions">
-                      <Link to="/treatments" className="btn-clinical btn-clinical--primary">
-                        View All Treatments →
-                      </Link>
-                      <div className="device-arrow-pair">
-                        <button
-                          type="button"
-                          onClick={deviceCycle.prev}
-                          aria-label="Previous device"
-                          className="round-nav-btn"
-                        >
-                          ←
-                        </button>
-                        <button
-                          type="button"
-                          onClick={deviceCycle.next}
-                          aria-label="Next device"
-                          className="round-nav-btn"
-                        >
-                          →
-                        </button>
+                    <div className="device-big-visual">
+                      <img
+                        src={currentDevice.image}
+                        alt={currentDevice.name}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <div className="device-overlay-strip">
+                      <span className="device-tag-mono">{currentDevice.tag}</span>
+                      <h3>{currentDevice.name}</h3>
+                      <p>{currentDevice.benefit}</p>
+                      <div className="device-strip-actions">
+                        <Link to="/treatments" className="btn-clinical btn-clinical--primary">
+                          View All Treatments →
+                        </Link>
+                        <div className="device-arrow-pair">
+                          <button
+                            type="button"
+                            onClick={deviceCycle.prev}
+                            aria-label="Previous device"
+                            className="round-nav-btn"
+                          >
+                            ←
+                          </button>
+                          <button
+                            type="button"
+                            onClick={deviceCycle.next}
+                            aria-label="Next device"
+                            className="round-nav-btn"
+                          >
+                            →
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
-                </motion.div>
-              </AnimatePresence>
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>
@@ -608,36 +776,29 @@ export default function Home() {
 
       {/* ── 4. PADMA SHRI & CLINICAL LEADERSHIP ── */}
       <section className="section home-legacy-stage" aria-label="National Honors and Heritage">
-        <SectionBackground variant="awards-constellation" opacity={0.65} />
-        {/* Floating Medical Decor — Legacy */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '10%', left: '8%', fontSize: '2.5rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '42%', left: '10%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '32%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '85px', height: '85px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '40%', width: '55px', height: '55px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container home-z1">
           <div className="legacy-split-grid">
-            {/* Left Large Uncropped Photo Stage */}
-            <div className="legacy-visual-col leg-from-bottom">
+            {/* Left Uncropped Photo Stage */}
+            <div className="legacy-visual-col">
               <div className="legacy-photo-stage">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentLegacy.id}
-                    className="legacy-photo-inner"
-                    initial={{ opacity: 0, x: -28 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 28 }}
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <img
-                      src={currentLegacy.image}
-                      alt={currentLegacy.caption}
-                      loading="lazy"
-                    />
-                  </motion.div>
-                </AnimatePresence>
+                <div className="legacy-photo-mask media-reveal-mask">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentLegacy.id}
+                      className="legacy-photo-inner"
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.97 }}
+                      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <img
+                        src={currentLegacy.image}
+                        alt={currentLegacy.caption}
+                        loading="lazy"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
                 <div className="legacy-photo-bar">
                   <span>{currentLegacy.caption}</span>
                 </div>
@@ -648,14 +809,16 @@ export default function Home() {
             <div className="legacy-copy-col">
               <div className="stage-header-row leg-section-header">
                 <div>
-                  <div className="section-kicker leg-from-right">National Honor &amp; Heritage</div>
-                  <h2 className="section-heading leg-from-right">
-                    Three Decades of Pioneering Firsts
-                  </h2>
+                  <div className="section-kicker">National Honor &amp; Heritage</div>
+                  <SplitHeading
+                    as="h2"
+                    className="section-heading"
+                    text="Three Decades of Pioneering Firsts"
+                  />
                 </div>
               </div>
 
-              <div className="legacy-selector-stack leg-from-right" role="tablist" aria-label="Career milestones">
+              <div className="legacy-selector-stack" role="tablist" aria-label="Career milestones">
                 {LEGACY_SCENES.map((scene, idx) => {
                   const isActive = legacyCycle.activeIndex === idx;
                   return (
@@ -685,7 +848,7 @@ export default function Home() {
                 })}
               </div>
 
-              <div className="leg-from-right" style={{ marginTop: '1.25rem' }}>
+              <div className="leg-cta-wrap" style={{ marginTop: '1.25rem' }}>
                 <Link to="/about" className="btn-clinical btn-clinical--primary">
                   Full Biography &amp; Qualifications →
                 </Link>
@@ -695,22 +858,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 5. AUTO-CYCLING VIDEO CINEMA & CONSULTATION RIBBON ── */}
+      {/* ── 5. AUTO-CYCLING VIDEO CINEMA ── */}
       <section className="section home-cinema-stage" aria-label="Featured Videos">
-        <SectionBackground variant="multimedia-waves" opacity={0.45} />
-        {/* Floating Medical Decor — Cinema */}
-        <div className="floating-medical-decor floating-heart floating-heart--pink" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '30%', right: '8%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '48%', right: '15%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
-        <div className="floating-pulse-ring" style={{ top: '18%', left: '45%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '28%', right: '38%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container home-z1">
           <div className="stage-header-row cin-section-header">
             <div>
               <div className="section-kicker">Watch &amp; Learn</div>
-              <h2 className="section-heading">Clinical Explainers &amp; Patient Stories</h2>
+              <SplitHeading
+                as="h2"
+                className="section-heading"
+                text="Clinical Explainers & Patient Stories"
+              />
             </div>
             <Link to="/media" className="btn-clinical btn-clinical--secondary">
               View All 10 Videos →
@@ -719,72 +877,74 @@ export default function Home() {
 
           <div className="cinema-stage-split">
             {/* Left Dynamic 16:9 Cinema Stage */}
-            <div className="cinema-main-col vid-from-left">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentVideo.id}
-                  className="cinema-player-stage"
-                  initial={{ opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <div
-                    className="cinema-thumb-hero"
-                    onClick={() => setActiveVideoModal(currentVideo)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setActiveVideoModal(currentVideo);
-                      }
-                    }}
-                    aria-label={`Play video: ${currentVideo.title}`}
+            <div className="cinema-main-col">
+              <div className="cinema-aperture-mask">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentVideo.id}
+                    className="cinema-player-stage"
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.34 }}
                   >
-                    <img
-                      src={currentVideo.thumbnail}
-                      alt={currentVideo.title}
-                      loading="lazy"
-                    />
-                    <div className="cinema-play-circle" aria-hidden="true">
-                      <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
-                      </svg>
+                    <div
+                      className="cinema-thumb-hero"
+                      onClick={() => setActiveVideoModal(currentVideo)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setActiveVideoModal(currentVideo);
+                        }
+                      }}
+                      aria-label={`Play video: ${currentVideo.title}`}
+                    >
+                      <img
+                        src={currentVideo.thumbnail}
+                        alt={currentVideo.title}
+                        loading="lazy"
+                      />
+                      <div className="cinema-play-circle" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="cinema-caption-strip">
-                    <div>
-                      <span className="cinema-cat-text">
-                        {currentVideo.category} · <span className="tabular-nums">{currentVideo.duration}</span>
-                      </span>
-                      <h3>{currentVideo.title}</h3>
+                    <div className="cinema-caption-strip">
+                      <div>
+                        <span className="cinema-cat-text">
+                          {currentVideo.category} · <span className="tabular-nums">{currentVideo.duration}</span>
+                        </span>
+                        <h3>{currentVideo.title}</h3>
+                      </div>
+                      <div className="cinema-links-group">
+                        <button
+                          type="button"
+                          className="btn-clinical btn-clinical--primary"
+                          onClick={() => setActiveVideoModal(currentVideo)}
+                        >
+                          Play Video
+                        </button>
+                        <a
+                          href={`https://www.youtube.com/watch?v=${currentVideo.youtubeId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-clinical btn-clinical--secondary"
+                        >
+                          YouTube ↗
+                        </a>
+                      </div>
                     </div>
-                    <div className="cinema-links-group">
-                      <button
-                        type="button"
-                        className="btn-clinical btn-clinical--primary"
-                        onClick={() => setActiveVideoModal(currentVideo)}
-                      >
-                        Play Video
-                      </button>
-                      <a
-                        href={`https://www.youtube.com/watch?v=${currentVideo.youtubeId}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-clinical btn-clinical--secondary"
-                      >
-                        YouTube ↗
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
 
             {/* Right Selectable Video Playlist */}
-            <div className="cinema-list-col vid-from-right" role="tablist" aria-label="Spotlight videos">
+            <div className="cinema-list-col" role="tablist" aria-label="Spotlight videos">
               {SPOTLIGHT_VIDEOS.map((vid, idx) => {
                 const isActive = videoCycle.activeIndex === idx;
                 return (
@@ -820,23 +980,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 6. VIBRANT CONSULTATION RIBBON WITH SCRUBBED ECG ── */}
+      {/* ── 6. CONSULTATION RIBBON WITH SUBTLE SCRUBBED ECG ── */}
       <section className="home-consult-ribbon" aria-label="Book Appointment">
         <svg className="consult-ecg-svg" viewBox="0 0 1200 100" preserveAspectRatio="none" aria-hidden="true">
-        {/* Floating Medical Decor — Consult */}
-        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
-        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
           <path
             className="consult-ecg-path"
             d="M0,55 L220,55 L245,42 L262,55 L310,55 L325,76 L345,14 L365,90 L385,46 L402,55 L640,55 L665,42 L682,55 L730,55 L745,76 L765,14 L785,90 L805,46 L822,55 L1200,55"
             fill="none"
-            stroke="rgba(255, 255, 255, 0.22)"
-            strokeWidth="2"
+            stroke="rgba(255, 255, 255, 0.2)"
+            strokeWidth="1.8"
             strokeDasharray="900"
             strokeDashoffset="900"
           />

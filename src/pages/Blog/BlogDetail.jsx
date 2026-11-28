@@ -1,11 +1,14 @@
-// BlogDetail.jsx – Dedicated full-length article detail page rendering exact original HTML
+// BlogDetail.jsx – Dedicated full-length article detail page with word-by-word title, shutter image reveal, and sidebar glide
 import { useEffect, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { gsap } from 'gsap';
-import SectionBackground from '../../components/backgrounds/SectionBackground';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SplitHeading from '../../components/motion/SplitHeading';
 import { BLOG_POSTS } from '../../data/blogData';
 import { DOCTOR, CONTACT_INFO } from '../../data/doctorData';
 import './Blog.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -20,29 +23,80 @@ export default function BlogDetail() {
     const mm = gsap.matchMedia();
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
+        // ── 1. HEADER MOUNT & SCROLL-EXIT ──
+        const headerMount = gsap.timeline();
+        headerMount
+          .fromTo('.blog-breadcrumbs', { x: -90, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: 'power3.out' })
+          .fromTo('.blog-detail-header .section-kicker', { x: -75, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.08)
+          .fromTo(
+            '.blog-detail-title .split-word-inner',
+            { yPercent: 120, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.048, ease: 'power3.out' },
+            0.16
+          )
+          .fromTo('.blog-detail-meta-bar', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.58, ease: 'power3.out' }, 0.42);
+
+        gsap.to('.blog-detail-header-inner', {
+          y: -26,
+          opacity: 0.25,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.blog-detail-header',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.7,
+          },
+        });
+
+        // ── 2. ARTICLE IMAGE 3-PHASE SCRUBBED GROWTH & SIDEBAR GLIDE ──
+        if (document.querySelector('.blog-hero-image-frame')) {
+          const heroImgTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: '.blog-hero-image-frame',
+              start: 'top 95%',
+              end: 'bottom 5%',
+              scrub: 0.8,
+            },
+          });
+          heroImgTl
+            .fromTo('.blog-hero-image-frame', { scale: 0.68, y: 55, opacity: 0.2 }, { scale: 1.03, y: 0, opacity: 1, duration: 0.36 }, 0)
+            .to('.blog-hero-image-frame', { scale: 1, y: 0, opacity: 1, duration: 0.34 }, 0.36)
+            .to('.blog-hero-image-frame', { scale: 0.82, y: -35, opacity: 0.25, duration: 0.3 }, 0.7);
+        }
+
         gsap.fromTo(
-          '.blog-detail-header-inner',
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-header', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } }
-        );
-        gsap.fromTo(
-          '.blog-article-body',
-          { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } }
+          '.blog-sidebar',
+          { x: 95, opacity: 0.2 },
+          {
+            x: 0,
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.blog-detail-stage',
+              start: 'top 92%',
+              end: 'top 45%',
+              scrub: 0.75,
+            },
+          }
         );
 
-        // Sidebar cards
-        gsap.fromTo('.blog-sidebar-card', { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.blog-sidebar-card h3', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.blog-recent-item', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.blog-detail-stage', start: 'top 85%', end: 'bottom 20%', toggleActions: 'play reverse play reverse' } });
-
-        // Bottom CTA ribbon
-        gsap.fromTo('.blog-cta-ribbon', { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.blog-cta-ribbon h2', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.blog-cta-ribbon p', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.blog-cta-ribbon .btn-clinical', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.blog-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        // ── 3. CTA RIBBON HANDOFF ──
+        const ctaTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.blog-cta-ribbon',
+            start: 'top 95%',
+            end: 'bottom 10%',
+            scrub: 0.75,
+          },
+        });
+        ctaTl
+          .fromTo('.blog-cta-inner > div:first-child', { x: -90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.blog-cta-inner .btn-clinical', { x: 90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .to('.blog-cta-inner', { scale: 1, opacity: 1, duration: 0.34 }, 0.38)
+          .to('.blog-cta-inner', { scale: 0.9, y: -24, opacity: 0.32, duration: 0.28 }, 0.72);
       }, pageRef);
 
+      ScrollTrigger.refresh();
       return () => ctx.revert();
     });
 
@@ -57,15 +111,6 @@ export default function BlogDetail() {
     <div ref={pageRef} className="blog-detail-root">
       {/* ── 1. ARTICLE HEADER ── */}
       <header className="blog-detail-header" aria-label="Article Details">
-        <SectionBackground variant="telemetry-grid" opacity={0.4} />
-        {/* Floating Medical Decor — BlogDetail Header */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '12%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container blog-z1">
           <div className="blog-detail-header-inner">
             <nav className="blog-breadcrumbs" aria-label="Breadcrumb">
@@ -77,7 +122,7 @@ export default function BlogDetail() {
             </nav>
 
             <span className="section-kicker">{post.category || 'Cardiology Clinical Monograph'}</span>
-            <h1 className="blog-detail-title">{post.title}</h1>
+            <SplitHeading as="h1" className="blog-detail-title" text={post.title} />
 
             <div className="blog-detail-meta-bar">
               <div className="blog-author-chip">
@@ -104,21 +149,15 @@ export default function BlogDetail() {
 
       {/* ── 2. EXACT ORIGINAL ARTICLE CONTENT + SIDEBAR ── */}
       <section className="section blog-detail-stage">
-        {/* Floating Medical Decor — BlogDetail Article */}
-        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container blog-z1">
           <div className="blog-detail-layout">
             {/* Main Longform Article: Exact Raw HTML from Official Source */}
             <article className="blog-article-body">
               {post.image && (
                 <div className="blog-hero-image-frame">
-                  <img src={post.image} alt={post.title} loading="eager" />
+                  <div className="blog-hero-image-mask media-reveal-mask">
+                    <img src={post.image} alt={post.title} loading="eager" />
+                  </div>
                 </div>
               )}
 
@@ -165,14 +204,6 @@ export default function BlogDetail() {
 
       {/* ── 3. BOTTOM CTA ── */}
       <section className="blog-cta-ribbon" aria-label="Book Consultation">
-        {/* Floating Medical Decor — BlogDetail CTA */}
-        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
-        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container">
           <div className="blog-cta-inner">
             <div>

@@ -1,10 +1,10 @@
-// Contact.jsx – Complete GSAP scroll animation for every section and element
+// Contact.jsx – Medanta OPD location hub with multi-technique GSAP choreography
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import SectionBackground from '../../components/backgrounds/SectionBackground';
 import AppointmentButton from '../../components/common/AppointmentButton';
+import SplitHeading from '../../components/motion/SplitHeading';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import { CONTACT_INFO, DOCTOR } from '../../data/doctorData';
 import './Contact.css';
@@ -24,14 +24,14 @@ const TRANSIT_ROUTES = [
     mode: 'Air Arrival',
     name: 'Indira Gandhi International Airport (T3)',
     distance: '~19 km · 30–35 min via NH-48',
-    detail: 'Direct cab via NH-48 (~30 min). Dedicated International Desk concierge assists with airport pickup, transfers, and medical visa facilitation.',
+    detail: 'Direct cab via NH-48 (~30 min). International Desk concierge assists with airport transfers and medical visa coordination.',
   },
   {
     id: 'metro',
     mode: 'Delhi Metro',
     name: 'Millennium City Centre (Yellow Line)',
     distance: '~5.2 km · 12 min auto/cab',
-    detail: 'Yellow Line terminal connects Central Delhi & New Delhi Railway Station directly to Subhash Chowk and the Medanta Road approach.',
+    detail: 'Yellow Line terminal connects Central Delhi and New Delhi Railway Station directly to the Medanta Road approach.',
   },
   {
     id: 'highway',
@@ -59,56 +59,150 @@ export default function Contact() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. CONTACT HERO ──
-        gsap.fromTo('.cnt-hero-left', { opacity: 0, x: -48 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-hero-right', { opacity: 0, x: 48, scale: 0.94 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', delay: 0.1, scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 1. CONTACT HERO — Strong opposing left/right mount + continuous float + scroll-exit ──
+        const heroMount = gsap.timeline();
+        heroMount
+          .fromTo(
+            '.cnt-hero-wedge',
+            { xPercent: 45, opacity: 0 },
+            { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }
+          )
+          .fromTo(
+            '.cnt-hero-copy',
+            { x: -120, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+            0.05
+          )
+          .fromTo(
+            '.cnt-hero-visual',
+            { x: 135, scale: 0.72, rotate: 2.5, opacity: 0 },
+            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.05, ease: 'power3.out' },
+            0.08
+          )
+          .fromTo('.cnt-hero-copy .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.18)
+          .fromTo(
+            '.cnt-main-title .split-word-inner',
+            { yPercent: 125, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
+            0.24
+          )
+          .fromTo('.cnt-main-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.46)
+          .fromTo(
+            '.cnt-hero-actions > *',
+            { scale: 0.82, y: 18, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
+            0.56
+          )
+          .fromTo(
+            '.cnt-quick-facts > div',
+            { x: -26, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' },
+            0.66
+          );
 
-        // Individual hero elements
-        gsap.fromTo('.section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-main-title', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.95, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-main-lead', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-hero-actions', { opacity: 0, scale: 0.9, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-quick-facts', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.45, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.to('.cnt-stage-float', {
+          y: -8,
+          duration: 3.6,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 1.15,
+        });
 
-        gsap.fromTo('.cnt-photo-frame', { opacity: 0, scale: 0.85, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-orbital-1', { opacity: 0, x: -50, rotate: -15 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-orbital-2', { opacity: 0, x: 50, rotate: 15 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        const heroExit = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.cnt-hero-stage',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.75,
+          },
+        });
+        heroExit
+          .to('.cnt-hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
+          .to('.cnt-hero-visual-scrub', { x: 75, y: -32, scale: 0.84, opacity: 0.2, ease: 'none' }, 0)
+          .to('.cnt-hero-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
-        // Continuous Hero Photo Elevation on Scroll
-        gsap.to('.cnt-photo-frame', { yPercent: 12, scale: 1.05, rotationY: -4, ease: 'none', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top top', end: 'bottom top', scrub: 1 } });
-        gsap.to('.cnt-orbital-1', { yPercent: -42, xPercent: 12, rotation: -3, ease: 'none', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
-        gsap.to('.cnt-orbital-2', { yPercent: 32, xPercent: -10, rotation: 3, ease: 'none', scrollTrigger: { trigger: '.cnt-hero-stage', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        // ── 2. HOSPITAL HUB & MAP — Opposite diagonal corner merge, map growth & split exit ──
+        const hubTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.cnt-hub-stage',
+            start: 'top 95%',
+            end: 'bottom 5%',
+            scrub: 0.8,
+          },
+        });
 
-        // ── 2. HOSPITAL HUB & MAPS ──
-        gsap.fromTo('.cnt-hub-left', { opacity: 0, x: -45 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-hub-right', { opacity: 0, x: 45 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        hubTl
+          .fromTo(
+            '.cnt-hub-left .section-heading',
+            { x: -55, color: '#5a738c', opacity: 0.25 },
+            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.cnt-hub-left',
+            { x: -110, y: 55, opacity: 0.15 },
+            { x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          .fromTo(
+            '.cnt-hub-right',
+            { x: 115, y: -50, scale: 0.66, opacity: 0.15 },
+            { x: 0, y: 0, scale: 1.02, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          // Plateau
+          .to('.cnt-hub-right', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.cnt-hub-left', { x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          // Split exit
+          .to('.cnt-hub-left', { x: -70, y: -30, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.cnt-hub-right', { x: 70, y: 30, scale: 0.78, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // Individual hub elements
-        gsap.fromTo('.cnt-address-block', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.transit-tab-bar', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.transit-tab-btn', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.5, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.transit-detail-box', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 3. PRE-VISIT PREPARATION — Checklist left glide + international desk growth & shrink exit ──
+        const prepTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.cnt-prep-stage',
+            start: 'top 95%',
+            end: 'bottom 5%',
+            scrub: 0.8,
+          },
+        });
 
-        gsap.fromTo('.cnt-map-frame', { opacity: 0, scale: 0.85, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        prepTl
+          .fromTo(
+            '.cnt-checklist-col .section-heading',
+            { x: -55, color: '#5a738c', opacity: 0.25 },
+            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
+            0
+          )
+          .fromTo('.cnt-checklist-col', { x: -95, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' }, 0)
+          .fromTo(
+            '.cnt-intl-col',
+            { scale: 0.65, x: 95, y: 65, opacity: 0.15 },
+            { scale: 1.02, x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          // Plateau
+          .to('.cnt-intl-col', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.cnt-checklist-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
+          // Exit shrink
+          .to('.cnt-checklist-col', { x: -65, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.cnt-intl-col', { scale: 0.8, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // Continuous map parallax
-        gsap.fromTo('.cnt-map-frame', { scale: 0.95, y: 30 }, { scale: 1.02, y: -15, ease: 'none', scrollTrigger: { trigger: '.cnt-hub-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
-
-        // ── 3. PRE-VISIT PREPARATION ──
-        gsap.fromTo('.cnt-prep-reveal', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // Individual prep elements
-        gsap.fromTo('.cnt-checklist-col', { opacity: 0, x: -45 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-check-row', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-intl-visual img', { opacity: 0, scale: 0.8, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-intl-body', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.cnt-intl-actions', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // Continuous International Desk Photo Scrub
-        gsap.fromTo('.cnt-intl-visual img', { y: 25, scale: 0.96 }, { y: -25, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
-
-        // ── 4. EMERGENCY BAND ──
-        gsap.fromTo('.cnt-emergency-band', { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-emergency-band', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
+        // ── 4. EMERGENCY BAND — Opposing split + Footer handoff recession ──
+        const emgTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.cnt-emergency-band',
+            start: 'top 95%',
+            end: 'bottom 10%',
+            scrub: 0.75,
+          },
+        });
+        emgTl
+          .fromTo('.cnt-emergency-flex > div:first-child', { x: -90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.cnt-emergency-flex .btn-clinical', { x: 90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .to('.cnt-emergency-flex', { scale: 1, opacity: 1, duration: 0.34 }, 0.38)
+          .to('.cnt-emergency-flex', { scale: 0.9, y: -24, opacity: 0.32, duration: 0.28 }, 0.72);
       }, pageRef);
 
       return () => ctx.revert();
@@ -122,82 +216,70 @@ export default function Contact() {
       {/* ── 1. CONSULTATION HERO SPLIT ── */}
       <section className="cnt-hero-stage" aria-label="Medanta OPD Contact">
         <div className="cnt-hero-wedge" aria-hidden="true" />
-        <SectionBackground variant="contact-radar" opacity={0.65} />
-        {/* Floating Medical Decor — Contact Hero */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '12%', left: '8%', fontSize: '2.2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
 
         <div className="container cnt-z1">
           <div className="cnt-hero-grid">
-            <div className="cnt-hero-copy cnt-hero-left">
-              <div className="section-kicker">
-                {CONTACT_INFO.hospital} · Gurugram
-              </div>
-              <h1 className="cnt-main-title">
-                OPD Consultations &amp; Hospital Access
-              </h1>
-              <p className="cnt-main-lead">
-                Book outpatient appointments or second opinions for structural heart valve and complex coronary care with Dr. Praveen Chandra.
-              </p>
+            <div className="cnt-hero-copy">
+              <div className="cnt-hero-copy-inner">
+                <div className="section-kicker">
+                  {CONTACT_INFO.hospital} · Gurugram
+                </div>
+                <SplitHeading
+                  as="h1"
+                  className="cnt-main-title"
+                  text="OPD Consultations & Hospital Access"
+                />
+                <p className="cnt-main-lead">
+                  Schedule outpatient appointments or angiogram second opinions with Dr. Praveen Chandra.
+                </p>
 
-              <div className="cnt-hero-actions">
-                <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
-                <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
-                  Call {CONTACT_INFO.phones[0]}
-                </a>
-              </div>
+                <div className="cnt-hero-actions">
+                  <AppointmentButton variant="primary" size="lg" label="Book Appointment" />
+                  <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
+                    Call {CONTACT_INFO.phones[0]}
+                  </a>
+                </div>
 
-              <dl className="cnt-quick-facts">
-                <div>
-                  <dt>Direct OPD Lines</dt>
-                  <dd className="tabular-nums">
-                    <a href={`tel:${CONTACT_INFO.phones[0]}`}>{CONTACT_INFO.phones[0]}</a> ·{' '}
-                    <a href={`tel:${CONTACT_INFO.phones[1]}`}>{CONTACT_INFO.phones[1]}</a>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Clinical Email</dt>
-                  <dd>
-                    <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>
-                  </dd>
-                </div>
-                <div>
-                  <dt>24/7 Cardiac Emergency</dt>
-                  <dd className="tabular-nums">
-                    Medanta Helpline {CONTACT_INFO.emergencyLine} · Board {CONTACT_INFO.hospitalBoard}
-                  </dd>
-                </div>
-              </dl>
+                <dl className="cnt-quick-facts">
+                  <div>
+                    <dt>Direct OPD Lines</dt>
+                    <dd className="tabular-nums">
+                      <a href={`tel:${CONTACT_INFO.phones[0]}`}>{CONTACT_INFO.phones[0]}</a> ·{' '}
+                      <a href={`tel:${CONTACT_INFO.phones[1]}`}>{CONTACT_INFO.phones[1]}</a>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Clinical Email</dt>
+                    <dd>
+                      <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>24/7 Cardiac Emergency</dt>
+                    <dd className="tabular-nums">
+                      Medanta Helpline {CONTACT_INFO.emergencyLine} · Board {CONTACT_INFO.hospitalBoard}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
             </div>
 
-            <div className="cnt-hero-visual cnt-hero-right perspective-stage" style={{ position: 'relative' }}>
-              <div className="cnt-orbital-1" style={{ position: 'absolute', top: '-14px', right: '-12px', zIndex: 4, pointerEvents: 'none' }}>
-                <div className="floating-orbital-badge floating-orbital-badge--gold">
-                  <span>🟢</span>
-                  <span>OPD Clinic Active · Sector 38</span>
+            <div className="cnt-hero-visual">
+              <div className="cnt-hero-visual-scrub">
+                <div className="cnt-stage-float">
+                  <div className="cnt-photo-frame">
+                    <div className="cnt-photo-mask media-reveal-mask">
+                      <img
+                        src={DOCTOR.images.consultation}
+                        alt="Dr. Praveen Chandra reviewing diagnostic records during patient consultation"
+                        loading="eager"
+                      />
+                    </div>
+                  </div>
+                  <div className="cnt-photo-caption">
+                    Outpatient Cardiology Wing · Sector 38, Gurugram
+                  </div>
                 </div>
-              </div>
-              <div className="cnt-orbital-2" style={{ position: 'absolute', bottom: '26px', left: '-12px', zIndex: 4, pointerEvents: 'none' }}>
-                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
-                  <span>🚑</span>
-                  <span>24/7 Acute Heart Trauma 1068</span>
-                </div>
-              </div>
-
-              <div className="cnt-photo-frame">
-                <img
-                  src={DOCTOR.images.consultation}
-                  alt="Dr. Praveen Chandra reviewing diagnostic records during patient consultation"
-                  loading="eager"
-                />
-              </div>
-              <div className="cnt-photo-caption">
-                Outpatient Cardiology Wing · Sector 38, Gurugram
               </div>
             </div>
           </div>
@@ -206,19 +288,11 @@ export default function Contact() {
 
       {/* ── 2. INTERACTIVE CAMPUS MAP & AUTO-CYCLING TRANSIT STAGE ── */}
       <section className="section cnt-hub-stage" aria-label="Campus Location and Transit">
-        {/* Floating Medical Decor — Hub */}
-        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container cnt-z1">
           <div className="cnt-hub-grid">
             <div className="cnt-hub-left">
               <div className="section-kicker">Campus Location &amp; Directions</div>
-              <h2 className="section-heading">Medanta – The Medicity, Gurugram</h2>
+              <SplitHeading as="h2" className="section-heading" text="Medanta – The Medicity, Gurugram" />
 
               <div className="cnt-address-block">
                 <span className="cnt-label-mono">Department Address</span>
@@ -262,10 +336,10 @@ export default function Contact() {
                   <motion.div
                     key={activeRoute.id}
                     className="transit-detail-box"
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: 14 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, x: -14 }}
+                    transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
                   >
                     <span className="transit-dist-mono tabular-nums">{activeRoute.distance}</span>
                     <h3>{activeRoute.name}</h3>
@@ -292,21 +366,13 @@ export default function Contact() {
 
       {/* ── 3. PRE-VISIT CHECKLIST & GLOBAL CARE DESK ── */}
       <section className="section cnt-prep-stage" aria-label="Consultation Checklist">
-        {/* Floating Medical Decor — Prep */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '42%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '15%', left: '42%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '30%', right: '42%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container cnt-z1">
-          <div className="cnt-prep-grid cnt-prep-reveal">
+          <div className="cnt-prep-grid">
             <div className="cnt-checklist-col">
               <div className="section-kicker">Patient Preparation</div>
-              <h2 className="section-heading">Diagnostic Records Checklist</h2>
+              <SplitHeading as="h2" className="section-heading" text="Diagnostic Records Checklist" />
               <p className="section-lead" style={{ marginBottom: '1.25rem' }}>
-                Verify the cardiac reports to carry for your outpatient evaluation ({completedCount} / {PRE_VISIT_DOCS.length} ready).
+                Reports to carry for your outpatient evaluation ({completedCount} / {PRE_VISIT_DOCS.length} ready).
               </p>
 
               <div className="cnt-checklist-rows">
@@ -332,16 +398,18 @@ export default function Contact() {
 
             <div className="cnt-intl-col">
               <div className="cnt-intl-visual">
-                <img
-                  src="/images/medical/medanta-hospital-gurugram.webp"
-                  alt="Medanta – The Medicity Hospital Campus, Gurugram"
-                  loading="lazy"
-                />
+                <div className="cnt-intl-mask media-reveal-mask">
+                  <img
+                    src="/images/medical/medanta-hospital-gurugram.webp"
+                    alt="Medanta – The Medicity Hospital Campus, Gurugram"
+                    loading="lazy"
+                  />
+                </div>
               </div>
               <div className="cnt-intl-body">
                 <h3>Outstation &amp; International Patient Coordination</h3>
                 <p>
-                  Dedicated assistance with prior angiogram film review, visa invitation letters, airport transfers from IGI Airport, and post-procedure follow-up via Medanta eClinic.
+                  Assistance with prior angiogram film review, visa letters, airport transfers from IGI Airport, and remote follow-up via Medanta eClinic.
                 </p>
                 <div className="cnt-intl-actions">
                   <AppointmentButton variant="primary" size="md" label="Schedule Evaluation" />
@@ -357,14 +425,6 @@ export default function Contact() {
 
       {/* ── 4. 24/7 EMERGENCY BAND ── */}
       <section className="cnt-emergency-band" aria-label="24/7 Emergency Heart Line">
-        {/* Floating Medical Decor — Emergency */}
-        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
-        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container">
           <div className="cnt-emergency-flex">
             <div>

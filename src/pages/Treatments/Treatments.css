@@ -22,37 +22,19 @@
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 2rem;
-  padding-bottom: 1.25rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--border-hairline);
 }
 
-.trt-hero-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 0.95rem;
-  background: #ffffff;
-  border: 1px solid var(--border-strong);
-  border-radius: 9999px;
-  font-size: 0.82rem;
+.trt-status-item {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--ink-body);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: var(--ink-muted);
 }
 
-.trt-hero-chip--gold {
-  border-color: rgba(197, 150, 51, 0.35);
-  color: #7d5910;
-  background: #fdfaf2;
-}
-
-.trt-chip-pulse {
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
-  background: #0ea5e9;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
-  animation: beaconPulse 2s ease-in-out infinite;
+.trt-status-item--gold {
+  color: var(--accent-gold);
 }
 
 /* 2-Column Panoramic Command Grid */
@@ -100,7 +82,7 @@
   border-top: 1px solid var(--border-hairline);
 }
 
-.trt-metric-pill {
+.trt-metric-item {
   display: flex;
   flex-direction: column;
 }
@@ -116,6 +98,10 @@
   font-size: 0.76rem;
   font-weight: 600;
   color: var(--ink-muted);
+}
+
+.trt-stage-float {
+  will-change: transform;
 }
 
 /* Centerpiece Heart / Catheter Contain Deck */
@@ -145,35 +131,17 @@
   transition: transform 300ms ease;
 }
 
-.trt-scanline-beam {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0, 91, 148, 0.75), transparent);
-  box-shadow: 0 0 10px rgba(0, 91, 148, 0.45);
-  animation: telemetrySweep 7s ease-in-out infinite;
-}
-
 .trt-centerpiece-readout {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.15rem;
   background: #ffffff;
   border-top: 1px solid var(--border-hairline);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink-primary);
-}
-
-.trt-readout-indicator {
-  width: 7px;
-  height: 7px;
-  border-radius: 9999px;
-  background: var(--accent-teal);
-  animation: beaconPulse 1.8s ease-in-out infinite;
 }
 
 /* Col 3: Specialties Matrix */
@@ -306,10 +274,7 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
-  color: #92660a;
-  background: #fdf5e6;
-  padding: 0.15rem 0.45rem;
-  border-radius: 9999px;
+  color: var(--accent-gold);
 }
 
 .dir-rail-cat {
@@ -716,16 +681,8 @@
 }
 
 .trt-appt-kicker {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.4rem 0.95rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+  justify-content: center;
 }
 
 .trt-appt-heading {

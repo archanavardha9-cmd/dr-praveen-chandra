@@ -1,12 +1,13 @@
-// Treatments.jsx – Complete GSAP scroll animation for every section and element
+// Treatments.jsx – Catheter therapies catalog with distinct multi-technique GSAP choreography
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
-import SectionBackground from '../../components/backgrounds/SectionBackground';
+import SplitHeading from '../../components/motion/SplitHeading';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
+import { animateNumericCounters } from '../../utils/motionHelpers';
 import { TREATMENTS, CONTACT_INFO } from '../../data/doctorData';
 import './Treatments.css';
 
@@ -69,12 +70,14 @@ export default function Treatments() {
   const activeProcedure = TREATMENTS[procedureCycle.activeIndex];
   const activeComp = COMPARISON_PARAMS[compCycle.activeIndex];
 
+  const { selectIndex: selectProcedureIndex } = procedureCycle;
+
   useEffect(() => {
     if (!location.hash) return;
     const id = location.hash.replace('#', '');
     const matchedIdx = TREATMENTS.findIndex((t) => t.id === id);
     if (matchedIdx !== -1) {
-      procedureCycle.selectIndex(matchedIdx);
+      selectProcedureIndex(matchedIdx);
     }
     const el = document.getElementById(id);
     if (el) {
@@ -82,101 +85,205 @@ export default function Treatments() {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 150);
     }
-  }, [location.hash]);
+  }, [location.hash, selectProcedureIndex]);
 
   useEffect(() => {
     const mm = gsap.matchMedia();
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. TREATMENTS HERO — Progressive staged reveal ──
-        gsap.fromTo('.trt-hero-status-strip', { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-hero-directive-col', { opacity: 0, x: -55 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-hero-centerpiece', { opacity: 0, scale: 0.85, x: 50 }, { opacity: 1, scale: 1, x: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 1. TREATMENTS HERO — Bold left/right mount + numeric counter + post-settle float + scroll-exit ──
+        const heroMount = gsap.timeline();
+        heroMount
+          .fromTo(
+            '.trt-hero-status-strip',
+            { y: -25, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }
+          )
+          .fromTo(
+            '.trt-hero-directive-col',
+            { x: -120, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+            0.05
+          )
+          .fromTo(
+            '.trt-hero-centerpiece-col',
+            { x: 135, scale: 0.72, rotate: 2.5, opacity: 0 },
+            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.05, ease: 'power3.out' },
+            0.08
+          )
+          .fromTo('.trt-hero-directive-col .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.18)
+          .fromTo(
+            '.trt-hero-headline .split-word-inner',
+            { yPercent: 125, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
+            0.24
+          )
+          .fromTo('.trt-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.48)
+          .fromTo(
+            '.trt-hero-actions > *',
+            { scale: 0.82, y: 18, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
+            0.58
+          )
+          .fromTo('.trt-metric-item', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }, 0.68);
 
-        // Individual hero elements
-        gsap.fromTo('.trt-hero-chip', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.6, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.section-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-hero-headline', { opacity: 0, x: -50, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-hero-lead', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-hero-actions', { opacity: 0, scale: 0.9, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-hero-metrics-row', { opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)', duration: 0.9, delay: 0.45, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        gsap.fromTo('.trt-centerpiece-visual img', { opacity: 0, scale: 0.8, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-scanline-beam', { opacity: 0, width: 0 }, { opacity: 1, width: '100%', duration: 1, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-centerpiece-readout', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // Continuous Hero Parallax on Scroll
-        gsap.to('.trt-hero-centerpiece img', { yPercent: -12, scale: 1.05, ease: 'none', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top top', end: 'bottom top', scrub: 1 } });
-        gsap.fromTo('.trt-orbital-1', { opacity: 0, x: 40, rotate: 10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-orbital-2', { opacity: 0, x: -40, rotate: -10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.to('.trt-orbital-1', { yPercent: -38, xPercent: -10, rotation: -3, ease: 'none', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top top', end: 'bottom top', scrub: 0.8 } });
-        gsap.to('.trt-orbital-2', { yPercent: 32, xPercent: 8, rotation: 3, ease: 'none', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top top', end: 'bottom top', scrub: 0.8 } });
-
-        // Continuous Directory Media Scrub
-        gsap.fromTo('.dir-card-media img', { y: 25, scale: 0.96 }, { y: -25, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
-
-        // ── 2. FULL PROCEDURE DIRECTORY SHOWCASE ──
-        gsap.fromTo('.dir-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-showcase-rail', { opacity: 0, x: -55 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-showcase-display', { opacity: 0, x: 55, scale: 0.92 }, { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // Individual directory elements
-        gsap.fromTo('.dir-rail-item', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-card-media img', { opacity: 0, scale: 0.8, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.95, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-card-body', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-card-meta', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-card-body h3', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-card-desc', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-card-bullets', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.dir-card-actions', { opacity: 0, scale: 0.9, y: 35 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.5, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-
-        // ── 3. ALTERNATING CATALOG ROWS ──
-        const rows = gsap.utils.toArray('.trt-zigzag-row');
-        rows.forEach((row, i) => {
-          const fromLeft = i % 2 === 0;
-          gsap.fromTo(
-            row,
-            { opacity: 0, x: fromLeft ? -55 : 55, y: 35 },
-            {
-              opacity: 1,
-              x: 0,
-              y: 0,
-              duration: 0.85,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: row,
-                start: 'top 88%',
-                end: 'bottom 12%',
-                toggleActions: 'play reverse play reverse',
-              },
-            }
-          );
+        animateNumericCounters('.trt-counter-val', {
+          trigger: '.treatments-hero-monument',
+          start: 'top 95%',
         });
 
-        // Individual zigzag elements
-        gsap.fromTo('.trt-zigzag-media img', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.trt-zigzag-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-zigzag-text', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.trt-zigzag-stage', start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.to('.trt-stage-float', {
+          y: -8,
+          duration: 3.6,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 1.15,
+        });
 
-        // ── 4. COMPARISON STAGE ──
-        gsap.fromTo('.trt-comp-stage-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-comp-reveal', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        const heroExit = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.treatments-hero-monument',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.75,
+          },
+        });
+        heroExit
+          .to('.trt-hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
+          .to('.trt-hero-visual-scrub', { x: 75, y: -32, scale: 0.84, opacity: 0.2, ease: 'none' }, 0);
 
-        // Individual comparison elements
-        gsap.fromTo('.comp-param-btn', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.comp-duel-stage', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.comp-duel-col', { opacity: 0, x: from => from === 0 ? -40 : 40 }, { opacity: 1, x: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.comp-duel-divider', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.2, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.trt-compare-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        // ── 2. PROCEDURE DIRECTORY — Scrubbed left rail glide + showcase small-to-large growth & layout exit ──
+        const dirTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.trt-directory-stage',
+            start: 'top 95%',
+            end: 'bottom 5%',
+            scrub: 0.8,
+          },
+        });
 
-        // ── 5. FINAL APPOINTMENT BANNER ──
-        gsap.fromTo('.trt-appointment-content', { opacity: 0, scale: 0.9, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
+        dirTl
+          .fromTo(
+            '.dir-section-header .section-heading',
+            { x: -60, color: '#5a738c', opacity: 0.25 },
+            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
+            0
+          )
+          .fromTo('.dir-section-header .section-lead', { x: 70, opacity: 0.2 }, { x: 0, opacity: 1, duration: 0.34 }, 0)
+          .fromTo('.dir-showcase-rail', { x: -105, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' }, 0)
+          .fromTo(
+            '.dir-showcase-display',
+            { scale: 0.64, x: 105, y: 60, opacity: 0.15 },
+            { scale: 1.02, x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0
+          )
+          // Plateau
+          .to('.dir-showcase-display', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.dir-showcase-rail', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
+          // Exit layout shift
+          .to('.dir-showcase-rail', { x: -85, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.dir-showcase-display', { x: -55, scale: 0.78, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // Individual banner elements
-        gsap.fromTo('.trt-appt-kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.7, delay: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-appt-heading', { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-appt-desc', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.25, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-appt-actions', { opacity: 0, scale: 0.9, y: 35 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.35, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
-        gsap.fromTo('.trt-appt-footnote', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.45, ease: 'power3.out', scrollTrigger: { trigger: '.trt-appointment-banner', start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' } });
+        // ── 3. ALTERNATING CATALOG ZIGZAG — Per-row 3-phase opposite diagonal merge, growth plateau & shrink exit ──
+        gsap.fromTo(
+          '.trt-zigzag-header .section-heading',
+          { x: -60, color: '#5a738c', opacity: 0.25 },
+          {
+            x: 0,
+            color: '#09223a',
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.trt-zigzag-header',
+              start: 'top 92%',
+              end: 'top 45%',
+              scrub: 0.7,
+            },
+          }
+        );
+
+        const rows = gsap.utils.toArray('.trt-zigzag-row');
+        rows.forEach((row, i) => {
+          const isEven = i % 2 === 0;
+          const mediaWrap = row.querySelector('.trt-zigzag-media');
+          const textWrap = row.querySelector('.trt-zigzag-text');
+
+          const rowTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: row,
+              start: 'top 95%',
+              end: 'bottom 5%',
+              scrub: 0.8,
+            },
+          });
+
+          if (mediaWrap && textWrap) {
+            rowTl
+              .fromTo(
+                mediaWrap,
+                {
+                  x: isEven ? -115 : 115,
+                  y: 55,
+                  scale: 0.62,
+                  rotate: isEven ? -3 : 3,
+                  opacity: 0.15,
+                },
+                { x: 0, y: 0, scale: 1.02, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+                0
+              )
+              .fromTo(
+                textWrap,
+                { x: isEven ? 115 : -115, y: -45, opacity: 0.15 },
+                { x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+                0
+              )
+              // Plateau
+              .to(mediaWrap, { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.34 }, 0.36)
+              .to(textWrap, { x: 0, y: 0, opacity: 1, duration: 0.34 }, 0.36)
+              // Exit shrink & split
+              .to(mediaWrap, { scale: 0.76, x: isEven ? -65 : 65, y: -35, opacity: 0.2, duration: 0.3, ease: 'power2.in' }, 0.7)
+              .to(textWrap, { x: isEven ? 65 : -65, y: 25, opacity: 0.2, duration: 0.3, ease: 'power2.in' }, 0.7);
+          }
+        });
+
+        // ── 4. COMPARISON HEADER ──
+        gsap.fromTo(
+          '.trt-comp-stage-header .section-heading',
+          { x: -60, color: '#5a738c', opacity: 0.25 },
+          {
+            x: 0,
+            color: '#09223a',
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.trt-compare-stage',
+              start: 'top 92%',
+              end: 'top 45%',
+              scrub: 0.7,
+            },
+          }
+        );
+
+        // ── 5. APPOINTMENT BANNER — Zoom surge & Footer handoff recession ──
+        const apptTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.trt-appointment-banner',
+            start: 'top 95%',
+            end: 'bottom 10%',
+            scrub: 0.75,
+          },
+        });
+        apptTl
+          .fromTo(
+            '.trt-appointment-content',
+            { scale: 0.82, y: 65, opacity: 0.2 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.38, ease: 'power2.out' },
+            0
+          )
+          .to('.trt-appointment-content', { scale: 1, y: 0, opacity: 1, duration: 0.34 }, 0.38)
+          .to('.trt-appointment-content', { scale: 0.9, y: -24, opacity: 0.32, duration: 0.28 }, 0.72);
       }, pageRef);
 
       return () => ctx.revert();
@@ -185,90 +292,132 @@ export default function Treatments() {
     return () => mm.revert();
   }, []);
 
+  // Comparison stage duel / table scrubbed choreography (re-binds cleanly when toggling view)
+  useEffect(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const ctx = gsap.context(() => {
+        const compTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.trt-comp-content',
+            start: 'top 95%',
+            end: 'bottom 8%',
+            scrub: 0.8,
+          },
+        });
+
+        if (compareView === 'interactive') {
+          compTl
+            .fromTo('.comp-param-bar', { y: 45, opacity: 0.15 }, { y: 0, opacity: 1, duration: 0.32 }, 0)
+            .fromTo(
+              '.comp-duel-col:first-child',
+              { x: -120, rotate: -2, opacity: 0.15 },
+              { x: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+              0.04
+            )
+            .fromTo(
+              '.comp-duel-col.is-catheter',
+              { x: 120, rotate: 2, opacity: 0.15 },
+              { x: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+              0.04
+            )
+            .fromTo(
+              '.comp-duel-divider',
+              { scale: 0.2, rotate: -35, opacity: 0 },
+              { scale: 1, rotate: 0, opacity: 1, duration: 0.3, ease: 'back.out(1.6)' },
+              0.12
+            )
+            // Plateau
+            .to('.comp-duel-col', { x: 0, rotate: 0, opacity: 1, duration: 0.32 }, 0.38)
+            // Exit split
+            .to('.comp-duel-col:first-child', { x: -80, opacity: 0.2, duration: 0.3 }, 0.7)
+            .to('.comp-duel-col.is-catheter', { x: 80, opacity: 0.2, duration: 0.3 }, 0.7)
+            .to('.comp-duel-divider', { scale: 0.5, opacity: 0.2, duration: 0.3 }, 0.7);
+        } else {
+          compTl
+            .fromTo('.trt-table-open', { scale: 0.76, y: 55, opacity: 0.15 }, { scale: 1, y: 0, opacity: 1, duration: 0.36 }, 0)
+            .to('.trt-table-open', { scale: 1, y: 0, opacity: 1, duration: 0.34 }, 0.36)
+            .to('.trt-table-open', { scale: 0.85, y: -35, opacity: 0.2, duration: 0.3 }, 0.7);
+        }
+      }, pageRef);
+
+      ScrollTrigger.refresh();
+      return () => ctx.revert();
+    });
+
+    return () => mm.revert();
+  }, [compareView]);
+
   return (
     <div ref={pageRef} className="treatments-root">
-      {/* ── 1. PREMIUM TREATMENTS HERO ── */}
+      {/* ── 1. TREATMENTS HERO ── */}
       <section className="treatments-hero-monument" aria-label="Cardiology Treatments Overview">
-        <SectionBackground variant="valve-motion" opacity={0.65} />
-        {/* Floating Medical Decor — Treatments Hero */}
-        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '12%', left: '8%', fontSize: '2.2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '40%', left: '10%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '15%', left: '40%', width: '80px', height: '80px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
-
         <div className="container trt-z1">
           <div className="trt-hero-status-strip">
-            <div className="trt-hero-chip">
-              <span className="trt-chip-pulse" />
-              <span>Chairman, Interventional Cardiology · Medanta – The Medicity, Gurugram</span>
-            </div>
-            <div className="trt-hero-chip trt-hero-chip--gold">
-              <span>🏅</span>
-              <span>Padma Shri Awardee 2016 · Pioneer of TAVI &amp; MitraClip in India</span>
-            </div>
+            <span className="trt-status-item">
+              Chairman, Interventional Cardiology · Medanta – The Medicity, Gurugram
+            </span>
+            <span className="trt-status-item trt-status-item--gold">
+              Padma Shri Awardee (2016) · Pioneer of TAVI &amp; MitraClip in India
+            </span>
           </div>
 
           <div className="trt-hero-command-grid">
             <div className="trt-hero-directive-col">
-              <div className="section-kicker">Catheter Interventions</div>
-              <h1 className="trt-hero-headline">
-                Precision Catheter Therapies &amp; Transcatheter Valve Repair
-              </h1>
-              <p className="trt-hero-lead">
-                Advanced percutaneous techniques eliminating sternotomy and heart-lung bypass for severe aortic stenosis, mitral regurgitation, and complex multi-vessel coronary blockages under the leadership of Padma Shri Dr. Praveen Chandra.
-              </p>
+              <div className="trt-hero-copy-inner">
+                <div className="section-kicker">Catheter Interventions</div>
+                <SplitHeading
+                  as="h1"
+                  className="trt-hero-headline"
+                  text="Precision Catheter Therapies & Transcatheter Valve Repair"
+                />
+                <p className="trt-hero-lead">
+                  Non-surgical catheter techniques for severe aortic stenosis, mitral regurgitation, and complex multi-vessel coronary blockages.
+                </p>
 
-              <div className="trt-hero-actions">
-                <AppointmentButton variant="primary" size="lg" label="Book Procedure Evaluation" />
-                <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
-                  Call {CONTACT_INFO.phones[0]}
-                </a>
-              </div>
+                <div className="trt-hero-actions">
+                  <AppointmentButton variant="primary" size="lg" label="Book Procedure Evaluation" />
+                  <a href={`tel:${CONTACT_INFO.phones[0]}`} className="btn-clinical btn-clinical--secondary tabular-nums">
+                    Call {CONTACT_INFO.phones[0]}
+                  </a>
+                </div>
 
-              <div className="trt-hero-metrics-row">
-                <div className="trt-metric-pill">
-                  <span className="trt-metric-val">1st in India</span>
-                  <span className="trt-metric-lbl">TAVI &amp; MitraClip</span>
-                </div>
-                <div className="trt-metric-pill">
-                  <span className="trt-metric-val">Beating Heart</span>
-                  <span className="trt-metric-lbl">Zero Bypass Required</span>
-                </div>
-                <div className="trt-metric-pill">
-                  <span className="trt-metric-val">100+ Papers</span>
-                  <span className="trt-metric-lbl">Indexed Publications</span>
+                <div className="trt-hero-metrics-row">
+                  <div className="trt-metric-item">
+                    <span className="trt-metric-val">1st in India</span>
+                    <span className="trt-metric-lbl">TAVI &amp; MitraClip</span>
+                  </div>
+                  <div className="trt-metric-item">
+                    <span className="trt-metric-val">Beating Heart</span>
+                    <span className="trt-metric-lbl">Zero Bypass Required</span>
+                  </div>
+                  <div className="trt-metric-item">
+                    <span className="trt-metric-val trt-counter-val tabular-nums">100+ Papers</span>
+                    <span className="trt-metric-lbl">Indexed Publications</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="trt-hero-centerpiece perspective-stage" style={{ position: 'relative' }}>
-              <div className="trt-orbital-1" style={{ position: 'absolute', top: '-14px', right: '-12px', zIndex: 4, pointerEvents: 'none' }}>
-                <div className="floating-orbital-badge floating-orbital-badge--gold">
-                  <span>✨</span>
-                  <span>First TAVI in India · 2011</span>
+            <div className="trt-hero-centerpiece-col">
+              <div className="trt-hero-visual-scrub">
+                <div className="trt-stage-float">
+                  <div className="trt-hero-centerpiece">
+                    <div className="trt-centerpiece-visual">
+                      <div className="trt-centerpiece-mask media-reveal-mask">
+                        <img
+                          src="/images/treatments/valve-replacement-tavi.webp"
+                          alt="Transcatheter Aortic Valve Implantation bioprosthetic frame"
+                          loading="eager"
+                        />
+                      </div>
+                    </div>
+                    <div className="trt-centerpiece-readout">
+                      <span>Transcatheter Aortic Valve Implantation · Non-Surgical Femoral Deployment</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="trt-orbital-2" style={{ position: 'absolute', bottom: '52px', left: '-12px', zIndex: 4, pointerEvents: 'none' }}>
-                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
-                  <span>🔬</span>
-                  <span>100% Non-Surgical Pin-Hole Access</span>
-                </div>
-              </div>
-
-              <div className="trt-centerpiece-visual">
-                <img
-                  src="/images/treatments/valve-replacement-tavi.webp"
-                  alt="Transcatheter Aortic Valve Implantation bioprosthetic frame"
-                  loading="eager"
-                />
-                <div className="trt-scanline-beam" aria-hidden="true" />
-              </div>
-              <div className="trt-centerpiece-readout">
-                <span className="trt-readout-indicator" />
-                <span>Transcatheter Aortic Valve Implantation · Non-Surgical Femoral Deployment</span>
               </div>
             </div>
           </div>
@@ -277,22 +426,14 @@ export default function Treatments() {
 
       {/* ── 2. FULL PROCEDURE DIRECTORY ── */}
       <section className="section trt-directory-stage" id="directory" aria-label="Full Procedure Directory">
-        {/* Floating Medical Decor — Directory */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container trt-z1">
           <div className="stage-header-row dir-section-header">
             <div>
               <div className="section-kicker">Full Procedure Directory</div>
-              <h2 className="section-heading">Auto-Cycling Clinical Protocols</h2>
+              <SplitHeading as="h2" className="section-heading" text="Clinical Catheter Protocols" />
             </div>
             <p className="section-lead">
-              Cycles automatically across all 7 catheter procedures. Select any procedure to inspect clinical indications and mechanism.
+              Select any of the 7 procedures to inspect indications and device design.
             </p>
           </div>
 
@@ -334,17 +475,19 @@ export default function Treatments() {
                 <motion.div
                   key={activeProcedure.id}
                   className="dir-display-card"
-                  initial={{ opacity: 0, x: 28, scale: 0.96 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -24, scale: 0.98 }}
-                  transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, x: 16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -16 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <div className="dir-card-media">
-                    <img
-                      src={activeProcedure.image}
-                      alt={activeProcedure.fullName}
-                      loading="eager"
-                    />
+                    <div className="dir-media-mask media-reveal-mask">
+                      <img
+                        src={activeProcedure.image}
+                        alt={activeProcedure.fullName}
+                        loading="eager"
+                      />
+                    </div>
                   </div>
 
                   <div className="dir-card-body">
@@ -352,7 +495,7 @@ export default function Treatments() {
                       <span>{activeProcedure.category}</span>
                       {activeProcedure.pioneer && (
                         <>
-                          <span>·</span>
+                          <span> · </span>
                           <span className="dir-meta-gold">{activeProcedure.pioneerLabel}</span>
                         </>
                       )}
@@ -401,22 +544,18 @@ export default function Treatments() {
 
       {/* ── 3. FULL CATALOG ZIGZAG ── */}
       <section className="section trt-zigzag-stage" aria-label="All Treatment Details">
-        {/* Floating Medical Decor — Zigzag */}
-        <div className="floating-medical-decor floating-heart floating-heart--teal" style={{ top: '10%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '28%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '42%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '45%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '15%', left: '42%', width: '70px', height: '70px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '30%', right: '42%', width: '45px', height: '45px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container trt-z1">
-          <div className="stage-header-row" style={{ marginBottom: '2.5rem' }}>
+          <div className="stage-header-row trt-zigzag-header" style={{ marginBottom: '2.5rem' }}>
             <div>
               <div className="section-kicker">Clinical Catalog</div>
-              <h2 className="section-heading">Detailed Indications &amp; Device Anatomy</h2>
+              <SplitHeading
+                as="h2"
+                className="section-heading"
+                text="Detailed Indications & Device Anatomy"
+              />
             </div>
             <p className="section-lead">
-              Every procedure is individually tailored with intravascular diagnostics, physiological flow tests, and multidisciplinary Heart Team planning.
+              Guided by intravascular imaging, FFR physiology, and multidisciplinary Heart Team planning.
             </p>
           </div>
 
@@ -430,17 +569,19 @@ export default function Treatments() {
                   className={`trt-zigzag-row ${isEven ? 'is-normal' : 'is-reversed'}`}
                 >
                   <div className="trt-zigzag-media">
-                    <img src={trt.image} alt={trt.fullName} loading="lazy" />
+                    <div className="trt-zigzag-mask media-reveal-mask">
+                      <img src={trt.image} alt={trt.fullName} loading="lazy" />
+                    </div>
                   </div>
 
                   <div className="trt-zigzag-text">
                     <div className="trt-zigzag-meta">
                       <span className="tabular-nums">0{idx + 1}</span>
-                      <span>·</span>
+                      <span> · </span>
                       <span>{trt.category}</span>
                       {trt.pioneer && (
                         <>
-                          <span>·</span>
+                          <span> · </span>
                           <span className="trt-meta-gold">{trt.pioneerLabel}</span>
                         </>
                       )}
@@ -466,19 +607,15 @@ export default function Treatments() {
 
       {/* ── 4. SURGERY VS CATHETER COMPARISON ── */}
       <section className="section trt-compare-stage" aria-label="Catheter vs Open Surgery">
-        {/* Floating Medical Decor — Comparison */}
-        <div className="floating-medical-decor floating-heart floating-heart--gold" style={{ top: '8%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '25%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '38%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '42%', right: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '30%', right: '18%' }} />
-        <div className="floating-pulse-ring" style={{ top: '12%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '22%', right: '42%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container trt-z1">
-          <div className="trt-catalog-header trt-comp-reveal trt-comp-stage-header">
+          <div className="trt-catalog-header trt-comp-stage-header">
             <div>
               <div className="section-kicker">Clinical Comparison</div>
-              <h2 className="section-heading">Open-Heart Surgery vs. Catheter Therapy</h2>
+              <SplitHeading
+                as="h2"
+                className="section-heading"
+                text="Open-Heart Surgery vs. Catheter Therapy"
+              />
             </div>
 
             <div className="trt-filter-tabs" role="tablist" aria-label="Comparison view mode">
@@ -503,106 +640,101 @@ export default function Treatments() {
             </div>
           </div>
 
-          {compareView === 'interactive' ? (
-            <div className="trt-comp-interactive trt-comp-reveal">
-              <div className="comp-param-bar" role="tablist" aria-label="Comparison parameters">
-                {COMPARISON_PARAMS.map((item, idx) => {
-                  const isActive = compCycle.activeIndex === idx;
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`comp-param-btn ${isActive ? 'is-active' : ''}`}
-                      onClick={() => compCycle.selectIndex(idx)}
-                    >
-                      <span>{item.label}</span>
-                      {isActive && (
-                        <div className="cycle-progress-track" style={{ marginTop: '0.4rem' }}>
-                          <div
-                            key={`cmp-prog-${compCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                            style={{ animationDuration: '4.8s' }}
-                          />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+          <div className="trt-comp-content">
+            {compareView === 'interactive' ? (
+              <div className="trt-comp-interactive">
+                <div className="comp-param-bar" role="tablist" aria-label="Comparison parameters">
+                  {COMPARISON_PARAMS.map((item, idx) => {
+                    const isActive = compCycle.activeIndex === idx;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        className={`comp-param-btn ${isActive ? 'is-active' : ''}`}
+                        onClick={() => compCycle.selectIndex(idx)}
+                      >
+                        <span>{item.label}</span>
+                        {isActive && (
+                          <div className="cycle-progress-track" style={{ marginTop: '0.4rem' }}>
+                            <div
+                              key={`cmp-prog-${compCycle.cycleKey}`}
+                              className="cycle-progress-bar"
+                              style={{ animationDuration: '4.8s' }}
+                            />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeComp.id}
-                  className="comp-duel-stage"
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -16 }}
-                  transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <div className="comp-duel-col">
-                    <span className="comp-col-tag">Traditional Open-Heart Surgery</span>
-                    <h3>{activeComp.param}</h3>
-                    <p>{activeComp.surgery}</p>
-                  </div>
-                  <div className="comp-duel-divider" aria-hidden="true">VS</div>
-                  <div className="comp-duel-col is-catheter">
-                    <span className="comp-col-tag">Dr. Chandra Catheter Approach</span>
-                    <h3>{activeComp.param}</h3>
-                    <p>{activeComp.catheter}</p>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          ) : (
-            <div className="trt-table-open trt-comp-reveal">
-              <table className="trt-clean-table">
-                <thead>
-                  <tr>
-                    <th>Parameter</th>
-                    <th>Traditional Open Surgery</th>
-                    <th>Catheter-Based Therapy</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {COMPARISON_PARAMS.map((p) => (
-                    <tr key={p.id}>
-                      <td className="param-cell">{p.param}</td>
-                      <td className="surgery-cell">{p.surgery}</td>
-                      <td className="catheter-cell">{p.catheter}</td>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeComp.id}
+                    className="comp-duel-stage"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div className="comp-duel-col">
+                      <span className="comp-col-tag">Traditional Open-Heart Surgery</span>
+                      <h3>{activeComp.param}</h3>
+                      <p>{activeComp.surgery}</p>
+                    </div>
+                    <div className="comp-duel-divider" aria-hidden="true">VS</div>
+                    <div className="comp-duel-col is-catheter">
+                      <span className="comp-col-tag">Dr. Chandra Catheter Approach</span>
+                      <h3>{activeComp.param}</h3>
+                      <p>{activeComp.catheter}</p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            ) : (
+              <div className="trt-table-open">
+                <table className="trt-clean-table">
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Traditional Open Surgery</th>
+                      <th>Catheter-Based Therapy</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {COMPARISON_PARAMS.map((p) => (
+                      <tr key={p.id}>
+                        <td className="param-cell">{p.param}</td>
+                        <td className="surgery-cell">{p.surgery}</td>
+                        <td className="catheter-cell">{p.catheter}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* ── 5. PREMIUM APPOINTMENT BANNER ── */}
+      {/* ── 5. APPOINTMENT BANNER ── */}
       <section className="trt-appointment-banner" aria-label="Book Procedure Consultation">
-        <SectionBackground variant="ecg-monitor" opacity={0.35} />
-        {/* Floating Medical Decor — Appointment Banner */}
-        <div className="floating-medical-decor floating-heart floating-heart--red" style={{ top: '15%', left: '8%', fontSize: '2rem' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ top: '35%', right: '6%' }} />
-        <div className="floating-medical-decor floating-med-cross" style={{ bottom: '45%', left: '12%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ top: '50%', right: '15%' }} />
-        <div className="floating-medical-decor floating-ecg-dot" style={{ bottom: '35%', right: '20%' }} />
-        <div className="floating-pulse-ring" style={{ top: '20%', left: '42%', width: '75px', height: '75px', animation: 'pulseRing 4s ease-in-out infinite' }} />
-        <div className="floating-pulse-ring" style={{ bottom: '25%', right: '40%', width: '50px', height: '50px', animation: 'pulseRing 5s ease-in-out infinite 1s' }} />
         <div className="container trt-z1">
           <div className="trt-appointment-content">
-            <span className="trt-appt-kicker">
-              🏥 Medanta – The Medicity · Department of Cardiology, Gurugram
-            </span>
+            <div className="section-kicker section-kicker--light trt-appt-kicker">
+              Medanta – The Medicity · Department of Cardiology, Gurugram
+            </div>
 
-            <h2 className="trt-appt-heading">
-              Schedule a Specialized Valve or Coronary Consultation
-            </h2>
+            <SplitHeading
+              as="h2"
+              className="trt-appt-heading"
+              text="Schedule a Specialized Valve or Coronary Consultation"
+            />
 
             <p className="trt-appt-desc">
-              Review prior coronary angiograms, determine non-surgical TAVI or MitraClip eligibility, or receive a dedicated second opinion with Padma Shri Dr. Praveen Chandra and the Medanta Heart Team.
+              Review angiograms, determine non-surgical TAVI or MitraClip eligibility, or request a specialist second opinion.
             </p>
 
             <div className="trt-appt-actions">
@@ -618,7 +750,7 @@ export default function Treatments() {
             <div className="trt-appt-footnote">
               <span>Emergency 24/7 Heart Hotline: <strong>Dial {CONTACT_INFO.emergencyLine}</strong></span>
               <span>·</span>
-              <span>Medanta Board: <strong>{CONTACT_INFO.hospitalBoard}</strong></span>
+              <span>Medanta Board: <strong className="tabular-nums">{CONTACT_INFO.hospitalBoard}</strong></span>
             </div>
           </div>
         </div>
