@@ -32,6 +32,7 @@ export default function Footer() {
   const footerRef = useRef(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.__PROGRESSIVE_REVEAL__) return;
     const mm = gsap.matchMedia();
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
@@ -52,7 +53,7 @@ export default function Footer() {
           }
         );
 
-        // 2. Top sapphire accent rule expands across from center
+        // 2. Top sapphire accent rule expands across from center (reversible + replayable)
         gsap.fromTo(
           '.footer-top-accent',
           { scaleX: 0 },
@@ -63,17 +64,21 @@ export default function Footer() {
             scrollTrigger: {
               trigger: '.site-footer',
               start: 'top 94%',
-              toggleActions: 'play none none none',
+              end: 'bottom 40%',
+              toggleActions: 'play reverse play reverse',
             },
           }
         );
 
-        // 3. Individual staggered wave animation for EVERY element in the footer
+        // 3. Individual staggered wave animation for EVERY element in the footer.
+        //    Reversible + replayable so it never permanently hides content and re-runs
+        //    whenever the footer is revisited.
         const itemsTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.site-footer',
             start: 'top 90%',
-            toggleActions: 'play none none none',
+            end: 'bottom 35%',
+            toggleActions: 'play reverse play reverse',
           },
         });
 
@@ -150,7 +155,7 @@ export default function Footer() {
       <div className="container footer-rise-wrap">
         <div className="footer-top-grid">
           <div className="footer-brand-col">
-            <Link to="/" className="footer-wordmark">
+            <Link to="/" className="footer-wordmark" data-reveal>
               Dr. Praveen Chandra
             </Link>
             <p className="footer-role-line">
@@ -194,11 +199,11 @@ export default function Footer() {
           <div className="footer-contact-col">
             <h3 className="footer-col-heading">Medanta OPD &amp; Contact</h3>
             <dl className="footer-contact-dl">
-              <div className="footer-contact-row">
+              <div className="footer-contact-row" data-reveal>
                 <dt>Location</dt>
                 <dd>{CONTACT_INFO.hospital}, Sector 38, Gurugram 122001</dd>
               </div>
-              <div className="footer-contact-row">
+              <div className="footer-contact-row" data-reveal>
                 <dt>Coordinator</dt>
                 <dd className="tabular-nums">
                   <a href={`tel:${CONTACT_INFO.phones[0]}`}>{CONTACT_INFO.phones[0]}</a>
@@ -206,13 +211,13 @@ export default function Footer() {
                   <a href={`tel:${CONTACT_INFO.phones[1]}`}>{CONTACT_INFO.phones[1]}</a>
                 </dd>
               </div>
-              <div className="footer-contact-row">
+              <div className="footer-contact-row" data-reveal>
                 <dt>Email</dt>
                 <dd>
                   <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>
                 </dd>
               </div>
-              <div className="footer-contact-row">
+              <div className="footer-contact-row" data-reveal>
                 <dt>24/7 Cardiac Emergency</dt>
                 <dd className="tabular-nums">
                   <a href={`tel:${CONTACT_INFO.emergencyLine}`} className="footer-emergency-link">
