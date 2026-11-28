@@ -1,4 +1,4 @@
-// About.jsx – Open architectural monograph with distinct multi-technique scroll choreography
+// About.jsx – Multi-image editorial monograph, 3-photo career triptych, academic heritage & dual-visual milestone stage
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
 import SplitHeading from '../../components/motion/SplitHeading';
+import ResponsiveImage from '../../components/common/ResponsiveImage';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import {
   DOCTOR,
@@ -22,21 +23,15 @@ const MILESTONE_CATEGORIES = [
   {
     id: 'National Honors',
     label: 'National Honors',
-    kicker: 'National Investiture & Presidential Honor',
-    title: 'Padma Shri (2016) Conferred by the President of India',
     image: DOCTOR.images.awardPodium,
-    caption: 'Rashtrapati Bhavan Investiture Ceremony · New Delhi',
-    description: 'Conferred by the President of India in recognition of pioneering contributions to interventional cardiology and structural heart innovation.',
+    companion: '/images/newspaper/dr4.webp',
     items: ACHIEVEMENTS.filter((item) => item.category === 'National Honor' || item.category === 'Clinical Honor'),
   },
   {
     id: 'Structural Heart',
     label: 'Structural Heart',
-    kicker: 'First Transcatheter Therapies in India',
-    title: 'Pioneered India’s First TAVI & MitraClip Procedures',
     image: '/images/treatments/valve-replacement-tavi.webp',
-    caption: 'Transcatheter Aortic & Mitral Valve Innovations',
-    description: 'Spearheaded non-surgical valve replacement (TAVI) and catheter repair (MitraClip) across India for high-surgical-risk patients.',
+    companion: '/images/illustrations/mitraclip-repair-diagram.webp',
     items: ACHIEVEMENTS.filter(
       (item) =>
         item.category === 'Structural Heart' ||
@@ -47,11 +42,8 @@ const MILESTONE_CATEGORIES = [
   {
     id: 'Academic & Leadership',
     label: 'Academic & Leadership',
-    kicker: 'Global Education & Research Governance',
-    title: 'Course Director India Live & Global Research Faculty',
     image: DOCTOR.images.speaking,
-    caption: 'Keynote Faculty Address · Global Interventional Symposia',
-    description: 'Founding Course Director of India Live, training interventionalists globally, with 100+ indexed cardiovascular publications.',
+    companion: DOCTOR.images.consultation,
     items: ACHIEVEMENTS.filter((item) => item.category === 'Leadership' || item.category === 'Research'),
   },
 ];
@@ -90,60 +82,40 @@ export default function About() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. HERO STAGE — Bold opposing left/right mount entrance + continuous float + scroll-exit ──
+        // ── 1. HERO MONOGRAPH — Multi-photo left/right entrance + overlapping inset + scroll exit ──
         const heroMount = gsap.timeline();
         heroMount
-          .fromTo(
-            '.about-hero-wedge',
-            { xPercent: -45, opacity: 0 },
-            { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }
-          )
-          .fromTo(
-            '.about-hero-visual',
-            { x: -135, scale: 0.72, rotate: -3, opacity: 0 },
-            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.0, ease: 'power3.out' },
-            0.05
-          )
-          .fromTo(
-            '.about-hero-copy',
-            { x: 120, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-            0.08
-          )
-          .fromTo(
-            '.about-hero-copy .hero-kicker',
-            { x: 30, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
-            0.2
-          )
+          .fromTo('.about-hero-wedge', { xPercent: -45, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' })
+          .fromTo('.about-hero-visual', { x: -130, scale: 0.74, rotate: -2.5, opacity: 0 }, { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }, 0.05)
+          .fromTo('.about-hero-inset', { x: 75, y: 45, scale: 0.65, opacity: 0 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' }, 0.35)
+          .fromTo('.about-hero-copy', { x: 115, opacity: 0 }, { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' }, 0.08)
+          .fromTo('.about-hero-copy .hero-kicker', { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5 }, 0.2)
           .fromTo(
             '.about-display-title .split-word-inner',
             { yPercent: 125, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.06, ease: 'power3.out' },
+            { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.06, ease: 'power3.out' },
             0.26
           )
-          .fromTo('.about-role-sub', { x: 24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
-          .fromTo('.about-short-bio', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.54)
-          .fromTo(
-            '.about-anchor-facts > div',
-            { x: 28, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' },
-            0.6
-          )
-          .fromTo(
-            '.about-hero-actions > *',
-            { scale: 0.82, y: 18, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
-            0.7
-          );
+          .fromTo('.about-role-sub', { x: 24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.52 }, 0.44)
+          .fromTo('.about-short-bio', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.52 }, 0.52)
+          .fromTo('.about-anchor-facts > div', { x: 24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.48, stagger: 0.08 }, 0.58)
+          .fromTo('.about-hero-actions > *', { scale: 0.84, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.52, stagger: 0.1, ease: 'back.out(1.6)' }, 0.68);
 
         gsap.to('.about-stage-float', {
           y: -8,
-          duration: 3.6,
+          duration: 3.7,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
           delay: 1.15,
+        });
+        gsap.to('.about-hero-inset', {
+          y: 7,
+          duration: 3.1,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 1.25,
         });
 
         const heroExit = gsap.timeline({
@@ -155,11 +127,11 @@ export default function About() {
           },
         });
         heroExit
-          .to('.about-hero-visual-scrub', { x: -75, y: -30, scale: 0.82, opacity: 0.2, ease: 'none' }, 0)
-          .to('.about-hero-copy-inner', { x: 75, y: -24, opacity: 0.2, ease: 'none' }, 0)
+          .to('.about-hero-visual-scrub', { x: -70, y: -30, scale: 0.84, opacity: 0.22, ease: 'none' }, 0)
+          .to('.about-hero-copy-inner', { x: 70, y: -24, opacity: 0.22, ease: 'none' }, 0)
           .to('.about-hero-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
-        // ── 2. CAREER TRAJECTORY — Scrubbed small-to-large visual growth, color shift & layout slide ──
+        // ── 2. CAREER TRIPTYCH — Horizontal era switcher + 3-photo expanding spread ──
         const careerTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.about-career-stage',
@@ -170,38 +142,13 @@ export default function About() {
         });
 
         careerTl
-          .fromTo(
-            '.abt-career-stage-header .section-heading',
-            { x: -60, color: '#5a738c', opacity: 0.25 },
-            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.abt-career-stage-header .section-lead',
-            { x: 70, opacity: 0.2 },
-            { x: 0, opacity: 1, duration: 0.34, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.career-left-col',
-            { x: -105, opacity: 0.15 },
-            { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.career-right-col',
-            { scale: 0.6, x: 105, y: 70, rotate: 2.5, opacity: 0.15 },
-            { scale: 1.03, x: 0, y: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          // Plateau
-          .to('.career-right-col', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
-          .to('.career-left-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
-          // Exit shrink & split
-          .to('.career-left-col', { x: -75, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.career-right-col', { scale: 0.78, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .fromTo('.abt-career-stage-header .section-heading', { x: -55, color: '#5a738c', opacity: 0.25 }, { x: 0, color: '#09223a', opacity: 1, duration: 0.32 }, 0)
+          .fromTo('.career-era-tabs-row', { y: 35, opacity: 0.15 }, { y: 0, opacity: 1, duration: 0.34 }, 0.03)
+          .fromTo('.career-triptych-card', { scale: 0.7, y: 65, opacity: 0.15 }, { scale: 1, y: 0, opacity: 1, duration: 0.36, stagger: 0.04 }, 0.02)
+          .to('.career-triptych-card', { scale: 1, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.career-triptych-card', { scale: 0.82, y: -35, opacity: 0.22, duration: 0.32 }, 0.68);
 
-        // ── 3. ACADEMIC & FELLOWSHIPS — Opposite diagonal corner merge, color shift & split exit ──
+        // ── 3. ACADEMIC & FELLOWSHIPS — Opposite diagonal corner merge & exit ──
         const acadTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.about-academic-stage',
@@ -212,32 +159,14 @@ export default function About() {
         });
 
         acadTl
-          .fromTo(
-            '.abt-academic-stage-header .section-heading',
-            { x: -65, color: '#8ac2e8', opacity: 0.25 },
-            { x: 0, color: '#ffffff', opacity: 1, duration: 0.34, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.acad-degrees-col',
-            { x: -120, y: 65, rotate: -2.5, opacity: 0.15 },
-            { x: 0, y: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.acad-fellow-col',
-            { x: 120, y: -65, scale: 0.72, rotate: 2.5, opacity: 0.15 },
-            { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          // Plateau
-          .to('.acad-degrees-col', { x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
-          .to('.acad-fellow-col', { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
-          // Diagonal split exit
-          .to('.acad-degrees-col', { x: -75, y: -35, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.acad-fellow-col', { x: 75, y: 35, scale: 0.82, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .fromTo('.abt-academic-stage-header .section-heading', { x: -65, color: '#8ac2e8', opacity: 0.25 }, { x: 0, color: '#ffffff', opacity: 1, duration: 0.34 }, 0)
+          .fromTo('.acad-degrees-col', { x: -110, y: 55, opacity: 0.15 }, { x: 0, y: 0, opacity: 1, duration: 0.36 }, 0)
+          .fromTo('.acad-fellow-col', { x: 110, y: -55, scale: 0.76, opacity: 0.15 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.36 }, 0)
+          .to('.acad-degrees-col, .acad-fellow-col', { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.acad-degrees-col', { x: -70, y: -30, opacity: 0.2, duration: 0.32 }, 0.68)
+          .to('.acad-fellow-col', { x: 70, y: 30, scale: 0.84, opacity: 0.2, duration: 0.32 }, 0.68);
 
-        // ── 4. MILESTONE LEDGER — Spotlight growth + left rail glide + shrink exit ──
+        // ── 4. MILESTONE LEDGER — Dual-Visual Stage Growth + Exit ──
         const ledgerTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.about-ledger-stage',
@@ -248,33 +177,15 @@ export default function About() {
         });
 
         ledgerTl
-          .fromTo(
-            '.abt-ledger-stage-header .section-heading',
-            { x: -55, color: '#5a738c', opacity: 0.25 },
-            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
-            0
-          )
-          .fromTo('.ledger-filter-bar', { x: 70, opacity: 0.2 }, { x: 0, opacity: 1, duration: 0.34 }, 0)
-          .fromTo(
-            '.ledger-list-col',
-            { x: -95, opacity: 0.15 },
-            { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.ledger-visual-col',
-            { scale: 0.62, y: 65, x: 95, opacity: 0.15 },
-            { scale: 1.03, y: 0, x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          // Plateau
-          .to('.ledger-visual-col', { scale: 1, y: 0, x: 0, opacity: 1, duration: 0.32 }, 0.36)
-          .to('.ledger-list-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
-          // Exit shrink
-          .to('.ledger-list-col', { x: -65, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.ledger-visual-col', { scale: 0.78, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .fromTo('.abt-ledger-stage-header .section-heading', { x: -55, color: '#5a738c', opacity: 0.25 }, { x: 0, color: '#09223a', opacity: 1, duration: 0.34 }, 0)
+          .fromTo('.ledger-filter-bar', { x: 65, opacity: 0.2 }, { x: 0, opacity: 1, duration: 0.34 }, 0)
+          .fromTo('.ledger-list-col', { x: -90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.36 }, 0)
+          .fromTo('.ledger-visual-col', { scale: 0.68, x: 90, y: 55, opacity: 0.15 }, { scale: 1.02, x: 0, y: 0, opacity: 1, duration: 0.36 }, 0)
+          .to('.ledger-visual-col', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.ledger-list-col', { x: -60, opacity: 0.2, duration: 0.32 }, 0.68)
+          .to('.ledger-visual-col', { scale: 0.8, y: -40, opacity: 0.2, duration: 0.32 }, 0.68);
 
-        // ── 5. CTA RIBBON — Opposing horizontal split + handoff to Footer ──
+        // ── 5. CTA RIBBON — Handoff to Footer ──
         const ctaTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.about-cta-ribbon',
@@ -284,8 +195,8 @@ export default function About() {
           },
         });
         ctaTl
-          .fromTo('.about-cta-flex > div:first-child', { x: -90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
-          .fromTo('.about-cta-actions', { x: 90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.about-cta-flex > div:first-child', { x: -85, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.about-cta-actions', { x: 85, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
           .to('.about-cta-flex', { scale: 1, opacity: 1, duration: 0.34 }, 0.38)
           .to('.about-cta-flex', { scale: 0.9, y: -24, opacity: 0.32, duration: 0.28 }, 0.72);
       }, pageRef);
@@ -298,33 +209,44 @@ export default function About() {
 
   return (
     <div ref={pageRef} className="about-root">
-      {/* ── 1. MONOGRAPH SPLIT HERO ── */}
+      {/* ── 1. MONOGRAPH SPLIT HERO WITH LAYERED PORTRAIT & PODIUM INSET ── */}
       <section className="about-hero-stage" aria-label="Biography Overview">
         <div className="about-hero-wedge" aria-hidden="true" />
 
         <div className="container abt-z1">
           <div className="about-hero-grid">
-            {/* Left Large Uncropped Portrait Frame */}
             <div className="about-hero-visual">
               <div className="about-hero-visual-scrub">
-                <div className="about-stage-float">
-                  <div className="about-portrait-frame">
-                    <div className="about-portrait-mask media-reveal-mask">
-                      <img
-                        src={DOCTOR.images.profile}
-                        alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
-                        loading="eager"
-                      />
+                <div className="about-portrait-cluster">
+                  <div className="about-stage-float">
+                    <div className="about-portrait-frame">
+                      <div className="about-portrait-mask media-reveal-mask">
+                        <ResponsiveImage
+                          src={DOCTOR.images.profile}
+                          alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
+                          priority
+                          objectFit="contain"
+                          sizes="(max-width: 960px) 90vw, 420px"
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="about-portrait-caption">
-                    Padma Shri 2016 · Medanta – The Medicity, Gurugram
+                  <div className="about-hero-inset" aria-hidden="true">
+                    <ResponsiveImage
+                      src={DOCTOR.images.awardPodium}
+                      alt=""
+                      objectFit="cover"
+                      sizes="170px"
+                    />
+                    <span>Padma Shri 2016</span>
                   </div>
+                </div>
+                <div className="about-portrait-caption">
+                  Padma Shri 2016 · Medanta – The Medicity, Gurugram
                 </div>
               </div>
             </div>
 
-            {/* Right Clean Typographic Monograph */}
             <div className="about-hero-copy">
               <div className="about-hero-copy-inner">
                 <p className="hero-kicker">
@@ -365,7 +287,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── 2. AUTO-CYCLING CAREER TRAJECTORY ── */}
+      {/* ── 2. CAREER TRAJECTORY — 3-ERA STEPPER + INTERACTIVE 3-PHOTO TRIPTYCH ── */}
       <section className="section about-career-stage" aria-label="Career Milestones">
         <div className="container abt-z1">
           <div className="stage-header-row abt-career-stage-header">
@@ -378,90 +300,91 @@ export default function About() {
               />
             </div>
             <p className="section-lead">
-              Three landmark appointments from 1992 to the present day.
+              Click any appointment chapter below to expand its institutional record.
             </p>
           </div>
 
-          <div className="career-split-stage">
-            {/* Left Role Selector + Live Copy */}
-            <div className="career-left-col">
-              <div className="career-era-tabs" role="tablist" aria-label="Career chapters">
-                {CAREER_TIMELINE.map((era, idx) => {
-                  const isActive = careerCycle.activeIndex === idx;
-                  return (
-                    <button
-                      key={era.period}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`career-era-tab ${isActive ? 'is-active' : ''}`}
-                      onClick={() => careerCycle.selectIndex(idx)}
-                    >
-                      <div className="career-tab-head">
-                        <span className="career-tab-period tabular-nums">{era.period}</span>
-                        <span className="career-tab-inst">{era.institution.split(',')[0]}</span>
-                      </div>
-                      {isActive && (
-                        <div className="cycle-progress-track" style={{ marginTop: '0.5rem' }}>
-                          <div
-                            key={`car-prog-${careerCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                          />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeEra.period}
-                  className="career-era-copy"
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 16 }}
-                  transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+          <div className="career-era-tabs-row" role="tablist" aria-label="Career chapters">
+            {CAREER_TIMELINE.map((era, idx) => {
+              const isActive = careerCycle.activeIndex === idx;
+              return (
+                <button
+                  key={era.period}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`career-era-tab ${isActive ? 'is-active' : ''}`}
+                  onClick={() => careerCycle.selectIndex(idx)}
                 >
-                  <span className="career-copy-period tabular-nums">{activeEra.period}</span>
+                  <div className="career-tab-head">
+                    <span className="career-tab-period tabular-nums">{era.period}</span>
+                    <span className="career-tab-inst">{era.institution.split(',')[0]}</span>
+                  </div>
+                  {isActive && (
+                    <div className="cycle-progress-track" style={{ marginTop: '0.5rem' }}>
+                      <div
+                        key={`car-prog-${careerCycle.cycleKey}`}
+                        className="cycle-progress-bar"
+                      />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 3-Photo Visual Triptych: Active era takes focal prominence while others stay visible */}
+          <div className="career-triptych-row">
+            {CAREER_TIMELINE.map((era, idx) => {
+              const isActive = careerCycle.activeIndex === idx;
+              return (
+                <button
+                  key={era.period}
+                  type="button"
+                  onClick={() => careerCycle.selectIndex(idx)}
+                  className={`career-triptych-card ${isActive ? 'is-focused' : ''}`}
+                  aria-label={`${era.role} at ${era.institution}`}
+                >
+                  <div className="career-triptych-img">
+                    <ResponsiveImage
+                      src={era.photo}
+                      alt={`${era.role} at ${era.institution}`}
+                      objectFit="cover"
+                      sizes="(max-width: 900px) 92vw, 38vw"
+                    />
+                  </div>
+                  <div className="career-triptych-overlay">
+                    <span className="tabular-nums">{era.period}</span>
+                    <h4>{era.institution.split(',')[0]}</h4>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="career-era-detail-bar">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeEra.period}
+                className="career-era-copy-wide"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div>
+                  <span className="career-copy-period tabular-nums">{activeEra.period} · {activeEra.caption}</span>
                   <h3>{activeEra.role}</h3>
                   <p className="career-copy-org">{activeEra.institution}</p>
-                  <p className="career-copy-desc">{activeEra.description}</p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Right Large Uncropped Scene Stage */}
-            <div className="career-right-col">
-              <div className="career-visual-stage">
-                <div className="career-visual-mask media-reveal-mask">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeEra.period}
-                      className="career-visual-inner"
-                      initial={{ opacity: 0, scale: 1.03 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.98 }}
-                      transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      <img
-                        src={activeEra.photo}
-                        alt={`${activeEra.role} at ${activeEra.institution}`}
-                        loading="lazy"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
                 </div>
-                <div className="career-visual-caption">
-                  <span>{activeEra.caption}</span>
-                </div>
-              </div>
-            </div>
+                <p className="career-copy-desc">{activeEra.description}</p>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </section>
 
-      {/* ── 3. KGMC QUALIFICATIONS & AUTO-CYCLING FELLOWSHIPS ── */}
+      {/* ── 3. KGMC QUALIFICATIONS & GLOBAL FELLOWSHIPS (SAPPHIRE CONTRAST) ── */}
       <section className="section about-academic-stage" aria-label="Academic Qualifications and Fellowships">
         <div className="container abt-z1">
           <div className="stage-header-row abt-academic-stage-header">
@@ -476,7 +399,6 @@ export default function About() {
           </div>
 
           <div className="acad-split-grid">
-            {/* Left Academic Degrees */}
             <div className="acad-degrees-col">
               <p className="section-lead section-lead--light" style={{ marginBottom: '1.5rem' }}>
                 Internal medicine and cardiology super-specialization from India’s historic medical college.
@@ -495,7 +417,6 @@ export default function About() {
               </div>
             </div>
 
-            {/* Right Interactive Auto-Cycling Global Fellowships Spotlight */}
             <div className="acad-fellow-col">
               <div className="fellow-selector-bar" role="tablist" aria-label="International fellowships">
                 {FELLOWSHIPS.map((f, idx) => {
@@ -543,7 +464,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── 4. AUTO-CYCLING HONORS & HISTORIC FIRSTS STAGE ── */}
+      {/* ── 4. HONORS & FIRSTS — DUAL-VISUAL EDITORIAL LEDGER ── */}
       <section className="section about-ledger-stage" aria-label="Honors and Milestones">
         <div className="container abt-z1">
           <div className="about-stage-header abt-ledger-stage-header">
@@ -585,7 +506,6 @@ export default function About() {
           </div>
 
           <div className="ledger-interactive-grid">
-            {/* Left Category Milestone Cards */}
             <div className="ledger-list-col">
               {activeCategory.items.map((item) => {
                 const isSelected = activeItem.id === item.id;
@@ -607,9 +527,9 @@ export default function About() {
               })}
             </div>
 
-            {/* Right Synchronized Uncropped Visual + Detail */}
+            {/* Dual-Image Milestone Showcase */}
             <div className="ledger-visual-col">
-              <div className="ledger-spotlight-mask media-reveal-mask">
+              <div className="ledger-dual-stage">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`${activeCategory.id}-${activeItem.id}`}
@@ -619,12 +539,23 @@ export default function About() {
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <div className="ledger-stage-visual">
-                      <img
-                        src={activeItem.photo || activeCategory.image}
-                        alt={activeItem.title}
-                        loading="lazy"
-                      />
+                    <div className="ledger-visual-pair">
+                      <div className="ledger-stage-visual">
+                        <ResponsiveImage
+                          src={activeItem.photo || activeCategory.image}
+                          alt={activeItem.title}
+                          objectFit="contain"
+                          sizes="(max-width: 900px) 90vw, 420px"
+                        />
+                      </div>
+                      <div className="ledger-companion-visual" aria-hidden="true">
+                        <ResponsiveImage
+                          src={activeCategory.companion}
+                          alt=""
+                          objectFit="cover"
+                          sizes="160px"
+                        />
+                      </div>
                     </div>
                     <div className="ledger-stage-copy">
                       <span className="ledger-stage-meta tabular-nums">

@@ -1,4 +1,4 @@
-// Home.jsx – Bold scroll-driven transformations: mount left/right split, image growth/shrink, diagonal merges, color transitions, and layout shifts
+// Home.jsx – Multi-image editorial compositions, noticeable medical ECG heartbeat, & scroll-scrubbed stage transformations
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
 import VideoModal from '../../components/media/VideoModal';
 import SplitHeading from '../../components/motion/SplitHeading';
+import ResponsiveImage from '../../components/common/ResponsiveImage';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import { animateNumericCounters } from '../../utils/motionHelpers';
 import {
@@ -28,6 +29,8 @@ const HERO_SLIDES = [
     label: 'Chairman, Medanta',
     caption: 'Dr. Praveen Chandra — Chairman, Interventional Cardiology',
     image: DOCTOR.images.hero,
+    companionTop: DOCTOR.images.cathLab,
+    companionBottom: DOCTOR.images.awardPodium,
   },
   {
     id: 'padma',
@@ -35,6 +38,8 @@ const HERO_SLIDES = [
     label: 'Padma Shri 2016',
     caption: 'Conferred the Padma Shri by the President of India (2016)',
     image: DOCTOR.images.awardPodium,
+    companionTop: DOCTOR.images.hero,
+    companionBottom: DOCTOR.images.speaking,
   },
   {
     id: 'cathlab',
@@ -42,17 +47,20 @@ const HERO_SLIDES = [
     label: 'Cath Lab Pioneer',
     caption: 'Leading complex coronary & structural heart procedures',
     image: DOCTOR.images.cathLab,
+    companionTop: DOCTOR.images.consultation,
+    companionBottom: DOCTOR.images.hero,
   },
 ];
 
-const LEGACY_SCENES = [
+const LEGACY_COLLAGE = [
   {
     id: 'padma',
     year: '2016',
     title: 'Padma Shri National Honor',
-    subtitle: 'Conferred by the President of India for cardiovascular medicine.',
+    subtitle: 'Conferred India’s fourth-highest civilian honor by the President of India.',
     image: DOCTOR.images.awardPodium,
     caption: 'Padma Shri Investiture Ceremony, Rashtrapati Bhavan',
+    slot: 'slot-hero',
   },
   {
     id: 'firsts',
@@ -60,15 +68,26 @@ const LEGACY_SCENES = [
     title: 'TAVI & MitraClip Pioneer',
     subtitle: 'First non-surgical aortic & mitral valve interventions in India.',
     image: DOCTOR.images.cathLab,
-    caption: 'Cardiac Catheterization Suite, Medanta – The Medicity',
+    caption: 'Cardiac Catheterization Suite, Medanta',
+    slot: 'slot-wide',
   },
   {
     id: 'faculty',
     year: '1992 – Present',
-    title: '30+ Years Clinical Leadership',
+    title: '30+ Years Leadership',
     subtitle: 'Past Chairman, National Interventional Council & global faculty.',
     image: DOCTOR.images.speaking,
-    caption: 'Addressing international interventional cardiology symposia',
+    caption: 'International Interventional Symposia',
+    slot: 'slot-tall',
+  },
+  {
+    id: 'care',
+    year: '100+ Papers',
+    title: 'Clinical Precision & Evaluation',
+    subtitle: 'Physiology-guided angiogram review and multidisciplinary Heart Team care.',
+    image: DOCTOR.images.consultation,
+    caption: 'Patient Consultation, Medanta',
+    slot: 'slot-inset',
   },
 ];
 
@@ -78,7 +97,7 @@ export default function Home() {
   const heroCycle = useAutoCycle(HERO_SLIDES.length, 5200);
   const anatomyCycle = useAutoCycle(ANATOMY_HOTSPOTS.length, 5500);
   const deviceCycle = useAutoCycle(DEVICES_SHOWCASE.length, 5500);
-  const legacyCycle = useAutoCycle(LEGACY_SCENES.length, 5500);
+  const legacyCycle = useAutoCycle(LEGACY_COLLAGE.length, 5200);
   const videoCycle = useAutoCycle(SPOTLIGHT_VIDEOS.length, 6000);
 
   const [activeVideoModal, setActiveVideoModal] = useState(null);
@@ -87,7 +106,9 @@ export default function Home() {
   const currentHero = HERO_SLIDES[heroCycle.activeIndex];
   const currentHotspot = ANATOMY_HOTSPOTS[anatomyCycle.activeIndex];
   const currentDevice = DEVICES_SHOWCASE[deviceCycle.activeIndex];
-  const currentLegacy = LEGACY_SCENES[legacyCycle.activeIndex];
+  const nextDevice = DEVICES_SHOWCASE[(deviceCycle.activeIndex + 1) % DEVICES_SHOWCASE.length];
+  const thirdDevice = DEVICES_SHOWCASE[(deviceCycle.activeIndex + 2) % DEVICES_SHOWCASE.length];
+  const currentLegacy = LEGACY_COLLAGE[legacyCycle.activeIndex];
   const currentVideo = SPOTLIGHT_VIDEOS[videoCycle.activeIndex];
 
   useEffect(() => {
@@ -95,7 +116,7 @@ export default function Home() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. HERO SECTION — Strong opposing left/right mount entrance + subtle post-settle float + scroll-exit ──
+        // ── 1. HERO SECTION — Strong opposing left/right entrance + multi-frame depth + noticeable ECG trace ──
         const heroMount = gsap.timeline();
         heroMount
           .fromTo(
@@ -116,6 +137,18 @@ export default function Home() {
             0.08
           )
           .fromTo(
+            '.hero-companion-top',
+            { x: 80, y: -40, scale: 0.65, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
+            0.35
+          )
+          .fromTo(
+            '.hero-companion-bottom',
+            { x: -60, y: 50, scale: 0.65, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
+            0.42
+          )
+          .fromTo(
             '.hero-kicker',
             { x: -30, opacity: 0 },
             { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
@@ -131,25 +164,25 @@ export default function Home() {
             '.hero-short-lead',
             { x: -25, opacity: 0 },
             { x: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
-            0.52
+            0.5
           )
           .fromTo(
             '.hero-cta-group > *',
-            { scale: 0.82, y: 18, opacity: 0 },
+            { scale: 0.84, y: 18, opacity: 0 },
             { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
-            0.62
+            0.6
           )
           .fromTo(
             '.hero-inline-stat',
             { y: 20, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' },
-            0.72
+            0.7
           )
           .fromTo(
             '.hero-switch-item',
-            { y: 24, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.55, stagger: 0.08, ease: 'power3.out' },
-            0.68
+            { y: 22, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.52, stagger: 0.08, ease: 'power3.out' },
+            0.66
           );
 
         animateNumericCounters('.hero-stat-value', {
@@ -157,33 +190,33 @@ export default function Home() {
           start: 'top 95%',
         });
 
-        // Subtle continuous floating motion after hero visual settles
+        // Subtle continuous floating motion after hero settles
         gsap.to('.hero-stage-float', {
-          y: -9,
-          duration: 3.6,
+          y: -8,
+          duration: 3.8,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
           delay: 1.15,
         });
-
-        // Restrained hero ECG draw & ambient particle drift
-        gsap.fromTo(
-          '.hero-ambient-ecg-path',
-          { strokeDashoffset: 1200 },
-          { strokeDashoffset: 0, duration: 2.2, ease: 'power2.out', delay: 0.35 }
-        );
-        gsap.to('.hero-ambient-particle', {
-          y: -18,
-          x: 10,
-          duration: 4.5,
-          stagger: { each: 0.7, from: 'random' },
+        gsap.to('.hero-companion-top', {
+          y: 6,
+          duration: 3.1,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
+          delay: 1.25,
+        });
+        gsap.to('.hero-companion-bottom', {
+          y: -7,
+          duration: 3.4,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 1.35,
         });
 
-        // Hero Scroll-Out Transformation (separate inner targets to avoid mount conflict)
+        // Hero Scroll-Out Exit
         const heroExit = gsap.timeline({
           scrollTrigger: {
             trigger: '.home-hero-stage',
@@ -194,10 +227,10 @@ export default function Home() {
         });
         heroExit
           .to('.hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
-          .to('.hero-visual-inner-scrub', { x: 75, y: -32, scale: 0.84, opacity: 0.2, ease: 'none' }, 0)
+          .to('.hero-visual-inner-scrub', { x: 75, y: -32, scale: 0.85, opacity: 0.22, ease: 'none' }, 0)
           .to('.hero-azure-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
-        // ── 2. ANATOMY STAGE — Scroll-scrubbed small-to-dominant growth, radial pin burst, color shift & shrink exit ──
+        // ── 2. ANATOMY STAGE — 3-Zone Sapphire Contrast Stage + growth + clean recede ──
         const anatTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.home-anatomy-stage',
@@ -208,29 +241,18 @@ export default function Home() {
         });
 
         anatTl
-          // Phase 1 (0 -> 0.35): dramatic growth & split entrance
           .fromTo(
             '.anat-section-header .section-heading',
             { x: -70, color: '#8ac2e8', opacity: 0.25 },
-            { x: 0, color: '#ffffff', opacity: 1, duration: 0.32, ease: 'power2.out' },
+            { x: 0, color: '#ffffff', opacity: 1, duration: 0.34, ease: 'power2.out' },
             0
           )
-          .fromTo(
-            '.anat-section-header .section-lead',
-            { x: 80, opacity: 0.15 },
-            { x: 0, opacity: 1, duration: 0.32, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.anatomy-circle-backdrop',
-            { scale: 0.25, opacity: 0.1 },
-            { scale: 1.06, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
+          .fromTo('.anat-section-header .section-lead', { x: 75, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.34 }, 0)
+          .fromTo('.anatomy-circle-backdrop', { scale: 0.28, opacity: 0.1 }, { scale: 1.04, opacity: 1, duration: 0.36 }, 0)
           .fromTo(
             '.anatomy-image-holder',
-            { scale: 0.56, y: 80, rotate: -6, opacity: 0.15 },
-            { scale: 1.04, y: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            { scale: 0.58, y: 75, rotate: -5, opacity: 0.15 },
+            { scale: 1.03, y: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0
           )
           .fromTo(
@@ -241,25 +263,20 @@ export default function Home() {
           )
           .fromTo(
             '.anatomy-dynamic-stage',
-            { x: 115, scale: 0.86, opacity: 0.15 },
-            { x: 0, scale: 1, opacity: 1, duration: 0.35, ease: 'power2.out' },
+            { x: 105, scale: 0.86, opacity: 0.15 },
+            { x: 0, scale: 1, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0.03
           )
-          .fromTo(
-            '.anatomy-zone-rail',
-            { y: 65, opacity: 0.15 },
-            { y: 0, opacity: 1, duration: 0.32, ease: 'power2.out' },
-            0.06
-          )
-          // Phase 2 (0.36 -> 0.68): Full crisp readability plateau
+          .fromTo('.anatomy-zone-rail', { y: 55, opacity: 0.15 }, { y: 0, opacity: 1, duration: 0.32 }, 0.06)
+          // Plateau
           .to('.anatomy-image-holder', { scale: 1, y: 0, opacity: 1, duration: 0.32 }, 0.36)
           .to('.anatomy-dynamic-stage', { x: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
-          // Phase 3 (0.68 -> 1.0): Shrink & recede into next section
-          .to('.anatomy-diagram-stage', { scale: 0.74, y: -60, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.anatomy-dynamic-stage', { x: 85, y: -30, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.anatomy-zone-rail', { y: -25, opacity: 0.18, duration: 0.32, ease: 'power2.in' }, 0.68);
+          // Exit shrink
+          .to('.anatomy-diagram-stage', { scale: 0.76, y: -55, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.anatomy-dynamic-stage', { x: 75, y: -30, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.anatomy-zone-rail', { y: -24, opacity: 0.18, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // ── 3. DEVICES STAGE — Background shape sweep, layout shift, image compact-to-large growth & heading color ──
+        // ── 3. DEVICES MULTI-IMAGE GALLERY — Asymmetric 3-Frame Composition + Inverse Scroll Transformation ──
         const devTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.home-devices-stage',
@@ -270,81 +287,61 @@ export default function Home() {
         });
 
         devTl
+          .fromTo('.dev-wide-header .section-heading', { y: -32, color: '#6c87a1' }, { y: 0, color: '#09223a', duration: 0.32 }, 0)
+          .fromTo('.dev-horizontal-tabs', { y: 28, opacity: 0.2 }, { y: 0, opacity: 1, duration: 0.32 }, 0.03)
           .fromTo(
-            '.devices-bg-shape',
-            { xPercent: 32, rotate: -12, scale: 0.85 },
-            { xPercent: 0, rotate: -4, scale: 1, duration: 0.36, ease: 'power2.out' },
+            '.dev-gallery-primary',
+            { scale: 0.66, y: 65, opacity: 0.18 },
+            { scale: 1.03, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0
           )
           .fromTo(
-            '.dev-section-header .section-heading',
-            { color: '#6c87a1', x: -50 },
-            { color: '#09223a', x: 0, duration: 0.35, ease: 'power2.out' },
-            0
+            '.dev-gallery-side-left',
+            { x: -120, y: 45, scale: 0.72, rotate: -4, opacity: 0.15 },
+            { x: 0, y: 0, scale: 0.96, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0.04
           )
           .fromTo(
-            '.devices-selector-col',
-            { x: -110, opacity: 0.15 },
-            { x: 0, opacity: 1, duration: 0.35, ease: 'power2.out' },
-            0
+            '.dev-gallery-side-right',
+            { x: 120, y: -45, scale: 0.72, rotate: 4, opacity: 0.15 },
+            { x: 0, y: 0, scale: 0.96, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0.04
           )
-          .fromTo(
-            '.devices-showcase-col',
-            { scale: 0.62, x: 115, y: 55, opacity: 0.15 },
-            { scale: 1.03, x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          // Plateau
-          .to('.devices-showcase-col', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
-          .to('.devices-selector-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
-          // Exit layout transformation: selector pulls left while showcase centers & compresses
-          .to('.devices-selector-col', { x: -90, opacity: 0.15, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.devices-showcase-col', { x: -65, scale: 0.78, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.devices-bg-shape', { xPercent: -14, rotate: 3, opacity: 0.4, duration: 0.32 }, 0.68);
+          // Inverse scroll prominence transform during progression
+          .to('.dev-gallery-primary', { scale: 0.97, y: 0, duration: 0.32 }, 0.36)
+          .to('.dev-gallery-side-left', { scale: 1.05, x: 10, duration: 0.32 }, 0.36)
+          .to('.dev-gallery-side-right', { scale: 1.05, x: -10, duration: 0.32 }, 0.36)
+          // Exit split sweep
+          .to('.dev-gallery-side-left', { x: -95, y: -35, scale: 0.78, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.dev-gallery-primary', { scale: 0.8, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.dev-gallery-side-right', { x: 95, y: 35, scale: 0.78, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // ── 4. LEGACY STAGE — Two diagonal panels entering from opposite corners & merging, then splitting apart ──
+        // ── 4. LEGACY 4-PHOTO EDITORIAL COLLAGE — 4-Corner Diagonal Convergence ──
         const legTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.home-legacy-stage',
             start: 'top 95%',
             end: 'bottom 5%',
-            scrub: 0.85,
+            scrub: 0.82,
           },
         });
 
         legTl
-          .fromTo(
-            '.legacy-visual-col',
-            { x: -135, y: -80, rotate: -4, scale: 0.72, opacity: 0.15 },
-            { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.legacy-copy-col',
-            { x: 135, y: 80, rotate: 3, opacity: 0.15 },
-            { x: 0, y: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0
-          )
-          .fromTo(
-            '.leg-section-header .section-heading',
-            { color: '#6c87a1' },
-            { color: '#09223a', duration: 0.35 },
-            0
-          )
-          .fromTo(
-            '.legacy-photo-bar',
-            { y: 45, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.25 },
-            0.12
-          )
+          .fromTo('.leg-section-header', { y: -35, opacity: 0.2 }, { y: 0, opacity: 1, duration: 0.32 }, 0)
+          .fromTo('.collage-tile-0', { x: -110, y: -60, scale: 0.72, rotate: -3, opacity: 0.15 }, { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.36 }, 0)
+          .fromTo('.collage-tile-1', { x: 110, y: -55, scale: 0.74, rotate: 3, opacity: 0.15 }, { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.36 }, 0.04)
+          .fromTo('.collage-tile-2', { x: -90, y: 70, scale: 0.74, rotate: 2.5, opacity: 0.15 }, { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.36 }, 0.06)
+          .fromTo('.collage-tile-3', { x: 95, y: 70, scale: 0.72, rotate: -2.5, opacity: 0.15 }, { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.36 }, 0.08)
+          .fromTo('.legacy-editorial-rail', { y: 50, opacity: 0.15 }, { y: 0, opacity: 1, duration: 0.34 }, 0.05)
           // Plateau
-          .to('.legacy-visual-col', { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
-          .to('.legacy-copy-col', { x: 0, y: 0, rotate: 0, opacity: 1, duration: 0.32 }, 0.36)
-          // Split exit
-          .to('.legacy-visual-col', { x: -75, y: -55, scale: 0.8, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.legacy-copy-col', { x: 75, y: 45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .to('.collage-tile, .legacy-editorial-rail', { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
+          // Part & recede into dark Cinema stage
+          .to('.collage-tile-0', { x: -80, y: -40, scale: 0.8, opacity: 0.2, duration: 0.32 }, 0.68)
+          .to('.collage-tile-1', { x: 80, y: -40, scale: 0.8, opacity: 0.2, duration: 0.32 }, 0.68)
+          .to('.collage-tile-2, .collage-tile-3', { y: 40, scale: 0.82, opacity: 0.2, duration: 0.32 }, 0.68)
+          .to('.legacy-editorial-rail', { y: 35, opacity: 0.2, duration: 0.32 }, 0.68);
 
-        // ── 5. VIDEO CINEMA — Small screen expanding into dominant cinema frame, playlist sliding horizontally ──
+        // ── 5. CLINICAL CINEMA — Full-Width Dark Theater Stage + Horizontal Filmstrip Sweep ──
         const cinTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.home-cinema-stage',
@@ -357,25 +354,25 @@ export default function Home() {
         cinTl
           .fromTo('.cin-section-header', { y: -35, opacity: 0.2 }, { y: 0, opacity: 1, duration: 0.32 }, 0)
           .fromTo(
-            '.cinema-main-col',
-            { scale: 0.58, y: 75, opacity: 0.2 },
-            { scale: 1.03, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            '.cinema-widescreen-player',
+            { scale: 0.62, y: 65, opacity: 0.18 },
+            { scale: 1.02, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0
           )
           .fromTo(
-            '.cinema-list-col',
-            { x: 115, rotate: 2, opacity: 0.15 },
-            { x: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-            0.03
+            '.cinema-filmstrip-item',
+            { x: 110, scale: 0.85, opacity: 0.15 },
+            { x: 0, scale: 1, opacity: 1, duration: 0.32, stagger: 0.04, ease: 'power2.out' },
+            0.05
           )
           // Plateau
-          .to('.cinema-main-col', { scale: 1, y: 0, opacity: 1, duration: 0.32 }, 0.36)
-          .to('.cinema-list-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.cinema-widescreen-player', { scale: 1, y: 0, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.cinema-filmstrip-item', { x: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
           // Exit shrink
-          .to('.cinema-main-col', { scale: 0.76, y: -50, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.cinema-list-col', { x: 80, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .to('.cinema-widescreen-player', { scale: 0.78, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.cinema-filmstrip-row', { x: -75, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // ── 6. CONSULTATION RIBBON — Scrubbed ECG draw + opposing split + smooth handoff to Footer ──
+        // ── 6. CONSULTATION RIBBON — Scrubbed ECG draw & Footer Handoff ──
         gsap.fromTo(
           '.consult-ecg-path',
           { strokeDashoffset: 900 },
@@ -400,10 +397,10 @@ export default function Home() {
           },
         });
         ribbonTl
-          .fromTo('.consult-ribbon-copy', { x: -100, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
-          .fromTo('.consult-ribbon-actions', { x: 100, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.consult-ribbon-copy', { x: -95, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.consult-ribbon-actions', { x: 95, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
           .to('.consult-ribbon-flex', { scale: 1, opacity: 1, duration: 0.34 }, 0.38)
-          .to('.consult-ribbon-flex', { scale: 0.9, y: -26, opacity: 0.32, duration: 0.28 }, 0.72);
+          .to('.consult-ribbon-flex', { scale: 0.91, y: -24, opacity: 0.32, duration: 0.28 }, 0.72);
       }, homeRef);
 
       return () => ctx.revert();
@@ -414,25 +411,53 @@ export default function Home() {
 
   return (
     <div ref={homeRef} className="home-root">
-      {/* ── 1. SPOTLIGHT HERO ── */}
+      {/* ── 1. SPOTLIGHT HERO WITH NOTICEABLE MEDICAL ECG HEARTBEAT ── */}
       <section className="home-hero-stage" aria-label="Introduction">
         <div className="hero-azure-wedge" aria-hidden="true" />
 
-        {/* Subtle Hero-Only Ambient Accents & Heartbeat ECG */}
-        <div className="hero-ambient-layer" aria-hidden="true">
-          <span className="hero-ambient-particle hero-p1" />
-          <span className="hero-ambient-particle hero-p2" />
-          <span className="hero-ambient-particle hero-p3" />
-          <span className="hero-ambient-particle hero-p4" />
-          <svg className="hero-ambient-ecg" viewBox="0 0 1440 80" preserveAspectRatio="none">
+        {/* Medical Heartbeat ECG & Cardiac Rhythm Layer */}
+        <div className="hero-ecg-backdrop" aria-hidden="true">
+          <div className="hero-ecg-grid" />
+          <svg
+            className="hero-ecg-svg"
+            viewBox="0 0 1440 120"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="heroEcgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="rgba(0, 91, 148, 0.05)" />
+                <stop offset="35%" stopColor="#005b94" />
+                <stop offset="65%" stopColor="#097c7c" />
+                <stop offset="100%" stopColor="rgba(9, 124, 124, 0.08)" />
+              </linearGradient>
+              <filter id="ecgGlow" x="-10%" y="-40%" width="120%" height="180%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Static Faint Clinical Reference Trace */}
             <path
-              className="hero-ambient-ecg-path"
-              d="M0,48 L320,48 L344,36 L360,48 L410,48 L424,68 L442,10 L460,74 L478,40 L494,48 L880,48 L904,36 L920,48 L970,48 L984,68 L1002,10 L1020,74 L1038,40 L1054,48 L1440,48"
+              className="hero-ecg-baseline"
+              d="M0,72 L160,72 L178,61 L194,72 L236,72 L250,90 L268,18 L286,98 L302,60 L318,72 L520,72 L538,61 L554,72 L596,72 L610,90 L628,18 L646,98 L662,60 L678,72 L890,72 L908,61 L924,72 L966,72 L980,90 L998,18 L1016,98 L1032,60 L1048,72 L1260,72 L1278,61 L1294,72 L1336,72 L1350,90 L1368,18 L1386,98 L1402,60 L1418,72 L1440,72"
               fill="none"
-              stroke="rgba(0, 91, 148, 0.14)"
+              stroke="rgba(0, 91, 148, 0.16)"
               strokeWidth="1.6"
-              strokeDasharray="1200"
-              strokeDashoffset="1200"
+            />
+
+            {/* Animated Traveling Cardiac Pulse Sweep */}
+            <path
+              className="hero-ecg-pulse-trace"
+              d="M0,72 L160,72 L178,61 L194,72 L236,72 L250,90 L268,18 L286,98 L302,60 L318,72 L520,72 L538,61 L554,72 L596,72 L610,90 L628,18 L646,98 L662,60 L678,72 L890,72 L908,61 L924,72 L966,72 L980,90 L998,18 L1016,98 L1032,60 L1048,72 L1260,72 L1278,61 L1294,72 L1336,72 L1350,90 L1368,18 L1386,98 L1402,60 L1418,72 L1440,72"
+              fill="none"
+              stroke="url(#heroEcgGrad)"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#ecgGlow)"
             />
           </svg>
         </div>
@@ -475,43 +500,68 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Auto-Cycling Visual Stage */}
+            {/* Right Multi-Frame Layered Visual Cluster */}
             <div className="hero-visual-col">
               <div className="hero-visual-inner-scrub">
-                <div className="hero-stage-float">
-                  <div className="hero-stage-frame">
-                    <div className="hero-curtain-mask media-reveal-mask">
-                      <AnimatePresence mode="wait">
-                        <motion.div
-                          key={currentHero.id}
-                          className="hero-slide-inner"
-                          initial={{ opacity: 0, x: 30, scale: 0.96 }}
-                          animate={{ opacity: 1, x: 0, scale: 1 }}
-                          exit={{ opacity: 0, x: -24, scale: 1.02 }}
-                          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                        >
-                          <img
-                            src={currentHero.image}
-                            alt={currentHero.caption}
-                            loading="eager"
-                          />
-                        </motion.div>
-                      </AnimatePresence>
-                    </div>
+                <div className="hero-collage-cluster">
+                  {/* Subtle Rhythmic Heartbeat Pulse Halo behind Main Portrait */}
+                  <div className="hero-heartbeat-halo" aria-hidden="true" />
 
-                    <div className="hero-stage-caption">
-                      <AnimatePresence mode="wait">
-                        <motion.span
-                          key={currentHero.id}
-                          initial={{ opacity: 0, y: 6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -6 }}
-                          transition={{ duration: 0.26 }}
-                        >
-                          {currentHero.caption}
-                        </motion.span>
-                      </AnimatePresence>
+                  <div className="hero-stage-float">
+                    <div className="hero-stage-frame">
+                      <div className="hero-curtain-mask media-reveal-mask">
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={currentHero.id}
+                            className="hero-slide-inner"
+                            initial={{ opacity: 0, x: 30, scale: 0.96 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: -24, scale: 1.02 }}
+                            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                          >
+                            <ResponsiveImage
+                              src={currentHero.image}
+                              alt={currentHero.caption}
+                              priority
+                              objectFit="contain"
+                              sizes="(max-width: 900px) 92vw, 44vw"
+                            />
+                          </motion.div>
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="hero-stage-caption">
+                        <AnimatePresence mode="wait">
+                          <motion.span
+                            key={currentHero.id}
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.26 }}
+                          >
+                            {currentHero.caption}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Overlapping Companion Stills */}
+                  <div className="hero-companion-frame hero-companion-top" aria-hidden="true">
+                    <ResponsiveImage
+                      src={currentHero.companionTop}
+                      alt=""
+                      objectFit="cover"
+                      sizes="180px"
+                    />
+                  </div>
+                  <div className="hero-companion-frame hero-companion-bottom" aria-hidden="true">
+                    <ResponsiveImage
+                      src={currentHero.companionBottom}
+                      alt=""
+                      objectFit="cover"
+                      sizes="190px"
+                    />
                   </div>
                 </div>
 
@@ -551,7 +601,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 2. INTERACTIVE CARDIAC ANATOMY STAGE ── */}
+      {/* ── 2. INTERACTIVE CARDIAC ANATOMY STAGE (RICH SAPPHIRE-TEAL CONTRAST) ── */}
       <section className="section home-anatomy-stage" id="anatomy" aria-label="Interactive Cardiac Anatomy">
         <div className="container home-z1">
           <div className="stage-header-row anat-section-header">
@@ -573,10 +623,11 @@ export default function Home() {
             <div className="anatomy-diagram-stage">
               <div className="anatomy-circle-backdrop" aria-hidden="true" />
               <div className="anatomy-image-holder">
-                <img
+                <ResponsiveImage
                   src={DOCTOR.illustrations.anatomy}
                   alt="Human cardiac anatomy illustration showing valves and coronary arteries"
-                  loading="lazy"
+                  objectFit="contain"
+                  sizes="(max-width: 900px) 90vw, 480px"
                 />
                 {ANATOMY_HOTSPOTS.map((spot, idx) => {
                   const isActive = anatomyCycle.activeIndex === idx;
@@ -598,7 +649,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Dynamic Matching Content + Matched Visual */}
+            {/* Right Dynamic Matching Content + Paired Procedure Visuals */}
             <div className="anatomy-dynamic-stage">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -621,13 +672,25 @@ export default function Home() {
                     <p className="anat-proc-summary">{currentHotspot.summary}</p>
                   </div>
 
-                  {/* Large Matched Procedure Visual */}
-                  <div className="anat-matched-visual">
-                    <img
-                      src={currentHotspot.image}
-                      alt={`${currentHotspot.procedure} illustration`}
-                      loading="lazy"
-                    />
+                  {/* Large Matched Visual + Companion Procedure Context Frame */}
+                  <div className="anat-visual-pair">
+                    <div className="anat-matched-visual">
+                      <ResponsiveImage
+                        src={currentHotspot.image}
+                        alt={`${currentHotspot.procedure} illustration`}
+                        objectFit="contain"
+                        sizes="(max-width: 900px) 88vw, 420px"
+                      />
+                    </div>
+                    <div className="anat-inset-lab" aria-hidden="true">
+                      <ResponsiveImage
+                        src={DOCTOR.images.cathLab}
+                        alt=""
+                        objectFit="cover"
+                        sizes="180px"
+                      />
+                      <span>Medanta Cath Lab</span>
+                    </div>
                   </div>
 
                   <div className="anat-action-row">
@@ -673,309 +736,320 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 3. PIONEERING DEVICES & CLINICAL FIRSTS ── */}
+      {/* ── 3. DEVICES GALLERY — ASYMMETRIC MULTI-IMAGE STAGE WITH INVERSE SCROLL TRANSFORM ── */}
       <section className="section home-devices-stage" aria-label="Medical Devices Showcase">
-        <div className="devices-bg-shape" aria-hidden="true" />
+        <div className="devices-mint-band" aria-hidden="true" />
 
         <div className="container home-z1">
-          <div className="devices-split-layout">
-            {/* Left Vertical Selector */}
-            <div className="devices-selector-col">
-              <div className="stage-header-row dev-section-header">
-                <div>
-                  <div className="section-kicker">Pioneering Technologies</div>
-                  <SplitHeading as="h2" className="section-heading" text="Devices & Breakthroughs" />
-                </div>
-              </div>
-
-              <div className="devices-vertical-list" role="tablist" aria-label="Medical devices">
-                {DEVICES_SHOWCASE.map((dev, idx) => {
-                  const isActive = deviceCycle.activeIndex === idx;
-                  return (
-                    <button
-                      key={dev.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`dev-list-row ${isActive ? 'is-active' : ''}`}
-                      onClick={() => deviceCycle.selectIndex(idx)}
-                    >
-                      <div className="dev-row-header">
-                        <span className="dev-row-num tabular-nums">0{idx + 1}</span>
-                        <span className="dev-row-name">{dev.name}</span>
-                      </div>
-                      {isActive && (
-                        <div className="cycle-progress-track" style={{ marginTop: '0.55rem' }}>
-                          <div
-                            key={`dev-prog-${deviceCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                          />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+          <div className="stage-header-row dev-wide-header">
+            <div>
+              <div className="section-kicker">Pioneering Technologies</div>
+              <SplitHeading as="h2" className="section-heading" text="Devices & Catheter Breakthroughs" />
             </div>
+            <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
+              All 7 Procedures →
+            </Link>
+          </div>
 
-            {/* Right Uncropped Visual & Dynamic Text */}
-            <div className="devices-showcase-col">
-              <div className="device-curtain-mask media-reveal-mask">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentDevice.id}
-                    className="device-hero-display"
-                    initial={{ opacity: 0, scale: 0.95, y: 14 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.97, y: -10 }}
-                    transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <div className="device-big-visual">
-                      <img
-                        src={currentDevice.image}
-                        alt={currentDevice.name}
-                        loading="lazy"
+          {/* Horizontal Tab Strip (breaks vertical sidebar monotony) */}
+          <div className="dev-horizontal-tabs" role="tablist" aria-label="Medical devices">
+            {DEVICES_SHOWCASE.map((dev, idx) => {
+              const isActive = deviceCycle.activeIndex === idx;
+              return (
+                <button
+                  key={dev.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`dev-h-tab ${isActive ? 'is-active' : ''}`}
+                  onClick={() => deviceCycle.selectIndex(idx)}
+                >
+                  <span className="dev-h-num tabular-nums">0{idx + 1}</span>
+                  <span className="dev-h-name">{dev.name.split('(')[0].trim()}</span>
+                  {isActive && (
+                    <div className="cycle-progress-track" style={{ marginTop: '0.45rem' }}>
+                      <div
+                        key={`dev-prog-${deviceCycle.cycleKey}`}
+                        className="cycle-progress-bar"
                       />
                     </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-                    <div className="device-overlay-strip">
+          {/* 3-Frame Transforming Visual Composition */}
+          <div className="dev-gallery-triptych">
+            {/* Left Companion Frame (clickable to switch) */}
+            <button
+              type="button"
+              className="dev-gallery-side dev-gallery-side-left"
+              onClick={deviceCycle.prev}
+              aria-label={`View previous device: ${DEVICES_SHOWCASE[(deviceCycle.activeIndex - 1 + DEVICES_SHOWCASE.length) % DEVICES_SHOWCASE.length].name}`}
+            >
+              <div className="dev-side-frame">
+                <ResponsiveImage
+                  src={DEVICES_SHOWCASE[(deviceCycle.activeIndex - 1 + DEVICES_SHOWCASE.length) % DEVICES_SHOWCASE.length].image}
+                  alt={DEVICES_SHOWCASE[(deviceCycle.activeIndex - 1 + DEVICES_SHOWCASE.length) % DEVICES_SHOWCASE.length].name}
+                  objectFit="contain"
+                  sizes="280px"
+                />
+              </div>
+              <span className="dev-side-caption">
+                ← {DEVICES_SHOWCASE[(deviceCycle.activeIndex - 1 + DEVICES_SHOWCASE.length) % DEVICES_SHOWCASE.length].name.split('(')[0].trim()}
+              </span>
+            </button>
+
+            {/* Primary Dominant Device Frame */}
+            <div className="dev-gallery-primary">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentDevice.id}
+                  className="dev-primary-stage"
+                  initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.98, y: -8 }}
+                  transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="dev-primary-visual">
+                    <ResponsiveImage
+                      src={currentDevice.image}
+                      alt={currentDevice.name}
+                      objectFit="contain"
+                      sizes="(max-width: 900px) 92vw, 560px"
+                    />
+                  </div>
+                  <div className="dev-primary-info">
+                    <div className="dev-info-meta">
                       <span className="device-tag-mono">{currentDevice.tag}</span>
-                      <h3>{currentDevice.name}</h3>
-                      <p>{currentDevice.benefit}</p>
-                      <div className="device-strip-actions">
-                        <Link to="/treatments" className="btn-clinical btn-clinical--primary">
-                          View All Treatments →
-                        </Link>
-                        <div className="device-arrow-pair">
-                          <button
-                            type="button"
-                            onClick={deviceCycle.prev}
-                            aria-label="Previous device"
-                            className="round-nav-btn"
-                          >
-                            ←
-                          </button>
-                          <button
-                            type="button"
-                            onClick={deviceCycle.next}
-                            aria-label="Next device"
-                            className="round-nav-btn"
-                          >
-                            →
-                          </button>
-                        </div>
+                      <div className="device-arrow-pair">
+                        <button type="button" onClick={deviceCycle.prev} aria-label="Previous device" className="round-nav-btn">←</button>
+                        <button type="button" onClick={deviceCycle.next} aria-label="Next device" className="round-nav-btn">→</button>
                       </div>
                     </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+                    <h3>{currentDevice.name}</h3>
+                    <p>{currentDevice.benefit}</p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
+
+            {/* Right Companion Frame (clickable to advance) */}
+            <button
+              type="button"
+              className="dev-gallery-side dev-gallery-side-right"
+              onClick={deviceCycle.next}
+              aria-label={`View next device: ${nextDevice.name}`}
+            >
+              <div className="dev-side-frame">
+                <ResponsiveImage
+                  src={nextDevice.image}
+                  alt={nextDevice.name}
+                  objectFit="contain"
+                  sizes="280px"
+                />
+              </div>
+              <span className="dev-side-caption">
+                {nextDevice.name.split('(')[0].trim()} →
+              </span>
+              <span className="dev-side-sub">{thirdDevice.tag}</span>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* ── 4. PADMA SHRI & CLINICAL LEADERSHIP ── */}
+      {/* ── 4. PADMA SHRI & HERITAGE — 4-IMAGE EDITORIAL MAGAZINE COLLAGE ── */}
       <section className="section home-legacy-stage" aria-label="National Honors and Heritage">
         <div className="container home-z1">
-          <div className="legacy-split-grid">
-            {/* Left Uncropped Photo Stage */}
-            <div className="legacy-visual-col">
-              <div className="legacy-photo-stage">
-                <div className="legacy-photo-mask media-reveal-mask">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentLegacy.id}
-                      className="legacy-photo-inner"
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.97 }}
-                      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      <img
-                        src={currentLegacy.image}
-                        alt={currentLegacy.caption}
-                        loading="lazy"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-                <div className="legacy-photo-bar">
-                  <span>{currentLegacy.caption}</span>
-                </div>
-              </div>
+          <div className="stage-header-row leg-section-header">
+            <div>
+              <div className="section-kicker">National Honor &amp; Heritage</div>
+              <SplitHeading
+                as="h2"
+                className="section-heading"
+                text="Three Decades of Pioneering Firsts"
+              />
             </div>
+            <Link to="/about" className="btn-clinical btn-clinical--primary">
+              Full Biography &amp; Qualifications →
+            </Link>
+          </div>
 
-            {/* Right Interactive Milestone Selector */}
-            <div className="legacy-copy-col">
-              <div className="stage-header-row leg-section-header">
-                <div>
-                  <div className="section-kicker">National Honor &amp; Heritage</div>
-                  <SplitHeading
-                    as="h2"
-                    className="section-heading"
-                    text="Three Decades of Pioneering Firsts"
-                  />
+          {/* 4-Photo Asymmetric Mosaic converging from 4 corners on scroll */}
+          <div className="legacy-mosaic-grid">
+            {LEGACY_COLLAGE.map((scene, idx) => {
+              const isActive = legacyCycle.activeIndex === idx;
+              return (
+                <button
+                  key={scene.id}
+                  type="button"
+                  onClick={() => legacyCycle.selectIndex(idx)}
+                  className={`collage-tile collage-tile-${idx} ${scene.slot} ${isActive ? 'is-active' : ''}`}
+                  aria-pressed={isActive}
+                >
+                  <div className="collage-tile-img">
+                    <ResponsiveImage
+                      src={scene.image}
+                      alt={scene.caption}
+                      objectFit={idx === 0 || idx === 1 ? 'cover' : 'cover'}
+                      sizes="(max-width: 768px) 92vw, 38vw"
+                    />
+                  </div>
+                  <div className="collage-tile-overlay">
+                    <span className="collage-year tabular-nums">{scene.year}</span>
+                    <span className="collage-title">{scene.title}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Open Concise Editorial Rail below Collage */}
+          <div className="legacy-editorial-rail">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentLegacy.id}
+                className="legacy-rail-content"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="legacy-rail-left">
+                  <span className="legacy-rail-year tabular-nums">{currentLegacy.year}</span>
+                  <h3>{currentLegacy.title}</h3>
                 </div>
-              </div>
-
-              <div className="legacy-selector-stack" role="tablist" aria-label="Career milestones">
-                {LEGACY_SCENES.map((scene, idx) => {
-                  const isActive = legacyCycle.activeIndex === idx;
-                  return (
-                    <button
-                      key={scene.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`legacy-row-btn ${isActive ? 'is-active' : ''}`}
-                      onClick={() => legacyCycle.selectIndex(idx)}
-                    >
-                      <div className="legacy-row-meta tabular-nums">{scene.year}</div>
-                      <div className="legacy-row-text">
-                        <h4>{scene.title}</h4>
-                        <p>{scene.subtitle}</p>
-                      </div>
-                      {isActive && (
-                        <div className="cycle-progress-track" style={{ gridColumn: '1 / -1', marginTop: '0.5rem' }}>
-                          <div
-                            key={`leg-prog-${legacyCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                          />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="leg-cta-wrap" style={{ marginTop: '1.25rem' }}>
-                <Link to="/about" className="btn-clinical btn-clinical--primary">
-                  Full Biography &amp; Qualifications →
-                </Link>
-              </div>
+                <p className="legacy-rail-desc">{currentLegacy.subtitle}</p>
+                <span className="legacy-rail-caption">{currentLegacy.caption}</span>
+              </motion.div>
+            </AnimatePresence>
+            <div className="cycle-progress-track" style={{ marginTop: '0.85rem' }}>
+              <div
+                key={`leg-prog-${legacyCycle.cycleKey}`}
+                className="cycle-progress-bar"
+                style={{ animationDuration: '5.2s' }}
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 5. AUTO-CYCLING VIDEO CINEMA ── */}
+      {/* ── 5. CLINICAL CINEMA — FULL-WIDTH DEEP SAPPHIRE THEATER + FILMSTRIP ── */}
       <section className="section home-cinema-stage" aria-label="Featured Videos">
         <div className="container home-z1">
           <div className="stage-header-row cin-section-header">
             <div>
-              <div className="section-kicker">Watch &amp; Learn</div>
+              <div className="section-kicker section-kicker--light">Watch &amp; Learn</div>
               <SplitHeading
                 as="h2"
-                className="section-heading"
+                className="section-heading section-heading--light"
                 text="Clinical Explainers & Patient Stories"
               />
             </div>
-            <Link to="/media" className="btn-clinical btn-clinical--secondary">
+            <Link to="/media" className="btn-clinical btn-clinical--light">
               View All 10 Videos →
             </Link>
           </div>
 
-          <div className="cinema-stage-split">
-            {/* Left Dynamic 16:9 Cinema Stage */}
-            <div className="cinema-main-col">
-              <div className="cinema-aperture-mask">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentVideo.id}
-                    className="cinema-player-stage"
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.34 }}
-                  >
-                    <div
-                      className="cinema-thumb-hero"
+          {/* Widescreen Dominant Theater Showcase */}
+          <div className="cinema-widescreen-player">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentVideo.id}
+                className="cinema-theater-grid"
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.34 }}
+              >
+                <div
+                  className="cinema-thumb-hero"
+                  onClick={() => setActiveVideoModal(currentVideo)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setActiveVideoModal(currentVideo);
+                    }
+                  }}
+                  aria-label={`Play video: ${currentVideo.title}`}
+                >
+                  <ResponsiveImage
+                    src={currentVideo.thumbnail}
+                    alt={currentVideo.title}
+                    objectFit="cover"
+                    sizes="(max-width: 900px) 92vw, 720px"
+                  />
+                  <div className="cinema-play-circle" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="cinema-theater-meta">
+                  <span className="cinema-cat-text">
+                    {currentVideo.category} · <span className="tabular-nums">{currentVideo.duration}</span>
+                  </span>
+                  <h3>{currentVideo.title}</h3>
+                  <p>{currentVideo.description}</p>
+                  <div className="cinema-links-group">
+                    <button
+                      type="button"
+                      className="btn-clinical btn-clinical--light"
                       onClick={() => setActiveVideoModal(currentVideo)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setActiveVideoModal(currentVideo);
-                        }
-                      }}
-                      aria-label={`Play video: ${currentVideo.title}`}
                     >
-                      <img
-                        src={currentVideo.thumbnail}
-                        alt={currentVideo.title}
-                        loading="lazy"
-                      />
-                      <div className="cinema-play-circle" aria-hidden="true">
-                        <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M6.5 4.5v11l9-5.5-9-5.5z" />
-                        </svg>
-                      </div>
-                    </div>
+                      Play Video
+                    </button>
+                    <a
+                      href={`https://www.youtube.com/watch?v=${currentVideo.youtubeId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-clinical cinema-outline-light"
+                    >
+                      YouTube ↗
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-                    <div className="cinema-caption-strip">
-                      <div>
-                        <span className="cinema-cat-text">
-                          {currentVideo.category} · <span className="tabular-nums">{currentVideo.duration}</span>
-                        </span>
-                        <h3>{currentVideo.title}</h3>
+          {/* Bottom Staggered 4-Frame Filmstrip Row */}
+          <div className="cinema-filmstrip-row" role="tablist" aria-label="Spotlight videos">
+            {SPOTLIGHT_VIDEOS.map((vid, idx) => {
+              const isActive = videoCycle.activeIndex === idx;
+              return (
+                <button
+                  key={vid.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`cinema-filmstrip-item ${isActive ? 'is-active' : ''}`}
+                  onClick={() => videoCycle.selectIndex(idx)}
+                >
+                  <div className="cinema-fs-thumb">
+                    <ResponsiveImage src={vid.thumbnail} alt={vid.title} objectFit="cover" sizes="280px" />
+                    <span className="cinema-fs-dur tabular-nums">{vid.duration}</span>
+                  </div>
+                  <div className="cinema-fs-info">
+                    <span className="cinema-pl-cat">{vid.category}</span>
+                    <span className="cinema-pl-title">{vid.title}</span>
+                    {isActive && (
+                      <div className="cycle-progress-track cycle-progress-track--light" style={{ marginTop: '0.45rem' }}>
+                        <div
+                          key={`vid-prog-${videoCycle.cycleKey}`}
+                          className="cycle-progress-bar"
+                          style={{ animationDuration: '6s' }}
+                        />
                       </div>
-                      <div className="cinema-links-group">
-                        <button
-                          type="button"
-                          className="btn-clinical btn-clinical--primary"
-                          onClick={() => setActiveVideoModal(currentVideo)}
-                        >
-                          Play Video
-                        </button>
-                        <a
-                          href={`https://www.youtube.com/watch?v=${currentVideo.youtubeId}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-clinical btn-clinical--secondary"
-                        >
-                          YouTube ↗
-                        </a>
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {/* Right Selectable Video Playlist */}
-            <div className="cinema-list-col" role="tablist" aria-label="Spotlight videos">
-              {SPOTLIGHT_VIDEOS.map((vid, idx) => {
-                const isActive = videoCycle.activeIndex === idx;
-                return (
-                  <button
-                    key={vid.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`cinema-playlist-row ${isActive ? 'is-active' : ''}`}
-                    onClick={() => videoCycle.selectIndex(idx)}
-                  >
-                    <div className="cinema-pl-thumb">
-                      <img src={vid.thumbnail} alt={vid.title} loading="lazy" />
-                    </div>
-                    <div className="cinema-pl-info">
-                      <span className="cinema-pl-cat">{vid.category}</span>
-                      <span className="cinema-pl-title">{vid.title}</span>
-                      {isActive && (
-                        <div className="cycle-progress-track" style={{ marginTop: '0.45rem' }}>
-                          <div
-                            key={`vid-prog-${videoCycle.cycleKey}`}
-                            className="cycle-progress-bar"
-                            style={{ animationDuration: '6s' }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -987,8 +1061,8 @@ export default function Home() {
             className="consult-ecg-path"
             d="M0,55 L220,55 L245,42 L262,55 L310,55 L325,76 L345,14 L365,90 L385,46 L402,55 L640,55 L665,42 L682,55 L730,55 L745,76 L765,14 L785,90 L805,46 L822,55 L1200,55"
             fill="none"
-            stroke="rgba(255, 255, 255, 0.2)"
-            strokeWidth="1.8"
+            stroke="rgba(255, 255, 255, 0.24)"
+            strokeWidth="1.9"
             strokeDasharray="900"
             strokeDashoffset="900"
           />

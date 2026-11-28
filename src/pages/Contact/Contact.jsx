@@ -1,9 +1,10 @@
-// Contact.jsx – Medanta OPD location hub with multi-technique GSAP choreography
+// Contact.jsx – Dual-image Medanta clinical collage, campus hub, open checklist & international atrium panel
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
+import ResponsiveImage from '../../components/common/ResponsiveImage';
 import SplitHeading from '../../components/motion/SplitHeading';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import { CONTACT_INFO, DOCTOR } from '../../data/doctorData';
@@ -59,50 +60,55 @@ export default function Contact() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. CONTACT HERO — Strong opposing left/right mount + continuous float + scroll-exit ──
+        // ── 1. CONTACT HERO — Left editorial copy + Dual-Image Medanta Collage convergence ──
         const heroMount = gsap.timeline();
         heroMount
           .fromTo(
             '.cnt-hero-wedge',
-            { xPercent: 45, opacity: 0 },
+            { xPercent: 40, opacity: 0 },
             { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }
           )
           .fromTo(
             '.cnt-hero-copy',
-            { x: -120, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+            { x: -115, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.9, ease: 'power3.out' },
             0.05
           )
           .fromTo(
-            '.cnt-hero-visual',
-            { x: 135, scale: 0.72, rotate: 2.5, opacity: 0 },
-            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.05, ease: 'power3.out' },
+            '.cnt-collage-primary',
+            { x: 115, scale: 0.78, opacity: 0 },
+            { x: 0, scale: 1, opacity: 1, duration: 1.0, ease: 'power3.out' },
             0.08
           )
-          .fromTo('.cnt-hero-copy .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.18)
+          .fromTo(
+            '.cnt-collage-campus',
+            { x: -55, y: 45, scale: 0.74, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out' },
+            0.25
+          )
           .fromTo(
             '.cnt-main-title .split-word-inner',
-            { yPercent: 125, opacity: 0 },
+            { yPercent: 120, opacity: 0 },
             { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
-            0.24
+            0.22
           )
-          .fromTo('.cnt-main-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.46)
+          .fromTo('.cnt-main-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
           .fromTo(
             '.cnt-hero-actions > *',
-            { scale: 0.82, y: 18, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
-            0.56
+            { scale: 0.86, y: 16, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.5)' },
+            0.55
           )
           .fromTo(
             '.cnt-quick-facts > div',
-            { x: -26, opacity: 0 },
+            { x: -24, opacity: 0 },
             { x: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' },
-            0.66
+            0.65
           );
 
         gsap.to('.cnt-stage-float', {
           y: -8,
-          duration: 3.6,
+          duration: 3.7,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
@@ -118,11 +124,12 @@ export default function Contact() {
           },
         });
         heroExit
-          .to('.cnt-hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
-          .to('.cnt-hero-visual-scrub', { x: 75, y: -32, scale: 0.84, opacity: 0.2, ease: 'none' }, 0)
+          .to('.cnt-hero-copy-inner', { x: -75, y: -24, opacity: 0.22, ease: 'none' }, 0)
+          .to('.cnt-collage-primary', { x: 65, y: -28, scale: 0.86, opacity: 0.26, ease: 'none' }, 0)
+          .to('.cnt-collage-campus', { x: -45, y: 24, scale: 1.06, opacity: 0.35, ease: 'none' }, 0)
           .to('.cnt-hero-wedge', { yPercent: -12, opacity: 0.3, ease: 'none' }, 0);
 
-        // ── 2. HOSPITAL HUB & MAP — Opposite diagonal corner merge, map growth & split exit ──
+        // ── 2. HOSPITAL HUB & MAP — Opposite corner merge, map growth & split exit ──
         const hubTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.cnt-hub-stage',
@@ -135,30 +142,28 @@ export default function Contact() {
         hubTl
           .fromTo(
             '.cnt-hub-left .section-heading',
-            { x: -55, color: '#5a738c', opacity: 0.25 },
-            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
+            { x: -55, opacity: 0.25 },
+            { x: 0, opacity: 1, duration: 0.34, ease: 'power2.out' },
             0
           )
           .fromTo(
             '.cnt-hub-left',
-            { x: -110, y: 55, opacity: 0.15 },
+            { x: -100, y: 45, opacity: 0.16 },
             { x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0
           )
           .fromTo(
             '.cnt-hub-right',
-            { x: 115, y: -50, scale: 0.66, opacity: 0.15 },
-            { x: 0, y: 0, scale: 1.02, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            { x: 105, y: -40, scale: 0.72, opacity: 0.16 },
+            { x: 0, y: 0, scale: 1.01, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0
           )
-          // Plateau
           .to('.cnt-hub-right', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
           .to('.cnt-hub-left', { x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
-          // Split exit
-          .to('.cnt-hub-left', { x: -70, y: -30, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.cnt-hub-right', { x: 70, y: 30, scale: 0.78, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .to('.cnt-hub-left', { x: -65, y: -25, opacity: 0.24, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.cnt-hub-right', { x: 65, y: 25, scale: 0.82, opacity: 0.24, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // ── 3. PRE-VISIT PREPARATION — Checklist left glide + international desk growth & shrink exit ──
+        // ── 3. PRE-VISIT PREPARATION & DUAL-VISUAL GLOBAL CARE PANEL ──
         const prepTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.cnt-prep-stage',
@@ -171,23 +176,26 @@ export default function Contact() {
         prepTl
           .fromTo(
             '.cnt-checklist-col .section-heading',
-            { x: -55, color: '#5a738c', opacity: 0.25 },
-            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
+            { x: -55, opacity: 0.25 },
+            { x: 0, opacity: 1, duration: 0.34, ease: 'power2.out' },
             0
           )
-          .fromTo('.cnt-checklist-col', { x: -95, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' }, 0)
+          .fromTo('.cnt-checklist-col', { x: -90, opacity: 0.16 }, { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' }, 0)
           .fromTo(
-            '.cnt-intl-col',
-            { scale: 0.65, x: 95, y: 65, opacity: 0.15 },
-            { scale: 1.02, x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            '.cnt-intl-visual-main',
+            { scale: 0.72, x: 85, opacity: 0.18 },
+            { scale: 1, x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0
           )
-          // Plateau
-          .to('.cnt-intl-col', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
-          .to('.cnt-checklist-col', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
-          // Exit shrink
-          .to('.cnt-checklist-col', { x: -65, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.cnt-intl-col', { scale: 0.8, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .fromTo(
+            '.cnt-intl-visual-inset',
+            { x: -45, y: 40, scale: 0.8, opacity: 0.15 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            0.04
+          )
+          .to(['.cnt-checklist-col', '.cnt-intl-visual-main', '.cnt-intl-visual-inset'], { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.32 }, 0.36)
+          .to('.cnt-checklist-col', { x: -60, opacity: 0.24, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.cnt-intl-col', { scale: 0.85, y: -35, opacity: 0.24, duration: 0.32, ease: 'power2.in' }, 0.68);
 
         // ── 4. EMERGENCY BAND — Opposing split + Footer handoff recession ──
         const emgTl = gsap.timeline({
@@ -199,8 +207,8 @@ export default function Contact() {
           },
         });
         emgTl
-          .fromTo('.cnt-emergency-flex > div:first-child', { x: -90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
-          .fromTo('.cnt-emergency-flex .btn-clinical', { x: 90, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.cnt-emergency-flex > div:first-child', { x: -85, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
+          .fromTo('.cnt-emergency-flex .btn-clinical', { x: 85, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.38 }, 0)
           .to('.cnt-emergency-flex', { scale: 1, opacity: 1, duration: 0.34 }, 0.38)
           .to('.cnt-emergency-flex', { scale: 0.9, y: -24, opacity: 0.32, duration: 0.28 }, 0.72);
       }, pageRef);
@@ -213,7 +221,7 @@ export default function Contact() {
 
   return (
     <div ref={pageRef} className="contact-root">
-      {/* ── 1. CONSULTATION HERO SPLIT ── */}
+      {/* ── 1. CONSULTATION HERO WITH DUAL-IMAGE CLINICAL COLLAGE ── */}
       <section className="cnt-hero-stage" aria-label="Medanta OPD Contact">
         <div className="cnt-hero-wedge" aria-hidden="true" />
 
@@ -265,20 +273,33 @@ export default function Contact() {
             </div>
 
             <div className="cnt-hero-visual">
-              <div className="cnt-hero-visual-scrub">
-                <div className="cnt-stage-float">
+              <div className="cnt-stage-float cnt-collage-canvas">
+                <div className="cnt-collage-primary">
                   <div className="cnt-photo-frame">
-                    <div className="cnt-photo-mask media-reveal-mask">
-                      <img
-                        src={DOCTOR.images.consultation}
-                        alt="Dr. Praveen Chandra reviewing diagnostic records during patient consultation"
-                        loading="eager"
-                      />
-                    </div>
+                    <ResponsiveImage
+                      src={DOCTOR.images.consultation}
+                      alt="Dr. Praveen Chandra reviewing diagnostic records during patient consultation"
+                      priority
+                      objectFit="contain"
+                      sizes="(max-width: 960px) 92vw, 480px"
+                    />
                   </div>
                   <div className="cnt-photo-caption">
                     Outpatient Cardiology Wing · Sector 38, Gurugram
                   </div>
+                </div>
+
+                <div className="cnt-collage-campus">
+                  <div className="cnt-campus-inset-media">
+                    <ResponsiveImage
+                      src="/images/medical/medanta-hospital-gurugram.webp"
+                      alt="Medanta – The Medicity Campus Entrance, Gurugram"
+                      priority
+                      objectFit="cover"
+                      sizes="240px"
+                    />
+                  </div>
+                  <span>Medanta – The Medicity</span>
                 </div>
               </div>
             </div>
@@ -335,7 +356,7 @@ export default function Contact() {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeRoute.id}
-                    className="transit-detail-box"
+                    className="transit-detail-open"
                     initial={{ opacity: 0, x: 14 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -14 }}
@@ -364,7 +385,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* ── 3. PRE-VISIT CHECKLIST & GLOBAL CARE DESK ── */}
+      {/* ── 3. PRE-VISIT CHECKLIST & DUAL-VISUAL INTERNATIONAL CARE PANEL ── */}
       <section className="section cnt-prep-stage" aria-label="Consultation Checklist">
         <div className="container cnt-z1">
           <div className="cnt-prep-grid">
@@ -397,15 +418,25 @@ export default function Contact() {
             </div>
 
             <div className="cnt-intl-col">
-              <div className="cnt-intl-visual">
-                <div className="cnt-intl-mask media-reveal-mask">
-                  <img
-                    src="/images/medical/medanta-hospital-gurugram.webp"
-                    alt="Medanta – The Medicity Hospital Campus, Gurugram"
-                    loading="lazy"
+              <div className="cnt-intl-visual-pair">
+                <div className="cnt-intl-visual-main">
+                  <ResponsiveImage
+                    src="/images/medical/medanta-gurugram-facility.webp"
+                    alt="Medanta – The Medicity Heart Institute Campus, Gurugram"
+                    objectFit="cover"
+                    sizes="(max-width: 960px) 92vw, 520px"
+                  />
+                </div>
+                <div className="cnt-intl-visual-inset">
+                  <ResponsiveImage
+                    src="/images/illustrations/hospital-atrium-concept.webp"
+                    alt="Modern cardiology wing atrium and patient welcome lounge"
+                    objectFit="cover"
+                    sizes="240px"
                   />
                 </div>
               </div>
+
               <div className="cnt-intl-body">
                 <h3>Outstation &amp; International Patient Coordination</h3>
                 <p>

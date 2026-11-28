@@ -14,7 +14,12 @@
   --stage-sapphire: #094d7a;
   --stage-sapphire-rich: #0d6295;
   --stage-teal: #0b6b78;
+  --stage-cinema: #05223a;
+  --stage-cinema-deep: #083457;
+  --stage-warm-stone: #f5f7fa;
+  --stage-mint-tint: #ebf7f5;
   --stage-gradient: linear-gradient(135deg, #084b76 0%, #0b6b7c 100%);
+  --stage-cinema-gradient: linear-gradient(145deg, #05223a 0%, #0a3c63 55%, #0b5d6c 100%);
 
   /* Structural Borders & Ink */
   --border-hairline: #cfe0ee;
@@ -310,6 +315,36 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   overflow: hidden;
   background: var(--canvas-ice);
+}
+
+/* ── Progressive Responsive Image Wrapper ── */
+.resp-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.resp-picture {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resp-img {
+  width: 100%;
+  height: 100%;
+  transition: opacity 260ms ease, transform 360ms var(--ease-out-expo);
+  opacity: 0.92;
+}
+
+.resp-img-wrap.is-loaded .resp-img {
+  opacity: 1;
 }
 
 /* ── Text Selection & Scrollbar ── */

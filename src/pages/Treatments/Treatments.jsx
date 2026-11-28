@@ -1,10 +1,11 @@
-// Treatments.jsx – Catheter therapies catalog with distinct multi-technique GSAP choreography
+// Treatments.jsx – Architectural procedural triad, interactive protocol stage & varied editorial catalog
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AppointmentButton from '../../components/common/AppointmentButton';
+import ResponsiveImage from '../../components/common/ResponsiveImage';
 import SplitHeading from '../../components/motion/SplitHeading';
 import { useAutoCycle } from '../../hooks/useAutoCycle';
 import { animateNumericCounters } from '../../utils/motionHelpers';
@@ -92,41 +93,52 @@ export default function Treatments() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. TREATMENTS HERO — Bold left/right mount + numeric counter + post-settle float + scroll-exit ──
+        // ── 1. TREATMENTS HERO — Left copy + 3-Layer Procedural Triad convergence & inverse exit ──
         const heroMount = gsap.timeline();
         heroMount
           .fromTo(
             '.trt-hero-status-strip',
-            { y: -25, opacity: 0 },
+            { y: -22, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }
           )
           .fromTo(
             '.trt-hero-directive-col',
-            { x: -120, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
+            { x: -110, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.9, ease: 'power3.out' },
             0.05
           )
           .fromTo(
-            '.trt-hero-centerpiece-col',
-            { x: 135, scale: 0.72, rotate: 2.5, opacity: 0 },
-            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.05, ease: 'power3.out' },
+            '.trt-triad-main',
+            { x: 110, scale: 0.78, opacity: 0 },
+            { x: 0, scale: 1, opacity: 1, duration: 1.0, ease: 'power3.out' },
             0.08
           )
-          .fromTo('.trt-hero-directive-col .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.18)
+          .fromTo(
+            '.trt-triad-wing--top',
+            { x: -55, y: -45, scale: 0.72, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out' },
+            0.22
+          )
+          .fromTo(
+            '.trt-triad-wing--bottom',
+            { x: 65, y: 55, scale: 0.72, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.9, ease: 'power3.out' },
+            0.28
+          )
           .fromTo(
             '.trt-hero-headline .split-word-inner',
-            { yPercent: 125, opacity: 0 },
+            { yPercent: 120, opacity: 0 },
             { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
-            0.24
+            0.22
           )
-          .fromTo('.trt-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.48)
+          .fromTo('.trt-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
           .fromTo(
             '.trt-hero-actions > *',
-            { scale: 0.82, y: 18, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
-            0.58
+            { scale: 0.86, y: 16, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.5)' },
+            0.55
           )
-          .fromTo('.trt-metric-item', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }, 0.68);
+          .fromTo('.trt-metric-item', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }, 0.65);
 
         animateNumericCounters('.trt-counter-val', {
           trigger: '.treatments-hero-monument',
@@ -135,7 +147,7 @@ export default function Treatments() {
 
         gsap.to('.trt-stage-float', {
           y: -8,
-          duration: 3.6,
+          duration: 3.8,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
@@ -151,10 +163,12 @@ export default function Treatments() {
           },
         });
         heroExit
-          .to('.trt-hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
-          .to('.trt-hero-visual-scrub', { x: 75, y: -32, scale: 0.84, opacity: 0.2, ease: 'none' }, 0);
+          .to('.trt-hero-copy-inner', { x: -75, y: -24, opacity: 0.22, ease: 'none' }, 0)
+          .to('.trt-triad-main', { scale: 0.86, y: -28, opacity: 0.28, ease: 'none' }, 0)
+          .to('.trt-triad-wing--top', { x: -55, y: -40, scale: 1.08, opacity: 0.35, ease: 'none' }, 0)
+          .to('.trt-triad-wing--bottom', { x: 55, y: 35, scale: 1.08, opacity: 0.35, ease: 'none' }, 0);
 
-        // ── 2. PROCEDURE DIRECTORY — Scrubbed left rail glide + showcase small-to-large growth & layout exit ──
+        // ── 2. PROCEDURE DIRECTORY — Scrubbed rail + display growth ──
         const dirTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.trt-directory-stage',
@@ -167,36 +181,33 @@ export default function Treatments() {
         dirTl
           .fromTo(
             '.dir-section-header .section-heading',
-            { x: -60, color: '#5a738c', opacity: 0.25 },
-            { x: 0, color: '#09223a', opacity: 1, duration: 0.34, ease: 'power2.out' },
+            { x: -55, opacity: 0.25 },
+            { x: 0, opacity: 1, duration: 0.34, ease: 'power2.out' },
             0
           )
-          .fromTo('.dir-section-header .section-lead', { x: 70, opacity: 0.2 }, { x: 0, opacity: 1, duration: 0.34 }, 0)
-          .fromTo('.dir-showcase-rail', { x: -105, opacity: 0.15 }, { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' }, 0)
+          .fromTo('.dir-section-header .section-lead', { x: 65, opacity: 0.2 }, { x: 0, opacity: 1, duration: 0.34 }, 0)
+          .fromTo('.dir-showcase-rail', { x: -95, opacity: 0.18 }, { x: 0, opacity: 1, duration: 0.36, ease: 'power2.out' }, 0)
           .fromTo(
             '.dir-showcase-display',
-            { scale: 0.64, x: 105, y: 60, opacity: 0.15 },
-            { scale: 1.02, x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
+            { scale: 0.7, x: 95, y: 50, opacity: 0.18 },
+            { scale: 1.01, x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
             0
           )
-          // Plateau
           .to('.dir-showcase-display', { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.32 }, 0.36)
           .to('.dir-showcase-rail', { x: 0, opacity: 1, duration: 0.32 }, 0.36)
-          // Exit layout shift
-          .to('.dir-showcase-rail', { x: -85, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68)
-          .to('.dir-showcase-display', { x: -55, scale: 0.78, y: -45, opacity: 0.2, duration: 0.32, ease: 'power2.in' }, 0.68);
+          .to('.dir-showcase-rail', { x: -70, opacity: 0.24, duration: 0.32, ease: 'power2.in' }, 0.68)
+          .to('.dir-showcase-display', { x: 45, scale: 0.84, y: -35, opacity: 0.24, duration: 0.32, ease: 'power2.in' }, 0.68);
 
-        // ── 3. ALTERNATING CATALOG ZIGZAG — Per-row 3-phase opposite diagonal merge, growth plateau & shrink exit ──
+        // ── 3. VARIED EDITORIAL CATALOG BANDS — Distinct per-band motion choreography ──
         gsap.fromTo(
-          '.trt-zigzag-header .section-heading',
-          { x: -60, color: '#5a738c', opacity: 0.25 },
+          '.trt-catalog-header-row .section-heading',
+          { x: -55, opacity: 0.25 },
           {
             x: 0,
-            color: '#09223a',
             opacity: 1,
             ease: 'none',
             scrollTrigger: {
-              trigger: '.trt-zigzag-header',
+              trigger: '.trt-catalog-header-row',
               start: 'top 92%',
               end: 'top 45%',
               scrub: 0.7,
@@ -204,57 +215,64 @@ export default function Treatments() {
           }
         );
 
-        const rows = gsap.utils.toArray('.trt-zigzag-row');
-        rows.forEach((row, i) => {
-          const isEven = i % 2 === 0;
-          const mediaWrap = row.querySelector('.trt-zigzag-media');
-          const textWrap = row.querySelector('.trt-zigzag-text');
-
-          const rowTl = gsap.timeline({
+        const panBands = gsap.utils.toArray('.trt-panorama-band');
+        panBands.forEach((band, idx) => {
+          const media = band.querySelector('.trt-panorama-visual');
+          const copy = band.querySelector('.trt-panorama-copy');
+          const fromLeft = idx % 2 === 0;
+          const tl = gsap.timeline({
             scrollTrigger: {
-              trigger: row,
+              trigger: band,
               start: 'top 95%',
               end: 'bottom 5%',
               scrub: 0.8,
             },
           });
-
-          if (mediaWrap && textWrap) {
-            rowTl
+          if (media && copy) {
+            tl.fromTo(
+              media,
+              { x: fromLeft ? -110 : 110, scale: 0.68, opacity: 0.15 },
+              { x: 0, scale: 1.02, opacity: 1, duration: 0.36, ease: 'power2.out' },
+              0
+            )
               .fromTo(
-                mediaWrap,
-                {
-                  x: isEven ? -115 : 115,
-                  y: 55,
-                  scale: 0.62,
-                  rotate: isEven ? -3 : 3,
-                  opacity: 0.15,
-                },
-                { x: 0, y: 0, scale: 1.02, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
-                0
-              )
-              .fromTo(
-                textWrap,
-                { x: isEven ? 115 : -115, y: -45, opacity: 0.15 },
+                copy,
+                { x: fromLeft ? 105 : -105, y: 35, opacity: 0.15 },
                 { x: 0, y: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
                 0
               )
-              // Plateau
-              .to(mediaWrap, { scale: 1, x: 0, y: 0, opacity: 1, duration: 0.34 }, 0.36)
-              .to(textWrap, { x: 0, y: 0, opacity: 1, duration: 0.34 }, 0.36)
-              // Exit shrink & split
-              .to(mediaWrap, { scale: 0.76, x: isEven ? -65 : 65, y: -35, opacity: 0.2, duration: 0.3, ease: 'power2.in' }, 0.7)
-              .to(textWrap, { x: isEven ? 65 : -65, y: 25, opacity: 0.2, duration: 0.3, ease: 'power2.in' }, 0.7);
+              .to([media, copy], { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.34 }, 0.36)
+              .to(media, { scale: 0.8, x: fromLeft ? -60 : 60, opacity: 0.22, duration: 0.3 }, 0.7)
+              .to(copy, { x: fromLeft ? 60 : -60, opacity: 0.22, duration: 0.3 }, 0.7);
+          }
+        });
+
+        const duoSpreads = gsap.utils.toArray('.trt-duo-spread');
+        duoSpreads.forEach((spread) => {
+          const cards = spread.querySelectorAll('.trt-duo-col');
+          if (cards.length === 2) {
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: spread,
+                start: 'top 94%',
+                end: 'bottom 8%',
+                scrub: 0.8,
+              },
+            });
+            tl.fromTo(cards[0], { x: -85, y: 45, opacity: 0.18 }, { x: 0, y: 0, opacity: 1, duration: 0.38 }, 0)
+              .fromTo(cards[1], { x: 85, y: 65, opacity: 0.18 }, { x: 0, y: 0, opacity: 1, duration: 0.38 }, 0)
+              .to(cards, { x: 0, y: 0, opacity: 1, duration: 0.34 }, 0.38)
+              .to(cards[0], { y: -30, opacity: 0.25, duration: 0.28 }, 0.72)
+              .to(cards[1], { y: -45, opacity: 0.25, duration: 0.28 }, 0.72);
           }
         });
 
         // ── 4. COMPARISON HEADER ──
         gsap.fromTo(
           '.trt-comp-stage-header .section-heading',
-          { x: -60, color: '#5a738c', opacity: 0.25 },
+          { x: -55, opacity: 0.25 },
           {
             x: 0,
-            color: '#09223a',
             opacity: 1,
             ease: 'none',
             scrollTrigger: {
@@ -309,16 +327,16 @@ export default function Treatments() {
 
         if (compareView === 'interactive') {
           compTl
-            .fromTo('.comp-param-bar', { y: 45, opacity: 0.15 }, { y: 0, opacity: 1, duration: 0.32 }, 0)
+            .fromTo('.comp-param-bar', { y: 40, opacity: 0.15 }, { y: 0, opacity: 1, duration: 0.32 }, 0)
             .fromTo(
               '.comp-duel-col:first-child',
-              { x: -120, rotate: -2, opacity: 0.15 },
+              { x: -110, rotate: -1.5, opacity: 0.15 },
               { x: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
               0.04
             )
             .fromTo(
               '.comp-duel-col.is-catheter',
-              { x: 120, rotate: 2, opacity: 0.15 },
+              { x: 110, rotate: 1.5, opacity: 0.15 },
               { x: 0, rotate: 0, opacity: 1, duration: 0.36, ease: 'power2.out' },
               0.04
             )
@@ -328,17 +346,15 @@ export default function Treatments() {
               { scale: 1, rotate: 0, opacity: 1, duration: 0.3, ease: 'back.out(1.6)' },
               0.12
             )
-            // Plateau
             .to('.comp-duel-col', { x: 0, rotate: 0, opacity: 1, duration: 0.32 }, 0.38)
-            // Exit split
-            .to('.comp-duel-col:first-child', { x: -80, opacity: 0.2, duration: 0.3 }, 0.7)
-            .to('.comp-duel-col.is-catheter', { x: 80, opacity: 0.2, duration: 0.3 }, 0.7)
+            .to('.comp-duel-col:first-child', { x: -75, opacity: 0.2, duration: 0.3 }, 0.7)
+            .to('.comp-duel-col.is-catheter', { x: 75, opacity: 0.2, duration: 0.3 }, 0.7)
             .to('.comp-duel-divider', { scale: 0.5, opacity: 0.2, duration: 0.3 }, 0.7);
         } else {
           compTl
-            .fromTo('.trt-table-open', { scale: 0.76, y: 55, opacity: 0.15 }, { scale: 1, y: 0, opacity: 1, duration: 0.36 }, 0)
+            .fromTo('.trt-table-open', { scale: 0.78, y: 55, opacity: 0.15 }, { scale: 1, y: 0, opacity: 1, duration: 0.36 }, 0)
             .to('.trt-table-open', { scale: 1, y: 0, opacity: 1, duration: 0.34 }, 0.36)
-            .to('.trt-table-open', { scale: 0.85, y: -35, opacity: 0.2, duration: 0.3 }, 0.7);
+            .to('.trt-table-open', { scale: 0.86, y: -35, opacity: 0.2, duration: 0.3 }, 0.7);
         }
       }, pageRef);
 
@@ -349,9 +365,17 @@ export default function Treatments() {
     return () => mm.revert();
   }, [compareView]);
 
+  const taviProc = TREATMENTS[0];
+  const mitraProc = TREATMENTS[1];
+  const pciProc = TREATMENTS[2];
+  const acuteProc = TREATMENTS[3];
+  const bmvProc = TREATMENTS[4];
+  const peripheralProc = TREATMENTS[5];
+  const leadlessProc = TREATMENTS[6];
+
   return (
     <div ref={pageRef} className="treatments-root">
-      {/* ── 1. TREATMENTS HERO ── */}
+      {/* ── 1. TREATMENTS HERO WITH 3-LAYER PROCEDURAL TRIAD ── */}
       <section className="treatments-hero-monument" aria-label="Cardiology Treatments Overview">
         <div className="container trt-z1">
           <div className="trt-hero-status-strip">
@@ -400,23 +424,48 @@ export default function Treatments() {
               </div>
             </div>
 
-            <div className="trt-hero-centerpiece-col">
-              <div className="trt-hero-visual-scrub">
-                <div className="trt-stage-float">
-                  <div className="trt-hero-centerpiece">
-                    <div className="trt-centerpiece-visual">
-                      <div className="trt-centerpiece-mask media-reveal-mask">
-                        <img
-                          src="/images/treatments/valve-replacement-tavi.webp"
-                          alt="Transcatheter Aortic Valve Implantation bioprosthetic frame"
-                          loading="eager"
-                        />
-                      </div>
-                    </div>
-                    <div className="trt-centerpiece-readout">
-                      <span>Transcatheter Aortic Valve Implantation · Non-Surgical Femoral Deployment</span>
-                    </div>
+            {/* 3-Layer Procedural Visual Triad */}
+            <div className="trt-hero-triad-col">
+              <div className="trt-stage-float trt-triad-canvas">
+                <div className="trt-triad-main">
+                  <div className="trt-triad-main-media">
+                    <ResponsiveImage
+                      src="/images/treatments/valve-replacement-tavi.webp"
+                      alt="Transcatheter Aortic Valve Implantation bioprosthetic frame"
+                      priority
+                      objectFit="contain"
+                      sizes="(max-width: 900px) 92vw, 440px"
+                    />
                   </div>
+                  <div className="trt-triad-readout">
+                    <span>TAVI / TAVR · Non-Surgical Femoral Valve</span>
+                  </div>
+                </div>
+
+                <div className="trt-triad-wing trt-triad-wing--top">
+                  <div className="trt-triad-wing-media">
+                    <ResponsiveImage
+                      src="/images/illustrations/mitraclip-repair-diagram.webp"
+                      alt="MitraClip percutaneous mitral leaflet clip repair"
+                      priority
+                      objectFit="contain"
+                      sizes="220px"
+                    />
+                  </div>
+                  <span>MitraClip TEER</span>
+                </div>
+
+                <div className="trt-triad-wing trt-triad-wing--bottom">
+                  <div className="trt-triad-wing-media">
+                    <ResponsiveImage
+                      src="/images/illustrations/coronary-stent-ivl.webp"
+                      alt="Intravascular lithotripsy and precision coronary stent"
+                      priority
+                      objectFit="contain"
+                      sizes="220px"
+                    />
+                  </div>
+                  <span>Complex PCI &amp; IVL</span>
                 </div>
               </div>
             </div>
@@ -474,20 +523,20 @@ export default function Treatments() {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeProcedure.id}
-                  className="dir-display-card"
+                  className="dir-display-panel"
                   initial={{ opacity: 0, x: 16 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -16 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <div className="dir-card-media">
-                    <div className="dir-media-mask media-reveal-mask">
-                      <img
-                        src={activeProcedure.image}
-                        alt={activeProcedure.fullName}
-                        loading="eager"
-                      />
-                    </div>
+                    <ResponsiveImage
+                      src={activeProcedure.image}
+                      alt={activeProcedure.fullName}
+                      priority
+                      objectFit="contain"
+                      sizes="(max-width: 900px) 92vw, 560px"
+                    />
                   </div>
 
                   <div className="dir-card-body">
@@ -542,10 +591,10 @@ export default function Treatments() {
         </div>
       </section>
 
-      {/* ── 3. FULL CATALOG ZIGZAG ── */}
-      <section className="section trt-zigzag-stage" aria-label="All Treatment Details">
-        <div className="container trt-z1">
-          <div className="stage-header-row trt-zigzag-header" style={{ marginBottom: '2.5rem' }}>
+      {/* ── 3. VARIED EDITORIAL CLINICAL CATALOG (Zero Repetitive Stacked White Cards) ── */}
+      <section className="trt-catalog-stage" aria-label="All Treatment Details">
+        <div className="container trt-z1 trt-catalog-intro">
+          <div className="stage-header-row trt-catalog-header-row">
             <div>
               <div className="section-kicker">Clinical Catalog</div>
               <SplitHeading
@@ -558,25 +607,63 @@ export default function Treatments() {
               Guided by intravascular imaging, FFR physiology, and multidisciplinary Heart Team planning.
             </p>
           </div>
+        </div>
 
-          <div className="trt-zigzag-list">
-            {TREATMENTS.map((trt, idx) => {
-              const isEven = idx % 2 === 0;
-              return (
-                <article
-                  id={trt.id}
-                  key={trt.id}
-                  className={`trt-zigzag-row ${isEven ? 'is-normal' : 'is-reversed'}`}
-                >
-                  <div className="trt-zigzag-media">
-                    <div className="trt-zigzag-mask media-reveal-mask">
-                      <img src={trt.image} alt={trt.fullName} loading="lazy" />
-                    </div>
+        {/* Band A: TAVI Structural Flagship Panorama */}
+        <article id={taviProc.id} className="trt-panorama-band trt-panorama-band--light">
+          <div className="container trt-panorama-grid">
+            <div className="trt-panorama-visual">
+              <ResponsiveImage
+                src={taviProc.image}
+                alt={taviProc.fullName}
+                objectFit="contain"
+                sizes="(max-width: 900px) 92vw, 520px"
+              />
+            </div>
+            <div className="trt-panorama-copy">
+              <div className="trt-cat-meta">
+                <span className="tabular-nums">01</span>
+                <span> · </span>
+                <span>{taviProc.category}</span>
+                {taviProc.pioneer && (
+                  <>
+                    <span> · </span>
+                    <span className="trt-meta-gold">{taviProc.pioneerLabel}</span>
+                  </>
+                )}
+              </div>
+              <h3>{taviProc.name}</h3>
+              <div className="trt-cat-sub">{taviProc.fullName}</div>
+              <p>{taviProc.description}</p>
+              <ul className="trt-cat-points">
+                {taviProc.details.slice(0, 3).map((pt) => (
+                  <li key={pt}>{pt}</li>
+                ))}
+              </ul>
+              <div className="trt-cat-action">
+                <AppointmentButton variant="primary" size="md" label="Evaluate TAVI Candidacy" />
+              </div>
+            </div>
+          </div>
+        </article>
+
+        {/* Band B: Asymmetric 2-Up Editorial Spread — MitraClip & Complex PCI */}
+        <div className="trt-duo-band trt-duo-band--white">
+          <div className="container">
+            <div className="trt-duo-spread">
+              {[mitraProc, pciProc].map((trt, i) => (
+                <article id={trt.id} key={trt.id} className="trt-duo-col">
+                  <div className="trt-duo-visual">
+                    <ResponsiveImage
+                      src={trt.image}
+                      alt={trt.fullName}
+                      objectFit="contain"
+                      sizes="(max-width: 900px) 92vw, 540px"
+                    />
                   </div>
-
-                  <div className="trt-zigzag-text">
-                    <div className="trt-zigzag-meta">
-                      <span className="tabular-nums">0{idx + 1}</span>
+                  <div className="trt-duo-copy">
+                    <div className="trt-cat-meta">
+                      <span className="tabular-nums">0{i + 2}</span>
                       <span> · </span>
                       <span>{trt.category}</span>
                       {trt.pioneer && (
@@ -587,22 +674,130 @@ export default function Treatments() {
                       )}
                     </div>
                     <h3>{trt.name}</h3>
-                    <div className="trt-zigzag-sub">{trt.fullName}</div>
+                    <div className="trt-cat-sub">{trt.fullName}</div>
                     <p>{trt.description}</p>
-                    <ul className="trt-zigzag-points">
+                    <ul className="trt-cat-points">
                       {trt.details.slice(0, 3).map((pt) => (
                         <li key={pt}>{pt}</li>
                       ))}
                     </ul>
-                    <div style={{ marginTop: '1.25rem' }}>
-                      <AppointmentButton variant="primary" size="md" label="Evaluate Candidacy" />
+                    <div className="trt-cat-action">
+                      <AppointmentButton variant="secondary" size="md" label="Evaluate Candidacy" />
                     </div>
                   </div>
                 </article>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Band C: High-Contrast Sapphire Contrast Feature — 24/7 Acute MI */}
+        <article id={acuteProc.id} className="trt-panorama-band trt-panorama-band--sapphire">
+          <div className="container trt-panorama-grid trt-panorama-grid--flipped">
+            <div className="trt-panorama-copy">
+              <div className="trt-cat-meta trt-cat-meta--light">
+                <span className="tabular-nums">04</span>
+                <span> · </span>
+                <span>{acuteProc.category}</span>
+                {acuteProc.pioneer && (
+                  <>
+                    <span> · </span>
+                    <span className="trt-meta-gold-light">{acuteProc.pioneerLabel}</span>
+                  </>
+                )}
+              </div>
+              <h3>{acuteProc.name}</h3>
+              <div className="trt-cat-sub trt-cat-sub--light">{acuteProc.fullName}</div>
+              <p>{acuteProc.description}</p>
+              <ul className="trt-cat-points trt-cat-points--light">
+                {acuteProc.details.slice(0, 3).map((pt) => (
+                  <li key={pt}>{pt}</li>
+                ))}
+              </ul>
+              <div className="trt-cat-action">
+                <AppointmentButton variant="white" size="md" label="24/7 Heart Emergency Protocol" />
+              </div>
+            </div>
+            <div className="trt-panorama-visual trt-panorama-visual--dark">
+              <ResponsiveImage
+                src={acuteProc.image}
+                alt={acuteProc.fullName}
+                objectFit="contain"
+                sizes="(max-width: 900px) 92vw, 520px"
+              />
+            </div>
+          </div>
+        </article>
+
+        {/* Band D: Warm Stone 2-Up Editorial Spread — BMV & Vascular / Carotid / AAA */}
+        <div className="trt-duo-band trt-duo-band--stone">
+          <div className="container">
+            <div className="trt-duo-spread">
+              {[bmvProc, peripheralProc].map((trt, i) => (
+                <article id={trt.id} key={trt.id} className="trt-duo-col">
+                  <div className="trt-duo-visual">
+                    <ResponsiveImage
+                      src={trt.image}
+                      alt={trt.fullName}
+                      objectFit="contain"
+                      sizes="(max-width: 900px) 92vw, 540px"
+                    />
+                  </div>
+                  <div className="trt-duo-copy">
+                    <div className="trt-cat-meta">
+                      <span className="tabular-nums">0{i + 5}</span>
+                      <span> · </span>
+                      <span>{trt.category}</span>
+                    </div>
+                    <h3>{trt.name}</h3>
+                    <div className="trt-cat-sub">{trt.fullName}</div>
+                    <p>{trt.description}</p>
+                    <ul className="trt-cat-points">
+                      {trt.details.slice(0, 3).map((pt) => (
+                        <li key={pt}>{pt}</li>
+                      ))}
+                    </ul>
+                    <div className="trt-cat-action">
+                      <AppointmentButton variant="secondary" size="md" label="Evaluate Candidacy" />
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Band E: Final Leadless Pacing Wide Showcase */}
+        <article id={leadlessProc.id} className="trt-panorama-band trt-panorama-band--ice">
+          <div className="container trt-panorama-grid">
+            <div className="trt-panorama-visual">
+              <ResponsiveImage
+                src={leadlessProc.image}
+                alt={leadlessProc.fullName}
+                objectFit="contain"
+                sizes="(max-width: 900px) 92vw, 520px"
+              />
+            </div>
+            <div className="trt-panorama-copy">
+              <div className="trt-cat-meta">
+                <span className="tabular-nums">07</span>
+                <span> · </span>
+                <span>{leadlessProc.category}</span>
+              </div>
+              <h3>{leadlessProc.name}</h3>
+              <div className="trt-cat-sub">{leadlessProc.fullName}</div>
+              <p>{leadlessProc.description}</p>
+              <ul className="trt-cat-points">
+                {leadlessProc.details.slice(0, 3).map((pt) => (
+                  <li key={pt}>{pt}</li>
+                ))}
+              </ul>
+              <div className="trt-cat-action">
+                <AppointmentButton variant="primary" size="md" label="Consult for Leadless Pacing" />
+              </div>
+            </div>
+          </div>
+        </article>
       </section>
 
       {/* ── 4. SURGERY VS CATHETER COMPARISON ── */}

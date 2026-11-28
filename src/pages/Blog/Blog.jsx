@@ -1,9 +1,10 @@
-// Blog.jsx – Editorial cardiology archive with word reveals, counters, curtain masks, and staggered card tilts
+// Blog.jsx – Editorial cardiology knowledge base with publication-collage hero, wide lead spread & scrubbed article grid
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitHeading from '../../components/motion/SplitHeading';
+import ResponsiveImage from '../../components/common/ResponsiveImage';
 import { animateNumericCounters } from '../../utils/motionHelpers';
 import { BLOG_POSTS } from '../../data/blogData';
 import { CONTACT_INFO } from '../../data/doctorData';
@@ -31,39 +32,58 @@ export default function Blog() {
     currentPage * POSTS_PER_PAGE
   );
 
+  // Separate lead feature from staggered grid when multiple articles exist
+  const hasLeadFeature = currentPosts.length > 1;
+  const leadPost = hasLeadFeature ? currentPosts[0] : null;
+  const gridPosts = hasLeadFeature ? currentPosts.slice(1) : currentPosts;
+
   const handleCategoryChange = (cat) => {
     setSelectedCategory(cat);
     setCurrentPage(1);
   };
 
-  // Static page sections: Bold Hero mount + float + scroll-exit, Filter Bar, and Consultation Ribbon
   useEffect(() => {
     const mm = gsap.matchMedia();
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
+        // ── 1. EDITORIAL PUBLICATION COLLAGE HERO — Multi-visual layered entrance + float + scroll separation ──
         const heroMount = gsap.timeline();
         heroMount
+          .fromTo('.blog-hero-content', { x: -110, opacity: 0 }, { x: 0, opacity: 1, duration: 0.92, ease: 'power3.out' })
           .fromTo(
-            '.blog-hero-content',
-            { x: -120, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.95, ease: 'power3.out' }
-          )
-          .fromTo(
-            '.blog-hero-graphic-col',
-            { x: 135, scale: 0.72, rotate: 2.5, opacity: 0 },
-            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 1.05, ease: 'power3.out' },
+            '.blog-hero-primary-panel',
+            { x: 110, scale: 0.78, rotate: 2, opacity: 0 },
+            { x: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
             0.06
           )
-          .fromTo('.blog-hero-content .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.16)
+          .fromTo(
+            '.blog-pub-spread-top',
+            { x: -65, y: -50, scale: 0.72, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
+            0.26
+          )
+          .fromTo(
+            '.blog-pub-spread-left',
+            { x: -75, y: 55, scale: 0.72, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
+            0.34
+          )
+          .fromTo(
+            '.blog-pub-spread-bottom',
+            { x: 65, y: 55, scale: 0.72, opacity: 0 },
+            { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.85, ease: 'back.out(1.4)' },
+            0.4
+          )
+          .fromTo('.blog-hero-content .section-kicker', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5 }, 0.16)
           .fromTo(
             '.blog-hero-title .split-word-inner',
             { yPercent: 125, opacity: 0 },
-            { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
+            { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.055, ease: 'power3.out' },
             0.22
           )
-          .fromTo('.blog-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.45)
-          .fromTo('.blog-stat-item', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }, 0.58);
+          .fromTo('.blog-hero-lead', { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55 }, 0.44)
+          .fromTo('.blog-stat-item', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48, stagger: 0.08 }, 0.54);
 
         animateNumericCounters('.blog-stat-num', {
           trigger: '.blog-hero-monument',
@@ -72,11 +92,27 @@ export default function Blog() {
 
         gsap.to('.blog-stage-float', {
           y: -8,
-          duration: 3.6,
+          duration: 3.8,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
           delay: 1.15,
+        });
+        gsap.to('.blog-pub-spread-top', {
+          y: 6,
+          duration: 3.2,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 1.2,
+        });
+        gsap.to('.blog-pub-spread-bottom', {
+          y: -7,
+          duration: 3.4,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: 1.3,
         });
 
         const heroExit = gsap.timeline({
@@ -88,12 +124,12 @@ export default function Blog() {
           },
         });
         heroExit
-          .to('.blog-hero-copy-inner', { x: -75, y: -24, opacity: 0.2, ease: 'none' }, 0)
-          .to('.blog-hero-visual-scrub', { x: 75, y: -32, scale: 0.84, opacity: 0.2, ease: 'none' }, 0);
+          .to('.blog-hero-copy-inner', { x: -70, y: -24, opacity: 0.22, ease: 'none' }, 0)
+          .to('.blog-hero-visual-scrub', { x: 70, y: -30, scale: 0.85, opacity: 0.22, ease: 'none' }, 0);
 
         gsap.fromTo(
           '.blog-filter-bar',
-          { x: -65, opacity: 0.2 },
+          { x: -60, opacity: 0.2 },
           {
             x: 0,
             opacity: 1,
@@ -128,15 +164,34 @@ export default function Blog() {
     return () => mm.revert();
   }, []);
 
-  // Article grid cards: per-card 3-phase scrubbed scale, subtle rotation, plateau, and shrink exit
+  // Lead editorial banner + staggered grid cards
   useEffect(() => {
     const mm = gsap.matchMedia();
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
+        if (document.querySelector('.blog-lead-spread')) {
+          gsap.fromTo(
+            '.blog-lead-spread',
+            { scale: 0.88, y: 40, opacity: 0.2 },
+            {
+              scale: 1,
+              y: 0,
+              opacity: 1,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: '.blog-lead-spread',
+                start: 'top 95%',
+                end: 'top 52%',
+                scrub: 0.7,
+              },
+            }
+          );
+        }
+
         const cards = gsap.utils.toArray('.blog-compact-card');
         cards.forEach((card, i) => {
-          const rot = i % 3 === 0 ? -2.8 : i % 3 === 2 ? 2.8 : 0;
+          const rot = i % 3 === 0 ? -2.2 : i % 3 === 2 ? 2.2 : 0;
           const cardTl = gsap.timeline({
             scrollTrigger: {
               trigger: card,
@@ -149,12 +204,12 @@ export default function Blog() {
           cardTl
             .fromTo(
               card,
-              { scale: 0.76, y: 60, rotate: rot, opacity: 0.18 },
+              { scale: 0.78, y: 55, rotate: rot, opacity: 0.2 },
               { scale: 1, y: 0, rotate: 0, opacity: 1, duration: 0.34, ease: 'power2.out' },
               0
             )
             .to(card, { scale: 1, y: 0, rotate: 0, opacity: 1, duration: 0.38 }, 0.34)
-            .to(card, { scale: 0.84, y: -28, opacity: 0.28, duration: 0.28, ease: 'power2.in' }, 0.72);
+            .to(card, { scale: 0.86, y: -26, opacity: 0.3, duration: 0.28, ease: 'power2.in' }, 0.72);
         });
       }, pageRef);
 
@@ -167,7 +222,7 @@ export default function Blog() {
 
   return (
     <div ref={pageRef} className="blog-page-root">
-      {/* ── 1. CLEAN CLINICAL BLOG HERO ── */}
+      {/* ── 1. MULTI-LAYER PUBLICATION COLLAGE HERO ── */}
       <section className="blog-hero-monument" aria-label="Cardiology Insights & Articles">
         <div className="container blog-z1">
           <div className="blog-hero-split-grid">
@@ -199,20 +254,59 @@ export default function Blog() {
               </div>
             </div>
 
+            {/* Layered Editorial Collage replacing lonely right square */}
             <div className="blog-hero-graphic-col">
               <div className="blog-hero-visual-scrub">
-                <div className="blog-stage-float">
-                  <div className="blog-hero-graphic-frame">
-                    <div className="blog-hero-mask media-reveal-mask">
-                      <img
-                        src="/images/illustrations/coronary-stent-ivl.webp"
-                        alt="Precision Coronary Interventions and Catheter Therapeutics"
-                        loading="eager"
-                      />
+                <div className="blog-collage-stage">
+                  {/* Top Editorial Spread */}
+                  <div className="blog-pub-spread blog-pub-spread-top" aria-hidden="true">
+                    <ResponsiveImage
+                      src="/images/publications/tavi-multidisciplinary-planning.webp"
+                      alt=""
+                      objectFit="cover"
+                      sizes="180px"
+                    />
+                    <span>TAVI Planning</span>
+                  </div>
+
+                  {/* Left Clinical Spread */}
+                  <div className="blog-pub-spread blog-pub-spread-left" aria-hidden="true">
+                    <ResponsiveImage
+                      src="/images/publications/complex-coronary-disease.webp"
+                      alt=""
+                      objectFit="cover"
+                      sizes="170px"
+                    />
+                    <span>Complex PCI</span>
+                  </div>
+
+                  {/* Centerpiece Graphic */}
+                  <div className="blog-stage-float blog-hero-primary-panel">
+                    <div className="blog-hero-graphic-frame">
+                      <div className="blog-hero-mask media-reveal-mask">
+                        <ResponsiveImage
+                          src="/images/illustrations/coronary-stent-ivl.webp"
+                          alt="Precision Coronary Interventions and Catheter Therapeutics"
+                          priority
+                          objectFit="contain"
+                          sizes="(max-width: 960px) 92vw, 440px"
+                        />
+                      </div>
+                      <div className="blog-hero-graphic-caption">
+                        <span>Evidence-Based Structural &amp; Coronary Literature</span>
+                      </div>
                     </div>
-                    <div className="blog-hero-graphic-caption">
-                      <span>Evidence-Based Structural &amp; Coronary Clinical Literature</span>
-                    </div>
+                  </div>
+
+                  {/* Bottom Editorial Spread */}
+                  <div className="blog-pub-spread blog-pub-spread-bottom" aria-hidden="true">
+                    <ResponsiveImage
+                      src="/images/publications/cardiovascular-risk-management.webp"
+                      alt=""
+                      objectFit="cover"
+                      sizes="190px"
+                    />
+                    <span>Preventive Cardiology</span>
                   </div>
                 </div>
               </div>
@@ -221,7 +315,7 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* ── 2. COMPACT BLOG LISTING ── */}
+      {/* ── 2. EDITORIAL LEAD SPREAD + STAGGERED ARTICLE GRID ── */}
       <section className="section blog-listing-stage" aria-label="All Blog Articles">
         <div className="container blog-z1">
           <div className="blog-filter-bar" role="tablist" aria-label="Filter articles by category">
@@ -239,11 +333,51 @@ export default function Blog() {
             ))}
           </div>
 
+          {/* Wide Editorial Lead Article (breaks uniform card grid) */}
+          {leadPost && (
+            <article className="blog-lead-spread">
+              <div className="blog-lead-media">
+                <ResponsiveImage
+                  src={leadPost.image}
+                  fallbackSrc="/images/publications/tavi-multidisciplinary-planning.webp"
+                  alt={leadPost.title}
+                  objectFit="contain"
+                  sizes="(max-width: 960px) 92vw, 520px"
+                />
+              </div>
+              <div className="blog-lead-body">
+                <div className="blog-compact-meta">
+                  <span className="blog-lead-tag">Featured Clinical Guide</span>
+                  <span aria-hidden="true">·</span>
+                  {leadPost.category && (
+                    <>
+                      <span className="blog-compact-cat-text">{leadPost.category}</span>
+                      <span aria-hidden="true">·</span>
+                    </>
+                  )}
+                  <span>{leadPost.date}</span>
+                </div>
+                <h2 className="blog-lead-title">
+                  <Link to={`/blog/${leadPost.slug}`}>{leadPost.title}</Link>
+                </h2>
+                <Link to={`/blog/${leadPost.slug}`} className="btn-clinical btn-clinical--primary">
+                  Read Full Monograph →
+                </Link>
+              </div>
+            </article>
+          )}
+
           <div className="blog-compact-grid">
-            {currentPosts.map((post) => (
+            {gridPosts.map((post) => (
               <article key={post.id} className="blog-compact-card">
                 <div className="blog-compact-thumb">
-                  <img src={post.image} alt={post.title} loading="lazy" />
+                  <ResponsiveImage
+                    src={post.image}
+                    fallbackSrc="/images/illustrations/coronary-stent-ivl.webp"
+                    alt={post.title}
+                    objectFit="contain"
+                    sizes="(max-width: 768px) 92vw, 360px"
+                  />
                 </div>
 
                 <div className="blog-compact-body">
@@ -327,7 +461,7 @@ export default function Blog() {
               href={CONTACT_INFO.appointmentUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-clinical btn-clinical--primary"
+              className="btn-clinical btn-clinical--light"
             >
               Book Consultation at Medanta ↗
             </a>

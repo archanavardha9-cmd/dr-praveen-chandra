@@ -1,10 +1,26 @@
-/* Footer.css – Bright hospital footer */
+/* Footer.css – Crisp architectural medical footer with animated horizon accent */
 
 .site-footer {
-  background: var(--canvas-ice);
-  border-top: 1px solid var(--border-hairline);
-  padding: 3.5rem 0 2rem;
+  position: relative;
+  background: linear-gradient(180deg, #f2f8fd 0%, #eaf3fb 100%);
+  border-top: 1px solid var(--border-strong);
+  padding: 3.75rem 0 2.25rem;
   color: var(--ink-body);
+  overflow: hidden;
+}
+
+.footer-top-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-teal) 55%, var(--accent-gold) 100%);
+  transform-origin: center center;
+}
+
+.footer-rise-wrap {
+  will-change: transform;
 }
 
 .footer-top-grid {
@@ -12,16 +28,20 @@
   grid-template-columns: 1.5fr 0.85fr 1fr 1.25fr;
   gap: 2.5rem;
   padding-bottom: 2.5rem;
-  border-bottom: 1px solid var(--border-hairline);
 }
 
 .footer-wordmark {
   display: inline-block;
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: var(--ink-primary);
   margin-bottom: 0.45rem;
+  transition: color 180ms ease;
+}
+
+.footer-wordmark:hover {
+  color: var(--accent-blue);
 }
 
 .footer-role-line {
@@ -42,9 +62,16 @@
 .footer-fellowship-line {
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink-primary);
   letter-spacing: 0.04em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.25rem;
+}
+
+.footer-fellowship-item {
+  display: inline-block;
 }
 
 .footer-sep {
@@ -67,19 +94,21 @@
 }
 
 .footer-link-list a {
+  display: inline-block;
   font-size: 0.88rem;
   color: var(--ink-muted);
-  transition: color 180ms ease;
+  transition: color 180ms ease, transform 200ms var(--ease-out-expo);
 }
 
 .footer-link-list a:hover {
   color: var(--accent-blue);
+  transform: translateX(4px);
 }
 
 .footer-contact-dl {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.78rem;
 }
 
 .footer-contact-dl dt {
@@ -100,7 +129,13 @@
 
 .footer-emergency-link {
   color: var(--accent-coral);
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.footer-divider-rule {
+  height: 1px;
+  background: var(--border-strong);
+  transform-origin: left center;
 }
 
 .footer-bottom-bar {
@@ -126,6 +161,9 @@
 }
 
 @media (max-width: 640px) {
+  .site-footer {
+    padding: 2.75rem 0 1.75rem;
+  }
   .footer-top-grid {
     grid-template-columns: 1fr;
     gap: 1.75rem;

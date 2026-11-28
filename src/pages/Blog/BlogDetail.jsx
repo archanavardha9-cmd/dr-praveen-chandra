@@ -1,9 +1,10 @@
-// BlogDetail.jsx – Dedicated full-length article detail page with word-by-word title, shutter image reveal, and sidebar glide
+// BlogDetail.jsx – Dedicated full-length article detail page preserving exact clinical prose with ResponsiveImage & scroll choreography
 import { useEffect, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitHeading from '../../components/motion/SplitHeading';
+import ResponsiveImage from '../../components/common/ResponsiveImage';
 import { BLOG_POSTS } from '../../data/blogData';
 import { DOCTOR, CONTACT_INFO } from '../../data/doctorData';
 import './Blog.css';
@@ -23,7 +24,6 @@ export default function BlogDetail() {
     const mm = gsap.matchMedia();
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. HEADER MOUNT & SCROLL-EXIT ──
         const headerMount = gsap.timeline();
         headerMount
           .fromTo('.blog-breadcrumbs', { x: -90, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: 'power3.out' })
@@ -37,7 +37,7 @@ export default function BlogDetail() {
           .fromTo('.blog-detail-meta-bar', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.58, ease: 'power3.out' }, 0.42);
 
         gsap.to('.blog-detail-header-inner', {
-          y: -26,
+          y: -24,
           opacity: 0.25,
           ease: 'none',
           scrollTrigger: {
@@ -48,7 +48,6 @@ export default function BlogDetail() {
           },
         });
 
-        // ── 2. ARTICLE IMAGE 3-PHASE SCRUBBED GROWTH & SIDEBAR GLIDE ──
         if (document.querySelector('.blog-hero-image-frame')) {
           const heroImgTl = gsap.timeline({
             scrollTrigger: {
@@ -59,14 +58,14 @@ export default function BlogDetail() {
             },
           });
           heroImgTl
-            .fromTo('.blog-hero-image-frame', { scale: 0.68, y: 55, opacity: 0.2 }, { scale: 1.03, y: 0, opacity: 1, duration: 0.36 }, 0)
+            .fromTo('.blog-hero-image-frame', { scale: 0.72, y: 45, opacity: 0.2 }, { scale: 1.02, y: 0, opacity: 1, duration: 0.36 }, 0)
             .to('.blog-hero-image-frame', { scale: 1, y: 0, opacity: 1, duration: 0.34 }, 0.36)
-            .to('.blog-hero-image-frame', { scale: 0.82, y: -35, opacity: 0.25, duration: 0.3 }, 0.7);
+            .to('.blog-hero-image-frame', { scale: 0.86, y: -30, opacity: 0.3, duration: 0.3 }, 0.7);
         }
 
         gsap.fromTo(
           '.blog-sidebar',
-          { x: 95, opacity: 0.2 },
+          { x: 90, opacity: 0.2 },
           {
             x: 0,
             opacity: 1,
@@ -80,7 +79,6 @@ export default function BlogDetail() {
           }
         );
 
-        // ── 3. CTA RIBBON HANDOFF ──
         const ctaTl = gsap.timeline({
           scrollTrigger: {
             trigger: '.blog-cta-ribbon',
@@ -151,12 +149,18 @@ export default function BlogDetail() {
       <section className="section blog-detail-stage">
         <div className="container blog-z1">
           <div className="blog-detail-layout">
-            {/* Main Longform Article: Exact Raw HTML from Official Source */}
             <article className="blog-article-body">
               {post.image && (
                 <div className="blog-hero-image-frame">
                   <div className="blog-hero-image-mask media-reveal-mask">
-                    <img src={post.image} alt={post.title} loading="eager" />
+                    <ResponsiveImage
+                      src={post.image}
+                      fallbackSrc="/images/illustrations/coronary-stent-ivl.webp"
+                      alt={post.title}
+                      priority
+                      objectFit="contain"
+                      sizes="(max-width: 960px) 92vw, 760px"
+                    />
                   </div>
                 </div>
               )}
@@ -168,7 +172,6 @@ export default function BlogDetail() {
               />
             </article>
 
-            {/* Sidebar */}
             <aside className="blog-sidebar">
               <div className="blog-sidebar-card">
                 <h3>About Dr. Praveen Chandra</h3>
@@ -214,7 +217,7 @@ export default function BlogDetail() {
               href={CONTACT_INFO.appointmentUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-clinical btn-clinical--primary"
+              className="btn-clinical btn-clinical--light"
             >
               Schedule Consultation ↗
             </a>
