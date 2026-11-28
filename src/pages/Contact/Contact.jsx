@@ -222,20 +222,20 @@ export default function Contact() {
               </a>
             </div>
             <dl className="cnt-quick-facts">
-              <div>
+              <div className="cnt-fact-block">
                 <dt>Direct OPD Lines</dt>
                 <dd className="tabular-nums">
                   <a href={`tel:${CONTACT_INFO.phones[0]}`}>{CONTACT_INFO.phones[0]}</a> ·{' '}
                   <a href={`tel:${CONTACT_INFO.phones[1]}`}>{CONTACT_INFO.phones[1]}</a>
                 </dd>
               </div>
-              <div>
+              <div className="cnt-fact-block">
                 <dt>Clinical Email</dt>
                 <dd>
                   <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>
                 </dd>
               </div>
-              <div>
+              <div className="cnt-fact-block">
                 <dt>24/7 Cardiac Emergency</dt>
                 <dd className="tabular-nums">
                   Medanta Helpline {CONTACT_INFO.emergencyLine} · Board {CONTACT_INFO.hospitalBoard}

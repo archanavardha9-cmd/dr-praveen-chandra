@@ -8,9 +8,9 @@
 /* ── 1. CENTERED CATHETER THERAPIES HERO WITH PROCEDURE CHIPS ── */
 .treatments-hero-monument {
   position: relative;
-  background: radial-gradient(circle at 82% 24%, rgba(0, 91, 148, 0.1) 0%, transparent 56%),
-    linear-gradient(180deg, #f5fafe 0%, #ffffff 100%);
-  padding: clamp(28px, 4vw, 48px) 0 clamp(48px, 6vw, 76px);
+  background: radial-gradient(circle at 82% 24%, rgba(0, 91, 148, 0.08) 0%, transparent 56%),
+    linear-gradient(180deg, #eef4fb 0%, #e3eef7 100%);
+  padding: clamp(24px, 3.5vw, 42px) 0 clamp(42px, 5.5vw, 68px);
   overflow: hidden;
   border-bottom: 1px solid var(--border-hairline);
 }

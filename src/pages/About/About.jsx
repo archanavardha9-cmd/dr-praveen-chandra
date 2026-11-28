@@ -82,17 +82,10 @@ export default function About() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        // ── 1. HERO EDITORIAL CENTERED — Circular portrait reveal + typography cascade ──
+        // ── 1. HERO EDITORIAL CENTERED — Typography cascade + portrait reveal + labels below ──
         const heroMount = gsap.timeline();
         heroMount
           .fromTo('.about-hero-wedge', { xPercent: -45, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1.0, ease: 'power3.out' })
-          .fromTo(
-            '.about-portrait-center',
-            { scale: 0.6, y: 40, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.95, ease: 'back.out(1.4)' },
-            0.05
-          )
-          .fromTo('.about-portrait-inset', { x: 50, y: 40, scale: 0.6, opacity: 0, rotate: -8 }, { x: 0, y: 0, scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: 'back.out(1.4)' }, 0.3)
           .fromTo(
             '.about-hero-kicker',
             { y: 30, opacity: 0 },
@@ -107,9 +100,15 @@ export default function About() {
           )
           .fromTo('.about-role-sub', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.4)
           .fromTo('.about-short-bio', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.5)
-          .fromTo('.about-fact-chip', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.07, ease: 'power3.out' }, 0.58)
-          .fromTo('.about-hero-center-actions > *', { scale: 0.84, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' }, 0.7)
-          .fromTo('.about-portrait-caption-center', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.78);
+          .fromTo(
+            '.about-portrait-center',
+            { scale: 0.6, y: 40, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.95, ease: 'back.out(1.4)' },
+            0.6
+          )
+          .fromTo('.about-portrait-caption-center', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.75)
+          .fromTo('.about-fact-chip', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.07, ease: 'power3.out' }, 0.8)
+          .fromTo('.about-hero-center-actions > *', { scale: 0.84, y: 16, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' }, 0.88);
 
         gsap.to('.about-portrait-frame-center img', {
           y: -8,
@@ -118,14 +117,6 @@ export default function About() {
           yoyo: true,
           ease: 'sine.inOut',
           delay: 1.15,
-        });
-        gsap.to('.about-portrait-inset img', {
-          y: 7,
-          duration: 3.1,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.25,
         });
 
         const heroExit = gsap.timeline({
@@ -225,29 +216,7 @@ export default function About() {
 
         <div className="container abt-z1">
           <div className="about-hero-center">
-            {/* Circular Portrait */}
-            <div className="about-portrait-center">
-              <div className="about-portrait-ring" aria-hidden="true" />
-              <div className="about-portrait-frame-center">
-                <ResponsiveImage
-                  src={DOCTOR.images.profile}
-                  alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
-                  priority
-                  objectFit="cover"
-                  sizes="(max-width: 600px) 80vw, 400px"
-                />
-              </div>
-              <div className="about-portrait-inset" aria-hidden="true">
-                <ResponsiveImage
-                  src={DOCTOR.images.awardPodium}
-                  alt=""
-                  objectFit="cover"
-                  sizes="110px"
-                />
-                <span className="about-portrait-inset-label">Padma Shri 2016</span>
-              </div>
-            </div>
-
+            {/* Heading and Introductory Text */}
             <p className="about-hero-kicker">
               Clinical Monograph · King George’s Medical College Alumnus
             </p>
@@ -259,21 +228,35 @@ export default function About() {
               Chairman of Interventional Cardiology at Medanta – The Medicity and pioneer of TAVI, MitraClip, and percutaneous myocardial laser revascularization in India.
             </p>
 
+            {/* Main Circular Portrait */}
+            <div className="about-portrait-center">
+              <div className="about-portrait-ring" aria-hidden="true" />
+              <div className="about-portrait-frame-center">
+                <ResponsiveImage
+                  src={DOCTOR.images.profile}
+                  alt="Dr. Praveen Chandra — Chairman, Interventional Cardiology at Medanta"
+                  priority
+                  objectFit="cover"
+                  objectPosition="center"
+                  sizes="(max-width: 600px) 80vw, 400px"
+                />
+              </div>
+            </div>
+
+            {/* Labels, Professional Details & Buttons Below Image */}
+            <div className="about-portrait-caption-center">
+              Padma Shri 2016 · Medanta – The Medicity, Gurugram
+            </div>
             <div className="about-hero-facts-mini">
               <span className="about-fact-chip">MBBS 1985 · MD 1989 · DM Cardiology 1991</span>
               <span className="about-fact-chip">FACC · FESC · FSCAI · FAPSIC · FCSI</span>
               <span className="about-fact-chip">Padma Shri Award (2016)</span>
             </div>
-
             <div className="about-hero-center-actions">
               <AppointmentButton variant="primary" size="lg" label="Book Consultation" />
               <Link to="/treatments" className="btn-clinical btn-clinical--secondary">
                 Clinical Specialties →
               </Link>
-            </div>
-
-            <div className="about-portrait-caption-center">
-              Padma Shri 2016 · Medanta – The Medicity, Gurugram
             </div>
           </div>
         </div>

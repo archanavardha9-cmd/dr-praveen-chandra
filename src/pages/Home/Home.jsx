@@ -148,25 +148,13 @@ export default function Home() {
             0.25
           )
           .fromTo(
-            '.hero-portrait-companion--top',
-            { x: -60, y: -40, scale: 0.6, opacity: 0, rotate: -5 },
-            { x: 0, y: 0, scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: 'back.out(1.4)' },
-            0.4
-          )
-          .fromTo(
-            '.hero-portrait-companion--bottom',
-            { x: 60, y: 50, scale: 0.6, opacity: 0, rotate: 5 },
-            { x: 0, y: 0, scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: 'back.out(1.4)' },
-            0.45
-          )
-          .fromTo(
             '.hero-center-actions > *',
             { scale: 0.84, y: 18, opacity: 0 },
             { scale: 1, y: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.6)' },
             0.55
           )
           .fromTo(
-            '.hero-center-metric',
+            '.hero-center-metric-row',
             { y: 20, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
             0.65
@@ -178,29 +166,13 @@ export default function Home() {
         });
 
         // Subtle continuous floating motion after hero settles
-        gsap.to('.hero-portrait-main img', {
+        gsap.to('.hero-portrait-frame-inner img', {
           y: -8,
           duration: 3.8,
           repeat: -1,
           yoyo: true,
           ease: 'sine.inOut',
           delay: 1.15,
-        });
-        gsap.to('.hero-portrait-companion--top img', {
-          y: 6,
-          duration: 3.1,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.25,
-        });
-        gsap.to('.hero-portrait-companion--bottom img', {
-          y: -7,
-          duration: 3.4,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 1.35,
         });
 
         const heroExit = gsap.timeline({
@@ -462,11 +434,10 @@ export default function Home() {
 
             {/* Short Lead */}
             <p className="hero-center-lead">
-              Dr. Praveen Chandra leads structural heart interventions at{' '}
-              <strong>Medanta – The Medicity, Gurugram</strong>.
+              Dr. Praveen Chandra leads structural heart interventions at Medanta – The Medicity, Gurugram.
             </p>
 
-            {/* Circular Portrait Composition */}
+            {/* Circular Portrait Composition - Single Central Image */}
             <div className="hero-portrait-composition">
               <div className="hero-portrait-main">
                 <div className="hero-portrait-ring" aria-hidden="true" />
@@ -474,10 +445,10 @@ export default function Home() {
                   <motion.div
                     key={currentHero.id}
                     className="hero-portrait-frame-inner"
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.92 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 1.05 }}
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   >
                     <ResponsiveImage
                       src={currentHero.image}
@@ -492,26 +463,6 @@ export default function Home() {
                   {currentHero.caption}
                 </div>
               </div>
-
-              <div className="hero-portrait-companion hero-portrait-companion--top">
-                <ResponsiveImage
-                  src={currentHero.companionTop}
-                  alt=""
-                  objectFit="cover"
-                  sizes="120px"
-                />
-                <span className="hero-portrait-companion-label">{currentHero.label}</span>
-              </div>
-
-              <div className="hero-portrait-companion hero-portrait-companion--bottom">
-                <ResponsiveImage
-                  src={currentHero.companionBottom}
-                  alt=""
-                  objectFit="cover"
-                  sizes="120px"
-                />
-                <span className="hero-portrait-companion-label">{HERO_SLIDES[(heroCycle.activeIndex + 1) % HERO_SLIDES.length].label}</span>
-              </div>
             </div>
 
             {/* CTA Group */}
@@ -522,10 +473,14 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Minimal Metric */}
-            <div className="hero-center-metric">
+            {/* Minimal Metric - Horizontal Row */}
+            <div className="hero-center-metric-row">
               <span className="hero-center-metric-val tabular-nums">30+</span>
-              <span className="hero-center-metric-label">Years of Clinical Leadership</span>
+              <span className="hero-center-metric-sep">·</span>
+              <span className="hero-center-metric-lbl">Years of Clinical Leadership</span>
+              <span className="hero-center-metric-sep">·</span>
+              <span className="hero-center-metric-val tabular-nums">100+</span>
+              <span className="hero-center-metric-lbl">Research Papers Published</span>
             </div>
           </div>
         </div>
