@@ -108,6 +108,13 @@ export default function Treatments() {
 
         // Continuous Hero Parallax on Scroll
         gsap.to('.trt-hero-centerpiece img', { yPercent: -12, scale: 1.05, ease: 'none', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top top', end: 'bottom top', scrub: 1 } });
+        gsap.fromTo('.trt-orbital-1', { opacity: 0, x: 40, rotate: 10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.trt-orbital-2', { opacity: 0, x: -40, rotate: -10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.to('.trt-orbital-1', { yPercent: -38, xPercent: -10, rotation: -3, ease: 'none', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        gsap.to('.trt-orbital-2', { yPercent: 32, xPercent: 8, rotation: 3, ease: 'none', scrollTrigger: { trigger: '.treatments-hero-monument', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+
+        // Continuous Directory Media Scrub
+        gsap.fromTo('.dir-card-media img', { y: 25, scale: 0.96 }, { y: -25, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
 
         // ── 2. FULL PROCEDURE DIRECTORY SHOWCASE ──
         gsap.fromTo('.dir-section-header', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.trt-directory-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
@@ -229,7 +236,20 @@ export default function Treatments() {
               </div>
             </div>
 
-            <div className="trt-hero-centerpiece">
+            <div className="trt-hero-centerpiece perspective-stage" style={{ position: 'relative' }}>
+              <div className="trt-orbital-1" style={{ position: 'absolute', top: '-14px', right: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--gold">
+                  <span>✨</span>
+                  <span>First TAVI in India · 2011</span>
+                </div>
+              </div>
+              <div className="trt-orbital-2" style={{ position: 'absolute', bottom: '52px', left: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
+                  <span>🔬</span>
+                  <span>100% Non-Surgical Pin-Hole Access</span>
+                </div>
+              </div>
+
               <div className="trt-centerpiece-visual">
                 <img
                   src="/images/treatments/valve-replacement-tavi.webp"

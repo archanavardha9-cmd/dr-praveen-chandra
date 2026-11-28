@@ -285,7 +285,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .floating-orbital-badge {
-  position: absolute;
+  position: relative;
   z-index: 4;
   display: inline-flex;
   align-items: center;
@@ -302,6 +302,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: var(--ink-primary);
   pointer-events: none;
+  white-space: nowrap;
   animation: floatBreathing 4.5s ease-in-out infinite alternate;
 }
 
@@ -318,10 +319,26 @@ h1, h2, h3, h4, h5, h6 {
   color: #055050;
 }
 
+.floating-orbital-badge--alt {
+  animation: floatBreathingAlt 5.2s ease-in-out infinite alternate;
+}
+
 @keyframes floatBreathing {
   0% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-8px) rotate(0.8deg); }
   100% { transform: translateY(6px) rotate(-0.8deg); }
+}
+
+@keyframes floatBreathingAlt {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-0.8deg); }
+  100% { transform: translateY(-6px) rotate(0.8deg); }
+}
+
+@media (max-width: 640px) {
+  .floating-orbital-badge {
+    display: none;
+  }
 }
 
 .reveal-overflow-hidden {

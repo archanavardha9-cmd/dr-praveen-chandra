@@ -249,14 +249,18 @@ export default function Home() {
 
             {/* Right Dynamic Auto-Cycling Visual Stage (Large & Uncropped with 3D Depth) */}
             <div className="hero-visual-col hero-enter-right perspective-stage" style={{ position: 'relative' }}>
-              {/* Floating 3D Orbital Badges with differential parallax */}
-              <div className="floating-orbital-badge floating-orbital-badge--gold hero-orbital-1" style={{ top: '-14px', left: '-18px' }}>
-                <span>🏅</span>
-                <span>Padma Shri Awardee · 2016</span>
+              {/* Floating 3D Orbital Badges with differential parallax and independent breathing */}
+              <div className="hero-orbital-1" style={{ position: 'absolute', top: '-14px', left: '-18px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--gold">
+                  <span>🏅</span>
+                  <span>Padma Shri Awardee · 2016</span>
+                </div>
               </div>
-              <div className="floating-orbital-badge floating-orbital-badge--teal hero-orbital-2" style={{ bottom: '72px', right: '-18px' }}>
-                <span>🏥</span>
-                <span>Medanta – The Medicity</span>
+              <div className="hero-orbital-2" style={{ position: 'absolute', bottom: '72px', right: '-18px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
+                  <span>🏥</span>
+                  <span>Medanta – The Medicity</span>
+                </div>
               </div>
 
               <div className="hero-stage-frame">

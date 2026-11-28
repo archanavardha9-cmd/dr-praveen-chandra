@@ -104,6 +104,9 @@ export default function Contact() {
         gsap.fromTo('.cnt-intl-body', { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
         gsap.fromTo('.cnt-intl-actions', { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
+        // Continuous International Desk Photo Scrub
+        gsap.fromTo('.cnt-intl-visual img', { y: 25, scale: 0.96 }, { y: -25, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.cnt-prep-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+
         // ── 4. EMERGENCY BAND ──
         gsap.fromTo('.cnt-emergency-band', { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.cnt-emergency-band', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
       }, pageRef);
@@ -165,13 +168,17 @@ export default function Contact() {
             </div>
 
             <div className="cnt-hero-visual cnt-hero-right perspective-stage" style={{ position: 'relative' }}>
-              <div className="floating-orbital-badge floating-orbital-badge--gold cnt-orbital-1" style={{ top: '-14px', right: '-12px' }}>
-                <span>🟢</span>
-                <span>OPD Clinic Active · Sector 38</span>
+              <div className="cnt-orbital-1" style={{ position: 'absolute', top: '-14px', right: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--gold">
+                  <span>🟢</span>
+                  <span>OPD Clinic Active · Sector 38</span>
+                </div>
               </div>
-              <div className="floating-orbital-badge floating-orbital-badge--teal cnt-orbital-2" style={{ bottom: '26px', left: '-12px' }}>
-                <span>🚑</span>
-                <span>24/7 Acute Heart Trauma 1068</span>
+              <div className="cnt-orbital-2" style={{ position: 'absolute', bottom: '26px', left: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
+                  <span>🚑</span>
+                  <span>24/7 Acute Heart Trauma 1068</span>
+                </div>
               </div>
 
               <div className="cnt-photo-frame">

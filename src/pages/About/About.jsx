@@ -157,6 +157,9 @@ export default function About() {
         gsap.fromTo('.ledger-stage-visual img', { opacity: 0, scale: 0.8, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.9, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
         gsap.fromTo('.ledger-stage-copy', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
+        // Continuous Ledger Parallax Float on Scroll
+        gsap.fromTo('.ledger-stage-visual img', { y: 25, scale: 0.96 }, { y: -25, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.about-ledger-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+
         // ── 5. CTA RIBBON ──
         gsap.fromTo('.about-cta-ribbon', { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
         gsap.fromTo('.about-cta-ribbon h2', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, delay: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.about-cta-ribbon', start: 'top 90%', end: 'bottom 10%', toggleActions: 'play reverse play reverse' } });
@@ -181,13 +184,17 @@ export default function About() {
           <div className="about-hero-grid">
             {/* Left Large Uncropped Portrait Frame with 3D Depth */}
             <div className="about-hero-visual abt-hero-left perspective-stage" style={{ position: 'relative' }}>
-              <div className="floating-orbital-badge floating-orbital-badge--gold abt-orbital-1" style={{ top: '-12px', right: '-12px' }}>
-                <span>🏅</span>
-                <span>Padma Shri · 2016</span>
+              <div className="abt-orbital-1" style={{ position: 'absolute', top: '-12px', right: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--gold">
+                  <span>🏅</span>
+                  <span>Padma Shri · 2016</span>
+                </div>
               </div>
-              <div className="floating-orbital-badge floating-orbital-badge--teal abt-orbital-2" style={{ bottom: '28px', left: '-12px' }}>
-                <span>🎓</span>
-                <span>KGMC Lucknow · DM Cardiology</span>
+              <div className="abt-orbital-2" style={{ position: 'absolute', bottom: '28px', left: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
+                  <span>🎓</span>
+                  <span>KGMC Lucknow · DM Cardiology</span>
+                </div>
               </div>
 
               <div className="about-portrait-frame">

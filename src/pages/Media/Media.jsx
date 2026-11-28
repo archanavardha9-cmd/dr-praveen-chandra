@@ -101,8 +101,16 @@ export default function Media() {
         gsap.fromTo('.theater-play-badge', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.4, ease: 'back.out(1.7)', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
         gsap.fromTo('.theater-caption-bar', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
-        // Continuous Hero Parallax
+        gsap.fromTo('.med-orbital-1', { opacity: 0, x: 40, rotate: 10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.med-orbital-2', { opacity: 0, x: -40, rotate: -10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Continuous Hero Parallax & Orbital Floating Scrub
         gsap.to('.med-hero-theater', { yPercent: 10, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+        gsap.to('.med-orbital-1', { yPercent: -42, xPercent: -12, rotation: -3, ease: 'none', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        gsap.to('.med-orbital-2', { yPercent: 35, xPercent: 10, rotation: 3, ease: 'none', scrollTrigger: { trigger: '.media-cinema-hero', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+
+        // Continuous Graphic Parallax Scrub
+        gsap.fromTo('.med-graphic-placeholder-frame img', { y: 25, scale: 0.96 }, { y: -25, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.media-archive-stage', start: 'top bottom', end: 'bottom top', scrub: 1 } });
 
         // ── 2. VIDEO DIRECTORY ──
         gsap.fromTo('.med-video-directory-layout', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.media-archive-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
@@ -234,7 +242,20 @@ export default function Media() {
               </div>
             </div>
 
-            <div className="med-hero-theater">
+            <div className="med-hero-theater perspective-stage" style={{ position: 'relative' }}>
+              <div className="med-orbital-1" style={{ position: 'absolute', top: '-14px', right: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--gold">
+                  <span>🎬</span>
+                  <span>100+ Live Symposia &amp; Keynotes</span>
+                </div>
+              </div>
+              <div className="med-orbital-2" style={{ position: 'absolute', bottom: '60px', left: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
+                  <span>📺</span>
+                  <span>Broadcast Media &amp; Telemedicine</span>
+                </div>
+              </div>
+
               <div
                 className="theater-screen-box"
                 onClick={() => setModalVideo(currentHeroVideo)}

@@ -53,6 +53,14 @@ export default function Blog() {
         gsap.fromTo('.blog-hero-graphic-frame img', { opacity: 0, scale: 0.8, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
         gsap.fromTo('.blog-hero-graphic-caption', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
+        gsap.fromTo('.blog-orbital-1', { opacity: 0, x: 40, rotate: 10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+        gsap.fromTo('.blog-orbital-2', { opacity: 0, x: -40, rotate: -10 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
+
+        // Continuous Hero Graphic Parallax & Orbital Float
+        gsap.to('.blog-hero-graphic-frame img', { y: -25, scale: 1.05, ease: 'none', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top top', end: 'bottom top', scrub: 1 } });
+        gsap.to('.blog-orbital-1', { yPercent: -40, xPercent: -12, rotation: -3, ease: 'none', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+        gsap.to('.blog-orbital-2', { yPercent: 32, xPercent: 10, rotation: 3, ease: 'none', scrollTrigger: { trigger: '.blog-hero-monument', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+
         // ── 2. BLOG LISTING CARDS ──
         gsap.fromTo('.blog-filter-bar', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.blog-listing-stage', start: 'top 85%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' } });
 
@@ -125,7 +133,20 @@ export default function Blog() {
               </div>
             </div>
 
-            <div className="blog-hero-graphic-col">
+            <div className="blog-hero-graphic-col perspective-stage" style={{ position: 'relative' }}>
+              <div className="blog-orbital-1" style={{ position: 'absolute', top: '-14px', right: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--gold">
+                  <span>📚</span>
+                  <span>55 Verified Clinical Monographs</span>
+                </div>
+              </div>
+              <div className="blog-orbital-2" style={{ position: 'absolute', bottom: '45px', left: '-12px', zIndex: 4, pointerEvents: 'none' }}>
+                <div className="floating-orbital-badge floating-orbital-badge--teal floating-orbital-badge--alt">
+                  <span>🫀</span>
+                  <span>Evidence-Based Cardiology</span>
+                </div>
+              </div>
+
               <div className="blog-hero-graphic-frame">
                 <img
                   src="/images/illustrations/coronary-stent-ivl.webp"
